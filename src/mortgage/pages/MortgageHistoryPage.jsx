@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { mortgageService } from '../api/mortgageService';
 import { Button } from '../../shared/components/Button';
 import { Header } from '../../shared/components/Header';
 import { Sidebar } from '../../shared/components/Sidebar';
 
 const MortgageHistoryPage = () => {
+  const { t } = useTranslation('mortgage');
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -40,14 +42,14 @@ const MortgageHistoryPage = () => {
       const data = await mortgageService.getMortgageHistory(50, 0);
       setHistory(data);
     } catch (err) {
-      setError(err?.message || 'Failed to fetch history');
+      setError(err?.message || t('history.messages.loadingError'));
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this calculation?')) {
+    if (!window.confirm(t('history.confirmDelete'))) {
       return;
     }
 
@@ -55,7 +57,7 @@ const MortgageHistoryPage = () => {
       await mortgageService.deleteMortgage(id);
       fetchHistory();
     } catch (err) {
-      alert('Failed to delete calculation: ' + (err?.message || 'Unknown error'));
+      alert(t('history.messages.deleteFailed') + ': ' + (err?.message || 'Unknown error'));
     }
   };
 
@@ -74,7 +76,7 @@ const MortgageHistoryPage = () => {
         <Header />
         <main className="lg:ml-64 px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex items-center justify-center h-64">
-            <div className="text-gray-400">Loading...</div>
+            <div className="text-gray-400">{t('shared:common.loading')}</div>
           </div>
         </main>
       </div>
@@ -103,21 +105,21 @@ const MortgageHistoryPage = () => {
       <main className="lg:ml-64 px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-white">Transactions</h1>
-            <p className="mt-2 text-gray-400">View and manage your mortgage calculations</p>
+            <h1 className="text-3xl font-bold text-white">{t('history.title')}</h1>
+            <p className="mt-2 text-gray-400">{t('history.subtitle')}</p>
           </div>
           <div className="mt-4 md:mt-0">
             <Button onClick={() => navigate('/mortgage/calculator')}>
-              New Calculation
+              {t('history.createNew')}
             </Button>
           </div>
         </div>
 
         {history.length === 0 ? (
           <div className="bg-gray-900 border border-gray-800 rounded-lg p-12 text-center">
-            <p className="text-gray-400 mb-4">No mortgage calculations found</p>
+            <p className="text-gray-400 mb-4">{t('history.empty')}</p>
             <Button onClick={() => navigate('/mortgage/calculator')}>
-              Create Your First Calculation
+              {t('history.emptySubtitle')}
             </Button>
           </div>
         ) : (
@@ -128,7 +130,7 @@ const MortgageHistoryPage = () => {
                   <div className="flex-1">
                     <div className="flex items-center mb-4">
                       <h3 className="text-lg font-semibold text-white">
-                        Calculation #{item.id}
+                        {t('history.card.calculationNumber', { number: item.id })}
                       </h3>
                       <span className="ml-3 inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-900/30 text-blue-400 border border-blue-800">
                         {item.currency}
@@ -137,27 +139,27 @@ const MortgageHistoryPage = () => {
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                       <div>
-                        <p className="text-gray-400">Property Price</p>
+                        <p className="text-gray-400">{t('history.card.propertyPrice')}</p>
                         <p className="font-semibold text-white">{item.currency} {formatCurrency(item.property_price)}</p>
                       </div>
                       <div>
-                        <p className="text-gray-400">Loan Amount</p>
+                        <p className="text-gray-400">{t('history.card.loanAmount')}</p>
                         <p className="font-semibold text-white">{item.currency} {formatCurrency(item.loan_amount)}</p>
                       </div>
                       <div>
-                        <p className="text-gray-400">Term</p>
-                        <p className="font-semibold text-white">{item.term_months} months</p>
+                        <p className="text-gray-400">{t('history.card.term')}</p>
+                        <p className="font-semibold text-white">{t('history.card.termMonths', { months: item.term_months })}</p>
                       </div>
                       <div>
-                        <p className="text-gray-400">Fixed Installment</p>
+                        <p className="text-gray-400">{t('history.card.fixedInstallment')}</p>
                         <p className="font-semibold text-white">{item.currency} {formatCurrency(item.fixed_installment)}</p>
                       </div>
                       <div>
-                        <p className="text-gray-400">TCEA</p>
+                        <p className="text-gray-400">{t('history.card.tcea')}</p>
                         <p className="font-semibold text-white">{formatPercentage(item.tcea)}%</p>
                       </div>
                       <div className="col-span-2 md:col-span-3">
-                        <p className="text-gray-400">Created</p>
+                        <p className="text-gray-400">{t('history.card.created')}</p>
                         <p className="font-semibold text-white">{formatDate(item.created_at)}</p>
                       </div>
                     </div>
@@ -168,13 +170,13 @@ const MortgageHistoryPage = () => {
                       onClick={() => handleView(item.id)}
                       className="flex-1 lg:flex-none"
                     >
-                      View Details
+                      {t('history.actions.view')}
                     </Button>
                     <button
                       onClick={() => handleDelete(item.id)}
                       className="flex-1 lg:flex-none px-4 py-2 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-900/20 border border-red-800 rounded-lg transition-colors"
                     >
-                      Delete
+                      {t('history.actions.delete')}
                     </button>
                   </div>
                 </div>

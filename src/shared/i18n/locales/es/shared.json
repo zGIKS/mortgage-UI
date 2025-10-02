@@ -1,0 +1,67 @@
+{
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "back": "Volver",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "warning": "Advertencia",
+    "confirm": "Confirmar",
+    "yes": "Sí",
+    "no": "No",
+    "submit": "Enviar",
+    "close": "Cerrar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "sort": "Ordenar",
+    "clear": "Limpiar",
+    "home": "Inicio",
+    "profile": "Perfil"
+  },
+  "navigation": {
+    "dashboard": "Panel",
+    "mortgages": "Hipotecas",
+    "calculator": "Calculadora",
+    "history": "Historial"
+  },
+  "dashboard": {
+    "welcome": "Bienvenido a tu Panel de Control",
+    "subtitle": "Gestiona tus finanzas en un solo lugar",
+    "cards": {
+      "profile": {
+        "title": "Perfil",
+        "description": "Ve y edita la información de tu cuenta"
+      },
+      "calculator": {
+        "title": "Calculadora",
+        "description": "Calcula tu hipoteca usando el método francés"
+      },
+      "history": {
+        "title": "Historial",
+        "description": "Ve y gestiona tus cálculos hipotecarios"
+      }
+    }
+  },
+  "header": {
+    "hello": "Hola, {{name}}",
+    "logout": "Cerrar sesión",
+    "language": "Idioma"
+  },
+  "validation": {
+    "required": "Este campo es obligatorio",
+    "email": "Por favor ingrese un email válido",
+    "minLength": "Mínimo {{min}} caracteres requeridos",
+    "maxLength": "Máximo {{max}} caracteres permitidos",
+    "numeric": "Solo se permiten valores numéricos",
+    "positive": "El valor debe ser positivo"
+  },
+  "currency": {
+    "symbol": "$",
+    "format": "{{amount, currency}}"
+  }
+}

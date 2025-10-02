@@ -1,0 +1,68 @@
+{
+  "auth": {
+    "login": {
+      "title": "Iniciar Sesión",
+      "subtitle": "Accede a tu panel financiero",
+      "email": "Correo Electrónico",
+      "password": "Contraseña",
+      "submit": "Iniciar Sesión",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "noAccount": "¿No tienes una cuenta?",
+      "createAccount": "Crea una aquí"
+    },
+    "register": {
+      "title": "Crear Cuenta",
+      "subtitle": "Únete a nuestra plataforma financiera",
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "email": "Correo Electrónico",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar Contraseña",
+      "submit": "Crear Cuenta",
+      "hasAccount": "¿Ya tienes una cuenta?",
+      "signIn": "Inicia sesión aquí"
+    },
+    "validation": {
+      "emailRequired": "El correo electrónico es obligatorio",
+      "emailInvalid": "Por favor ingresa un correo electrónico válido",
+      "passwordRequired": "La contraseña es obligatoria",
+      "passwordMinLength": "La contraseña debe tener al menos 8 caracteres",
+      "firstNameRequired": "El nombre es obligatorio",
+      "lastNameRequired": "El apellido es obligatorio",
+      "confirmPasswordRequired": "Por favor confirma tu contraseña",
+      "passwordMismatch": "Las contraseñas no coinciden"
+    },
+    "errors": {
+      "loginFailed": "Correo electrónico o contraseña incorrectos",
+      "registerFailed": "Error al crear la cuenta",
+      "networkError": "Error de conexión. Por favor intenta de nuevo.",
+      "serverError": "Error del servidor. Por favor intenta más tarde."
+    },
+    "success": {
+      "accountCreated": "Cuenta creada exitosamente",
+      "loginSuccess": "¡Bienvenido de vuelta!"
+    }
+  },
+  "profile": {
+    "title": "Configuración del Perfil",
+    "userInfo": {
+      "title": "Información del Usuario",
+      "fullName": "Nombre Completo",
+      "email": "Correo Electrónico",
+      "accountCreated": "Cuenta Creada"
+    },
+    "updateProfile": {
+      "title": "Actualizar Perfil",
+      "email": "Correo Electrónico",
+      "emailPlaceholder": "Ingresa un nuevo correo electrónico",
+      "newPassword": "Nueva Contraseña",
+      "passwordPlaceholder": "Déjalo en blanco para mantener la contraseña actual",
+      "submit": "Actualizar Perfil",
+      "updating": "Actualizando..."
+    },
+    "messages": {
+      "updateSuccess": "Perfil actualizado exitosamente",
+      "updateFailed": "Error al actualizar. Por favor intenta de nuevo."
+    }
+  }
+}

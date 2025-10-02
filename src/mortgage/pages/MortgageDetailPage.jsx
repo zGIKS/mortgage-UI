@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { mortgageService } from '../api/mortgageService';
 import PaymentScheduleTable from '../components/PaymentScheduleTable';
 import MortgageCalculatorForm from '../components/MortgageCalculatorForm';
@@ -10,6 +11,7 @@ import { Sidebar } from '../../shared/components/Sidebar';
 const MortgageDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation('mortgage');
   const [mortgage, setMortgage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -24,7 +26,11 @@ const MortgageDetailPage = () => {
   };
 
   const formatPercentage = (value) => {
-    return (value * 100).toFixed(4);
+    return value ? parseFloat(value).toFixed(6) : '0.000000';
+  };
+
+  const formatRateType = (rateType) => {
+    return rateType === 'EFFECTIVE' ? t('calculator.form.options.rateTypes.effective') : t('calculator.form.options.rateTypes.nominal');
   };
 
   const formatDate = (dateString) => {
@@ -45,7 +51,7 @@ const MortgageDetailPage = () => {
       const data = await mortgageService.getMortgageById(id);
       setMortgage(data);
     } catch (err) {
-      setError(err?.message || 'Failed to fetch mortgage details');
+      setError(err?.message || t('details.messages.loadingError'));
     } finally {
       setLoading(false);
     }
@@ -60,14 +66,14 @@ const MortgageDetailPage = () => {
       setMortgage(updatedData);
       setIsEditing(false);
     } catch (err) {
-      setError(err?.message || 'Failed to update mortgage');
+      setError(err?.message || t('details.messages.updateError'));
     } finally {
       setUpdateLoading(false);
     }
   };
 
   const handleDelete = async () => {
-    if (!window.confirm('Are you sure you want to delete this calculation?')) {
+    if (!window.confirm(t('details.confirmDelete'))) {
       return;
     }
 
@@ -75,7 +81,7 @@ const MortgageDetailPage = () => {
       await mortgageService.deleteMortgage(id);
       navigate('/mortgage/history');
     } catch (err) {
-      alert('Failed to delete calculation: ' + (err?.message || 'Unknown error'));
+      alert(t('details.messages.deleteError') + ': ' + (err?.message || 'Unknown error'));
     }
   };
 
@@ -107,7 +113,7 @@ const MortgageDetailPage = () => {
             <p className="text-red-400">{error}</p>
           </div>
           <Button onClick={() => navigate('/mortgage/history')}>
-            Back to History
+            {t('details.backToHistory')}
           </Button>
         </main>
       </div>
@@ -131,23 +137,23 @@ const MortgageDetailPage = () => {
                 onClick={() => navigate('/mortgage/history')}
                 className="text-gray-400 hover:text-white transition-colors"
               >
-                ← Back
+                {t('details.back')}
               </button>
             </div>
-            <h1 className="text-3xl font-bold text-white">Mortgage Calculation #{mortgage.id}</h1>
-            <p className="mt-2 text-gray-400">Created on {formatDate(mortgage.created_at)}</p>
+            <h1 className="text-3xl font-bold text-white">{t('details.title', { id: mortgage.id })}</h1>
+            <p className="mt-2 text-gray-400">{t('details.createdOn', { date: formatDate(mortgage.created_at) })}</p>
           </div>
           <div className="mt-4 md:mt-0 flex gap-2">
             {!isEditing ? (
               <>
                 <Button onClick={() => setIsEditing(true)}>
-                  Edit
+                  {t('details.edit')}
                 </Button>
                 <button
                   onClick={handleDelete}
                   className="px-4 py-2 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-900/20 border border-red-800 rounded-lg transition-colors"
                 >
-                  Delete
+                  {t('details.delete')}
                 </button>
               </>
             ) : (
@@ -158,7 +164,7 @@ const MortgageDetailPage = () => {
                 }}
                 variant="outline"
               >
-                Cancel
+                {t('details.cancel')}
               </Button>
             )}
           </div>
@@ -172,7 +178,7 @@ const MortgageDetailPage = () => {
 
         {isEditing ? (
           <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 mb-8">
-            <h2 className="text-xl font-semibold text-white mb-6">Edit Mortgage Calculation</h2>
+            <h2 className="text-xl font-semibold text-white mb-6">{t('details.editTitle')}</h2>
             <MortgageCalculatorForm
               onCalculate={handleUpdate}
               loading={updateLoading}
@@ -194,89 +200,95 @@ const MortgageDetailPage = () => {
         ) : (
           <>
             <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 mb-8">
-              <h2 className="text-xl font-semibold text-white mb-6">Calculation Summary</h2>
+              <h2 className="text-xl font-semibold text-white mb-6">{t('details.summaryTitle')}</h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="bg-blue-900/20 border border-blue-800 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">Fixed Installment</p>
+                  <p className="text-sm text-gray-400 mb-1">{t('details.metrics.fixedInstallment')}</p>
                   <p className="text-2xl font-bold text-blue-400">{mortgage.currency} {formatCurrency(mortgage.fixed_installment)}</p>
                 </div>
 
                 <div className="bg-green-900/20 border border-green-800 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">Principal Financed</p>
+                  <p className="text-sm text-gray-400 mb-1">{t('details.metrics.principalFinanced')}</p>
                   <p className="text-2xl font-bold text-green-400">{mortgage.currency} {formatCurrency(mortgage.principal_financed)}</p>
                 </div>
 
                 <div className="bg-purple-900/20 border border-purple-800 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">Total Interest Paid</p>
+                  <p className="text-sm text-gray-400 mb-1">{t('details.metrics.totalInterestPaid')}</p>
                   <p className="text-2xl font-bold text-purple-400">{mortgage.currency} {formatCurrency(mortgage.total_interest_paid)}</p>
                 </div>
 
                 <div className="bg-indigo-900/20 border border-indigo-800 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">Total Paid</p>
+                  <p className="text-sm text-gray-400 mb-1">{t('details.metrics.totalPaid')}</p>
                   <p className="text-2xl font-bold text-indigo-400">{mortgage.currency} {formatCurrency(mortgage.total_paid)}</p>
                 </div>
 
                 <div className="bg-yellow-900/20 border border-yellow-800 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">TCEA</p>
+                  <p className="text-sm text-gray-400 mb-1">{t('details.metrics.tcea')}</p>
                   <p className="text-2xl font-bold text-yellow-400">{formatPercentage(mortgage.tcea)}%</p>
                 </div>
 
                 <div className="bg-pink-900/20 border border-pink-800 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">Periodic Rate</p>
+                  <p className="text-sm text-gray-400 mb-1">{t('details.metrics.periodicRate')}</p>
                   <p className="text-2xl font-bold text-pink-400">{formatPercentage(mortgage.periodic_rate)}%</p>
                 </div>
 
                 <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">IRR</p>
+                  <p className="text-sm text-gray-400 mb-1">{t('details.metrics.irr')}</p>
                   <p className="text-2xl font-bold text-gray-300">{formatPercentage(mortgage.irr)}%</p>
                 </div>
 
                 {mortgage.npv !== 0 && (
                   <div className="bg-teal-900/20 border border-teal-800 rounded-lg p-4">
-                    <p className="text-sm text-gray-400 mb-1">NPV</p>
+                    <p className="text-sm text-gray-400 mb-1">{t('details.metrics.npv')}</p>
                     <p className="text-2xl font-bold text-teal-400">{mortgage.currency} {formatCurrency(mortgage.npv)}</p>
                   </div>
                 )}
 
                 <div className="bg-orange-900/20 border border-orange-800 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">Term</p>
-                  <p className="text-2xl font-bold text-orange-400">{mortgage.term_months} months</p>
+                  <p className="text-sm text-gray-400 mb-1">{t('details.metrics.term')}</p>
+                  <p className="text-2xl font-bold text-orange-400">{t('details.fields.termMonths', { months: mortgage.term_months })}</p>
                 </div>
               </div>
 
               <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div className="flex justify-between py-2 border-b border-gray-800">
-                  <span className="text-gray-400">Property Price:</span>
+                  <span className="text-gray-400">{t('details.fields.propertyPrice')}</span>
                   <span className="font-semibold text-white">{mortgage.currency} {formatCurrency(mortgage.property_price)}</span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-gray-800">
-                  <span className="text-gray-400">Down Payment:</span>
+                  <span className="text-gray-400">{t('details.fields.downPayment')}</span>
                   <span className="font-semibold text-white">{mortgage.currency} {formatCurrency(mortgage.down_payment)}</span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-gray-800">
-                  <span className="text-gray-400">Loan Amount:</span>
+                  <span className="text-gray-400">{t('details.fields.loanAmount')}</span>
                   <span className="font-semibold text-white">{mortgage.currency} {formatCurrency(mortgage.loan_amount)}</span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-gray-800">
-                  <span className="text-gray-400">Bono Techo Propio:</span>
+                  <span className="text-gray-400">{t('details.fields.bonusTechoPropio')}</span>
                   <span className="font-semibold text-white">{mortgage.currency} {formatCurrency(mortgage.bono_techo_propio)}</span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-gray-800">
-                  <span className="text-gray-400">Interest Rate:</span>
-                  <span className="font-semibold text-white">{mortgage.interest_rate}% ({mortgage.rate_type})</span>
+                  <span className="text-gray-400">{t('details.fields.interestRate')}</span>
+                  <span className="font-semibold text-white">{mortgage.interest_rate}% ({formatRateType(mortgage.rate_type)})</span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-gray-800">
-                  <span className="text-gray-400">Grace Period:</span>
+                  <span className="text-gray-400">{t('details.fields.gracePeriod')}</span>
                   <span className="font-semibold text-white">
-                    {mortgage.grace_period_type === 'NONE' ? 'None' : `${mortgage.grace_period_months} months (${mortgage.grace_period_type})`}
+                    {mortgage.grace_period_type === 'NONE' ? 
+                      t('details.fields.gracePeriodNone') : 
+                      t('details.fields.gracePeriodValue', { 
+                        months: mortgage.grace_period_months, 
+                        type: mortgage.grace_period_type 
+                      })
+                    }
                   </span>
                 </div>
               </div>
             </div>
 
             <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
-              <h2 className="text-xl font-semibold text-white mb-6">Payment Schedule</h2>
+              <h2 className="text-xl font-semibold text-white mb-6">{t('details.amortizationSchedule')}</h2>
               <PaymentScheduleTable schedule={mortgage.payment_schedule} />
             </div>
           </>

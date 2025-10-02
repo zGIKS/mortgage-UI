@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import MortgageCalculatorForm from '../components/MortgageCalculatorForm';
 import PaymentScheduleTable from '../components/PaymentScheduleTable';
 import { mortgageService } from '../api/mortgageService';
@@ -6,6 +7,7 @@ import { Header } from '../../shared/components/Header';
 import { Sidebar } from '../../shared/components/Sidebar';
 
 const MortgageCalculatorPage = () => {
+  const { t } = useTranslation('mortgage');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
@@ -30,7 +32,7 @@ const MortgageCalculatorPage = () => {
       const data = await mortgageService.calculateMortgage(formData);
       setResult(data);
     } catch (err) {
-      setError(err?.message || 'Failed to calculate mortgage');
+      setError(err?.message || t('errors.calculationFailed'));
     } finally {
       setLoading(false);
     }
@@ -43,12 +45,12 @@ const MortgageCalculatorPage = () => {
 
       <main className="lg:ml-64 px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white">Calculator</h1>
-          <p className="mt-2 text-gray-400">Calculate your mortgage using the French amortization method</p>
+          <h1 className="text-3xl font-bold text-white">{t('calculator.title')}</h1>
+          <p className="mt-2 text-gray-400">{t('calculator.subtitle')}</p>
         </div>
 
         <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 mb-8">
-          <h2 className="text-xl font-semibold text-white mb-6">Enter Loan Details</h2>
+          <h2 className="text-xl font-semibold text-white mb-6">{t('details.loanInfo')}</h2>
           <MortgageCalculatorForm onCalculate={handleCalculate} loading={loading} />
         </div>
 
@@ -61,26 +63,26 @@ const MortgageCalculatorPage = () => {
         {result && (
           <>
             <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 mb-8">
-              <h2 className="text-xl font-semibold text-white mb-6">Calculation Summary</h2>
+              <h2 className="text-xl font-semibold text-white mb-6">{t('calculator.results.title')}</h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="bg-blue-900/20 border border-blue-800 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">Fixed Installment</p>
+                  <p className="text-sm text-gray-400 mb-1">{t('calculator.results.monthlyPayment')}</p>
                   <p className="text-2xl font-bold text-blue-400">{result.currency} {formatCurrency(result.fixed_installment)}</p>
                 </div>
 
                 <div className="bg-green-900/20 border border-green-800 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">Principal Financed</p>
+                  <p className="text-sm text-gray-400 mb-1">{t('financial.terms.principal')}</p>
                   <p className="text-2xl font-bold text-green-400">{result.currency} {formatCurrency(result.principal_financed)}</p>
                 </div>
 
                 <div className="bg-purple-900/20 border border-purple-800 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">Total Interest Paid</p>
+                  <p className="text-sm text-gray-400 mb-1">{t('calculator.results.totalInterest')}</p>
                   <p className="text-2xl font-bold text-purple-400">{result.currency} {formatCurrency(result.total_interest_paid)}</p>
                 </div>
 
                 <div className="bg-indigo-900/20 border border-indigo-800 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">Total Paid</p>
+                  <p className="text-sm text-gray-400 mb-1">{t('calculator.results.totalCost')}</p>
                   <p className="text-2xl font-bold text-indigo-400">{result.currency} {formatCurrency(result.total_paid)}</p>
                 </div>
 
@@ -118,11 +120,11 @@ const MortgageCalculatorPage = () => {
                   <span className="font-semibold text-white">{result.currency} {formatCurrency(result.property_price)}</span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-gray-800">
-                  <span className="text-gray-400">Down Payment:</span>
+                  <span className="text-gray-400">{t('calculator.form.downPayment')}:</span>
                   <span className="font-semibold text-white">{result.currency} {formatCurrency(result.down_payment)}</span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-gray-800">
-                  <span className="text-gray-400">Loan Amount:</span>
+                  <span className="text-gray-400">{t('calculator.form.loanAmount')}:</span>
                   <span className="font-semibold text-white">{result.currency} {formatCurrency(result.loan_amount)}</span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-gray-800">
@@ -130,7 +132,7 @@ const MortgageCalculatorPage = () => {
                   <span className="font-semibold text-white">{result.currency} {formatCurrency(result.bono_techo_propio)}</span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-gray-800">
-                  <span className="text-gray-400">Interest Rate:</span>
+                  <span className="text-gray-400">{t('calculator.form.interestRate')}:</span>
                   <span className="font-semibold text-white">{result.interest_rate}% ({result.rate_type})</span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-gray-800">
@@ -143,7 +145,7 @@ const MortgageCalculatorPage = () => {
             </div>
 
             <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
-              <h2 className="text-xl font-semibold text-white mb-6">Payment Schedule</h2>
+              <h2 className="text-xl font-semibold text-white mb-6">{t('amortization.title')}</h2>
               <PaymentScheduleTable schedule={result.payment_schedule} />
             </div>
           </>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { authService } from '../iam/application/auth-service';
 import { Card } from '../shared/components/Card';
 import { Header } from '../shared/components/Header';
@@ -7,6 +8,7 @@ import { Sidebar } from '../shared/components/Sidebar';
 
 export function HomePage() {
   const navigate = useNavigate();
+  const { t } = useTranslation('shared');
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -27,8 +29,8 @@ export function HomePage() {
 
       <main className="lg:ml-64 px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-white mb-2">Welcome to your Dashboard</h2>
-          <p className="text-gray-400">Manage your finances in one place</p>
+          <h2 className="text-3xl font-bold text-white mb-2">{t('dashboard.welcome')}</h2>
+          <p className="text-gray-400">{t('dashboard.subtitle')}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -43,8 +45,8 @@ export function HomePage() {
                 </svg>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-white mb-1">Profile</h3>
-                <p className="text-gray-400 text-sm">View and edit your account information</p>
+                <h3 className="text-xl font-semibold text-white mb-1">{t('dashboard.cards.profile.title')}</h3>
+                <p className="text-gray-400 text-sm">{t('dashboard.cards.profile.description')}</p>
               </div>
             </div>
           </Card>
@@ -60,8 +62,8 @@ export function HomePage() {
                 </svg>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-white mb-1">Calculator</h3>
-                <p className="text-gray-400 text-sm">Calculate your mortgage using the French method</p>
+                <h3 className="text-xl font-semibold text-white mb-1">{t('dashboard.cards.calculator.title')}</h3>
+                <p className="text-gray-400 text-sm">{t('dashboard.cards.calculator.description')}</p>
               </div>
             </div>
           </Card>
@@ -77,8 +79,8 @@ export function HomePage() {
                 </svg>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-white mb-1">History</h3>
-                <p className="text-gray-400 text-sm">View and manage your mortgage calculations</p>
+                <h3 className="text-xl font-semibold text-white mb-1">{t('dashboard.cards.history.title')}</h3>
+                <p className="text-gray-400 text-sm">{t('dashboard.cards.history.description')}</p>
               </div>
             </div>
           </Card>
