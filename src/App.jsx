@@ -3,6 +3,9 @@ import { LoginPage } from './iam/presentation/pages/LoginPage';
 import { RegisterPage } from './iam/presentation/pages/RegisterPage';
 import { HomePage } from './pages/HomePage';
 import { ProfilePage } from './pages/ProfilePage';
+import MortgageCalculatorPage from './mortgage/pages/MortgageCalculatorPage';
+import MortgageHistoryPage from './mortgage/pages/MortgageHistoryPage';
+import MortgageDetailPage from './mortgage/pages/MortgageDetailPage';
 import { authService } from './iam/application/auth-service';
 
 function PrivateRoute({ children }) {
@@ -28,6 +31,30 @@ function App() {
           element={
             <PrivateRoute>
               <ProfilePage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/mortgage/calculator"
+          element={
+            <PrivateRoute>
+              <MortgageCalculatorPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/mortgage/history"
+          element={
+            <PrivateRoute>
+              <MortgageHistoryPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/mortgage/:id"
+          element={
+            <PrivateRoute>
+              <MortgageDetailPage />
             </PrivateRoute>
           }
         />

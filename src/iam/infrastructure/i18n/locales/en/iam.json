@@ -1,0 +1,68 @@
+{
+  "auth": {
+    "login": {
+      "title": "Sign In",
+      "subtitle": "Access your financial dashboard",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign In",
+      "forgotPassword": "Forgot your password?",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create one here"
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Join our financial platform",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "submit": "Create Account",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in here"
+    },
+    "validation": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email address",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least 8 characters",
+      "firstNameRequired": "First name is required",
+      "lastNameRequired": "Last name is required",
+      "confirmPasswordRequired": "Please confirm your password",
+      "passwordMismatch": "Passwords do not match"
+    },
+    "errors": {
+      "loginFailed": "Invalid email or password",
+      "registerFailed": "Failed to create account",
+      "networkError": "Network error. Please try again.",
+      "serverError": "Server error. Please try again later."
+    },
+    "success": {
+      "accountCreated": "Account created successfully",
+      "loginSuccess": "Welcome back!"
+    }
+  },
+  "profile": {
+    "title": "Profile Settings",
+    "userInfo": {
+      "title": "User Information",
+      "fullName": "Full Name",
+      "email": "Email",
+      "accountCreated": "Account Created"
+    },
+    "updateProfile": {
+      "title": "Update Profile",
+      "email": "Email",
+      "emailPlaceholder": "Enter new email",
+      "newPassword": "New Password",
+      "passwordPlaceholder": "Leave blank to keep current password",
+      "submit": "Update Profile",
+      "updating": "Updating..."
+    },
+    "messages": {
+      "updateSuccess": "Profile updated successfully",
+      "updateFailed": "Update failed. Please try again."
+    }
+  }
+}
