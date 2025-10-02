@@ -4,6 +4,8 @@ import { authService } from '../iam/application/auth-service';
 import { Input } from '../shared/components/Input';
 import { Button } from '../shared/components/Button';
 import { Card } from '../shared/components/Card';
+import { Header } from '../shared/components/Header';
+import { Sidebar } from '../shared/components/Sidebar';
 
 export function ProfilePage() {
   const navigate = useNavigate();
@@ -56,29 +58,17 @@ export function ProfilePage() {
     }
   };
 
-  const handleLogout = () => {
-    authService.logout();
-    navigate('/login');
-  };
-
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-950 p-4">
-      <div className="max-w-4xl mx-auto pt-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-white">Profile Settings</h1>
-          <div className="flex gap-4">
-            <Button variant="outline" onClick={() => navigate('/home')}>
-              Back to Home
-            </Button>
-            <Button variant="secondary" onClick={handleLogout}>
-              Logout
-            </Button>
-          </div>
-        </div>
+    <div className="min-h-screen bg-gray-950">
+      <Sidebar />
+      <Header />
 
-        <div className="grid gap-6">
+      <main className="lg:ml-64 px-4 sm:px-6 lg:px-8 py-8">
+        <h1 className="text-3xl font-bold text-white mb-8">Profile Settings</h1>
+
+        <div className="grid gap-6 max-w-4xl">
           <Card>
             <h2 className="text-xl font-semibold text-white mb-6">User Information</h2>
             <div className="space-y-4">
@@ -87,8 +77,8 @@ export function ProfilePage() {
                 <p className="text-gray-200 mt-1">{user.full_name}</p>
               </div>
               <div>
-                <span className="text-sm text-gray-400">User ID</span>
-                <p className="text-gray-200 mt-1 font-mono text-sm">{user.id}</p>
+                <span className="text-sm text-gray-400">Email</span>
+                <p className="text-gray-200 mt-1">{user.email}</p>
               </div>
               <div>
                 <span className="text-sm text-gray-400">Account Created</span>
@@ -138,7 +128,7 @@ export function ProfilePage() {
             </form>
           </Card>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
