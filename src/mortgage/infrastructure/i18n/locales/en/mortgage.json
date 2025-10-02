@@ -8,7 +8,7 @@
       "interestRate": "Annual Interest Rate",
       "interestRatePlaceholder": "Enter the APR (%)",
       "loanTerm": "Loan Term",
-      "loanTermPlaceholder": "Enter term in years",
+      "loanTermPlaceholder": "Enter term in months",
       "downPayment": "Down Payment",
       "downPaymentPlaceholder": "Enter down payment amount",
       "propertyPrice": "Property Price",

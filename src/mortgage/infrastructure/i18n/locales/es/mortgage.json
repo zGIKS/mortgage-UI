@@ -15,7 +15,7 @@
       "interestRatePlaceholder": "Ingresa la TAE (%)",
       "rateType": "Tipo de Tasa",
       "loanTerm": "Plazo del Préstamo",
-      "loanTermPlaceholder": "Ingresa el plazo en años",
+      "loanTermPlaceholder": "Ingresa el plazo en meses",
       "gracePeriodMonths": "Período de Gracia (meses)",
       "gracePeriodMonthsPlaceholder": "Ingresa el período de gracia en meses",
       "gracePeriodType": "Tipo de Período de Gracia",
