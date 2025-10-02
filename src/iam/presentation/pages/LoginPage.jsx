@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { authService } from '../../application/auth-service';
 import { Input } from '../../../shared/components/Input';
 import { Button } from '../../../shared/components/Button';
 import { Card } from '../../../shared/components/Card';
+import { LanguageToggle } from '../../../shared/components/LanguageToggle';
 
 export function LoginPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation('iam');
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -31,7 +34,7 @@ export function LoginPage() {
       await authService.login(formData.email, formData.password);
       navigate('/home');
     } catch (err) {
-      setError(err.message || 'Login failed. Please try again.');
+      setError(err.message || t('auth.errors.loginFailed'));
     } finally {
       setLoading(false);
     }
@@ -39,30 +42,34 @@ export function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
+      <div className="absolute top-4 right-4">
+        <LanguageToggle />
+      </div>
+      
       <Card className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Welcome Back</h1>
-          <p className="text-gray-400">Sign in to your account</p>
+          <h1 className="text-3xl font-bold text-white mb-2">{t('auth.login.title')}</h1>
+          <p className="text-gray-400">{t('auth.login.subtitle')}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <Input
-            label="Email"
+            label={t('auth.login.email')}
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
-            placeholder="Enter your email"
+            placeholder={t('auth.login.email')}
             required
           />
 
           <Input
-            label="Password"
+            label={t('auth.login.password')}
             type="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
-            placeholder="Enter your password"
+            placeholder={t('auth.login.password')}
             required
           />
 
@@ -73,13 +80,13 @@ export function LoginPage() {
           )}
 
           <Button type="submit" disabled={loading} className="w-full">
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? t('shared:common.loading') : t('auth.login.submit')}
           </Button>
 
           <p className="text-center text-gray-400 text-sm">
-            Don't have an account?{' '}
+            {t('auth.login.noAccount')}{' '}
             <Link to="/register" className="text-blue-500 hover:text-blue-400 font-medium">
-              Sign up
+              {t('auth.login.createAccount')}
             </Link>
           </p>
         </form>
