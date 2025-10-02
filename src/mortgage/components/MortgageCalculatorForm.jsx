@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Input } from '../../shared/components/Input';
 import { Button } from '../../shared/components/Button';
 
-const MortgageCalculatorForm = ({ onCalculate, loading }) => {
-  const [formData, setFormData] = useState({
+const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
+  const [formData, setFormData] = useState(initialData || {
     property_price: '',
     down_payment: '',
     loan_amount: '',
@@ -166,7 +166,7 @@ const MortgageCalculatorForm = ({ onCalculate, loading }) => {
 
       <div className="flex justify-end">
         <Button type="submit" disabled={loading}>
-          {loading ? 'Calculating...' : 'Calculate Mortgage'}
+          {loading ? (initialData ? 'Updating...' : 'Calculating...') : (initialData ? 'Update Mortgage' : 'Calculate Mortgage')}
         </Button>
       </div>
     </form>
