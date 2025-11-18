@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { LogOut } from 'lucide-react';
 import { authService } from '../../iam/application/auth-service';
-import { Button } from './Button';
+import { Button } from '@/components/ui/button';
 import { LanguageToggle } from './LanguageToggle';
 
 export function Header() {
@@ -15,15 +16,21 @@ export function Header() {
   };
 
   return (
-    <header className="bg-gray-900 border-b border-gray-800 lg:ml-64 sticky top-0 z-10">
-      <div className="px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center gap-4 ml-14 lg:ml-0">
-            <span className="text-gray-400">{t('header.hello', { name: user?.full_name })}</span>
+    <header className="sticky top-0 z-30 border-b border-border/60 bg-background/80 backdrop-blur lg:left-72 lg:w-[calc(100%-18rem)]">
+      <div className="px-4 sm:px-6 lg:px-10">
+        <div className="flex h-16 items-center justify-between">
+          <div className="flex flex-col gap-0.5">
+            <span className="text-base font-semibold tracking-tight text-white">
+              {t('header.brand')}
+            </span>
+            <p className="text-sm text-white/70">
+              {t('header.hello', { name: user?.full_name })}
+            </p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <LanguageToggle />
-            <Button variant="secondary" onClick={handleLogout}>
+            <Button variant="secondary" size="sm" className="gap-2" onClick={handleLogout}>
+              <LogOut className="h-4 w-4" aria-hidden />
               {t('header.logout')}
             </Button>
           </div>

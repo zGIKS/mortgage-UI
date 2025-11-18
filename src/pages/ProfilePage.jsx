@@ -2,20 +2,19 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { authService } from '../iam/application/auth-service';
-import { Input } from '../shared/components/Input';
-import { Button } from '../shared/components/Button';
-import { Card } from '../shared/components/Card';
 import { Header } from '../shared/components/Header';
 import { Sidebar } from '../shared/components/Sidebar';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export function ProfilePage() {
   const navigate = useNavigate();
   const { t } = useTranslation('iam');
   const [user, setUser] = useState(null);
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
@@ -63,71 +62,83 @@ export function ProfilePage() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen bg-background">
       <Sidebar />
       <Header />
 
-      <main className="lg:ml-64 px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-3xl font-bold text-white mb-8">{t('profile.title')}</h1>
+      <main className="lg:ml-72 px-4 sm:px-6 lg:px-10 py-10 space-y-8">
+        <h1 className="text-3xl font-semibold text-foreground">{t('profile.title')}</h1>
 
-        <div className="grid gap-6 max-w-4xl">
-          <Card>
-            <h2 className="text-xl font-semibold text-white mb-6">{t('profile.userInfo.title')}</h2>
-            <div className="space-y-4">
+        <div className="grid gap-8 lg:grid-cols-2">
+          <Card className="border-border/70 bg-card/90">
+            <CardHeader>
+              <CardTitle>{t('profile.userInfo.title')}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4 text-sm">
               <div>
-                <span className="text-sm text-gray-400">{t('profile.userInfo.fullName')}</span>
-                <p className="text-gray-200 mt-1">{user.full_name}</p>
+                <p className="text-muted-foreground">{t('profile.userInfo.fullName')}</p>
+                <p className="text-base font-medium text-foreground">{user.full_name}</p>
               </div>
               <div>
-                <span className="text-sm text-gray-400">{t('profile.userInfo.email')}</span>
-                <p className="text-gray-200 mt-1">{user.email}</p>
+                <p className="text-muted-foreground">{t('profile.userInfo.email')}</p>
+                <p className="text-base font-medium text-foreground">{user.email}</p>
               </div>
               <div>
-                <span className="text-sm text-gray-400">{t('profile.userInfo.accountCreated')}</span>
-                <p className="text-gray-200 mt-1">
+                <p className="text-muted-foreground">{t('profile.userInfo.accountCreated')}</p>
+                <p className="text-base font-medium text-foreground">
                   {new Date(user.created_at).toLocaleDateString()}
                 </p>
               </div>
-            </div>
+            </CardContent>
           </Card>
 
-          <Card>
-            <h2 className="text-xl font-semibold text-white mb-6">{t('profile.updateProfile.title')}</h2>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <Input
-                label={t('profile.updateProfile.email')}
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder={t('profile.updateProfile.emailPlaceholder')}
-              />
-
-              <Input
-                label={t('profile.updateProfile.newPassword')}
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder={t('profile.updateProfile.passwordPlaceholder')}
-              />
-
-              {error && (
-                <div className="bg-red-900/20 border border-red-900 text-red-400 px-4 py-3 rounded-lg">
-                  {error}
+          <Card className="border-border/70 bg-card/90">
+            <CardHeader>
+              <CardTitle>{t('profile.updateProfile.title')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="email">{t('profile.updateProfile.email')}</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder={t('profile.updateProfile.emailPlaceholder')}
+                  />
                 </div>
-              )}
 
-              {success && (
-                <div className="bg-green-900/20 border border-green-900 text-green-400 px-4 py-3 rounded-lg">
-                  {success}
+                <div className="space-y-2">
+                  <Label htmlFor="password">{t('profile.updateProfile.newPassword')}</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder={t('profile.updateProfile.passwordPlaceholder')}
+                  />
                 </div>
-              )}
 
-              <Button type="submit" disabled={loading}>
-                {loading ? t('profile.updateProfile.updating') : t('profile.updateProfile.submit')}
-              </Button>
-            </form>
+                {error && (
+                  <Alert variant="destructive">
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
+
+                {success && (
+                  <Alert>
+                    <AlertDescription>{success}</AlertDescription>
+                  </Alert>
+                )}
+
+                <Button type="submit" disabled={loading} className="w-full">
+                  {loading ? t('shared:common.loading') : t('profile.updateProfile.submit')}
+                </Button>
+              </form>
+            </CardContent>
           </Card>
         </div>
       </main>

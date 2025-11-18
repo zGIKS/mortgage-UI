@@ -2,9 +2,12 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { mortgageService } from '../api/mortgageService';
-import { Button } from '../../shared/components/Button';
 import { Header } from '../../shared/components/Header';
 import { Sidebar } from '../../shared/components/Sidebar';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
 
 const MortgageHistoryPage = () => {
   const { t } = useTranslation('mortgage');
@@ -13,26 +16,22 @@ const MortgageHistoryPage = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat('en-US', {
+  const formatCurrency = (value) =>
+    new Intl.NumberFormat('en-US', {
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     }).format(value);
-  };
 
-  const formatPercentage = (value) => {
-    return (value * 100).toFixed(4);
-  };
+  const formatPercentage = (value) => (value * 100).toFixed(4);
 
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+  const formatDate = (dateString) =>
+    new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
-  };
 
   const fetchHistory = async () => {
     setLoading(true);
@@ -69,121 +68,118 @@ const MortgageHistoryPage = () => {
     fetchHistory();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-950">
-        <Sidebar />
-        <Header />
-        <main className="lg:ml-64 px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex items-center justify-center h-64">
-            <div className="text-gray-400">{t('shared:common.loading')}</div>
-          </div>
-        </main>
-      </div>
-    );
-  }
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <div className="flex h-64 items-center justify-center">
+          <span className="text-muted-foreground">{t('shared:common.loading')}</span>
+        </div>
+      );
+    }
 
-  if (error) {
+    if (error) {
+      return (
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      );
+    }
+
+    if (history.length === 0) {
+      return (
+        <Card className="border-dashed border-border/60 bg-card/50 text-center">
+          <CardContent className="py-12">
+            <p className="text-muted-foreground">{t('history.empty')}</p>
+            <Button className="mt-4" onClick={() => navigate('/mortgage/calculator')}>
+              {t('history.emptySubtitle')}
+            </Button>
+          </CardContent>
+        </Card>
+      );
+    }
+
     return (
-      <div className="min-h-screen bg-gray-950">
-        <Sidebar />
-        <Header />
-        <main className="lg:ml-64 px-4 sm:px-6 lg:px-8 py-8">
-          <div className="bg-red-900/20 border border-red-800 rounded-lg p-4">
-            <p className="text-red-400">{error}</p>
-          </div>
-        </main>
+      <div className="grid gap-6">
+        {history.map((item) => (
+          <Card key={item.id} className="border-border/70 bg-card/90">
+            <CardHeader className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <CardTitle>{t('history.card.calculationNumber', { number: item.id })}</CardTitle>
+                <p className="text-sm text-muted-foreground">{formatDate(item.created_at)}</p>
+              </div>
+              <Badge variant="secondary" className="w-fit">
+                {item.currency}
+              </Badge>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid gap-4 text-sm sm:grid-cols-2 lg:grid-cols-3">
+                <div>
+                  <p className="text-muted-foreground">{t('history.card.propertyPrice')}</p>
+                  <p className="font-semibold text-foreground">
+                    {item.currency} {formatCurrency(item.property_price)}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">{t('history.card.loanAmount')}</p>
+                  <p className="font-semibold text-foreground">
+                    {item.currency} {formatCurrency(item.loan_amount)}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">{t('history.card.fixedInstallment')}</p>
+                  <p className="font-semibold text-foreground">
+                    {item.currency} {formatCurrency(item.fixed_installment)}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">{t('history.card.term')}</p>
+                  <p className="font-semibold text-foreground">
+                    {t('history.card.termMonths', { months: item.term_months })}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">{t('history.card.tcea')}</p>
+                  <p className="font-semibold text-foreground">
+                    {formatPercentage(item.tcea)}%
+                  </p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">{t('history.card.created')}</p>
+                  <p className="font-semibold text-foreground">{formatDate(item.created_at)}</p>
+                </div>
+              </div>
+              <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+                <Button variant="outline" onClick={() => handleView(item.id)}>
+                  {t('history.actions.view')}
+                </Button>
+                <Button variant="ghost" className="text-destructive hover:text-destructive" onClick={() => handleDelete(item.id)}>
+                  {t('history.actions.delete')}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
     );
-  }
+  };
 
   return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen bg-background">
       <Sidebar />
       <Header />
 
-      <main className="lg:ml-64 px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
+      <main className="lg:ml-72 px-4 sm:px-6 lg:px-10 py-10 space-y-8">
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-white">{t('history.title')}</h1>
-            <p className="mt-2 text-gray-400">{t('history.subtitle')}</p>
+            <p className="text-sm text-muted-foreground">{t('history.subtitle')}</p>
+            <h1 className="text-3xl font-semibold text-foreground">{t('history.title')}</h1>
           </div>
-          <div className="mt-4 md:mt-0">
-            <Button onClick={() => navigate('/mortgage/calculator')}>
-              {t('history.createNew')}
-            </Button>
-          </div>
+          <Button onClick={() => navigate('/mortgage/calculator')}>
+            {t('history.createNew')}
+          </Button>
         </div>
 
-        {history.length === 0 ? (
-          <div className="bg-gray-900 border border-gray-800 rounded-lg p-12 text-center">
-            <p className="text-gray-400 mb-4">{t('history.empty')}</p>
-            <Button onClick={() => navigate('/mortgage/calculator')}>
-              {t('history.emptySubtitle')}
-            </Button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-6">
-            {history.map((item) => (
-              <div key={item.id} className="bg-gray-900 border border-gray-800 rounded-lg p-6 hover:border-gray-700 transition-colors">
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center mb-4">
-                      <h3 className="text-lg font-semibold text-white">
-                        {t('history.card.calculationNumber', { number: item.id })}
-                      </h3>
-                      <span className="ml-3 inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-900/30 text-blue-400 border border-blue-800">
-                        {item.currency}
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                      <div>
-                        <p className="text-gray-400">{t('history.card.propertyPrice')}</p>
-                        <p className="font-semibold text-white">{item.currency} {formatCurrency(item.property_price)}</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-400">{t('history.card.loanAmount')}</p>
-                        <p className="font-semibold text-white">{item.currency} {formatCurrency(item.loan_amount)}</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-400">{t('history.card.term')}</p>
-                        <p className="font-semibold text-white">{t('history.card.termMonths', { months: item.term_months })}</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-400">{t('history.card.fixedInstallment')}</p>
-                        <p className="font-semibold text-white">{item.currency} {formatCurrency(item.fixed_installment)}</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-400">{t('history.card.tcea')}</p>
-                        <p className="font-semibold text-white">{formatPercentage(item.tcea)}%</p>
-                      </div>
-                      <div className="col-span-2 md:col-span-3">
-                        <p className="text-gray-400">{t('history.card.created')}</p>
-                        <p className="font-semibold text-white">{formatDate(item.created_at)}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-4 lg:mt-0 lg:ml-6 flex flex-row lg:flex-col gap-2">
-                    <Button
-                      onClick={() => handleView(item.id)}
-                      className="flex-1 lg:flex-none"
-                    >
-                      {t('history.actions.view')}
-                    </Button>
-                    <button
-                      onClick={() => handleDelete(item.id)}
-                      className="flex-1 lg:flex-none px-4 py-2 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-900/20 border border-red-800 rounded-lg transition-colors"
-                    >
-                      {t('history.actions.delete')}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        {renderContent()}
       </main>
     </div>
   );

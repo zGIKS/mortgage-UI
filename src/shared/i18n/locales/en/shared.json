@@ -48,6 +48,7 @@
     }
   },
   "header": {
+    "brand": "Mi Vivienda",
     "hello": "Hello, {{name}}",
     "logout": "Logout",
     "language": "Language"

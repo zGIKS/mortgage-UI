@@ -1,7 +1,15 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Input } from '../../shared/components/Input';
-import { Button } from '../../shared/components/Button';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from '@/components/ui/select';
 
 const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
   const { t } = useTranslation('mortgage');
@@ -49,137 +57,185 @@ const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Input
-          label={t('calculator.form.propertyPrice')}
-          type="number"
-          name="property_price"
-          value={formData.property_price}
-          onChange={handleChange}
-          placeholder={t('calculator.form.propertyPricePlaceholder')}
-          required
-          step="0.01"
-        />
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="property_price">{t('calculator.form.propertyPrice')}</Label>
+          <Input
+            id="property_price"
+            type="number"
+            name="property_price"
+            value={formData.property_price}
+            onChange={handleChange}
+            placeholder={t('calculator.form.propertyPricePlaceholder')}
+            required
+            step="0.01"
+          />
+        </div>
 
-        <Input
-          label={t('calculator.form.downPayment')}
-          type="number"
-          name="down_payment"
-          value={formData.down_payment}
-          onChange={handleChange}
-          placeholder={t('calculator.form.downPaymentPlaceholder')}
-          required
-          step="0.01"
-        />
+        <div className="space-y-2">
+          <Label htmlFor="down_payment">{t('calculator.form.downPayment')}</Label>
+          <Input
+            id="down_payment"
+            type="number"
+            name="down_payment"
+            value={formData.down_payment}
+            onChange={handleChange}
+            placeholder={t('calculator.form.downPaymentPlaceholder')}
+            required
+            step="0.01"
+          />
+        </div>
 
-        <Input
-          label={t('calculator.form.loanAmount')}
-          type="number"
-          name="loan_amount"
-          value={formData.loan_amount}
-          onChange={handleChange}
-          placeholder={t('calculator.form.loanAmountPlaceholder')}
-          required
-          step="0.01"
-        />
+        <div className="space-y-2">
+          <Label htmlFor="loan_amount">{t('calculator.form.loanAmount')}</Label>
+          <Input
+            id="loan_amount"
+            type="number"
+            name="loan_amount"
+            value={formData.loan_amount}
+            onChange={handleChange}
+            placeholder={t('calculator.form.loanAmountPlaceholder')}
+            required
+            step="0.01"
+          />
+        </div>
 
-        <Input
-          label={t('calculator.form.bonusTechoPropio')}
-          type="number"
-          name="bono_techo_propio"
-          value={formData.bono_techo_propio}
-          onChange={handleChange}
-          placeholder={t('calculator.form.bonusTechoPropioPlaceholder')}
-          step="0.01"
-        />
+        <div className="space-y-2">
+          <Label htmlFor="bono_techo_propio">{t('calculator.form.bonusTechoPropio')}</Label>
+          <Input
+            id="bono_techo_propio"
+            type="number"
+            name="bono_techo_propio"
+            value={formData.bono_techo_propio}
+            onChange={handleChange}
+            placeholder={t('calculator.form.bonusTechoPropioPlaceholder')}
+            step="0.01"
+          />
+        </div>
 
-        <Input
-          label={t('calculator.form.interestRate')}
-          type="number"
-          name="interest_rate"
-          value={formData.interest_rate}
-          onChange={handleChange}
-          placeholder={t('calculator.form.interestRatePlaceholder')}
-          required
-          step="0.01"
-        />
+        <div className="space-y-2">
+          <Label htmlFor="interest_rate">{t('calculator.form.interestRate')}</Label>
+          <Input
+            id="interest_rate"
+            type="number"
+            name="interest_rate"
+            value={formData.interest_rate}
+            onChange={handleChange}
+            placeholder={t('calculator.form.interestRatePlaceholder')}
+            required
+            step="0.01"
+          />
+        </div>
 
-        <div className="flex flex-col">
-          <label className="text-sm font-medium text-gray-300 mb-1">{t('calculator.form.rateType')}</label>
-          <select
-            name="rate_type"
+        <div className="space-y-2">
+          <Label htmlFor="rate_type">{t('calculator.form.rateType')}</Label>
+          <Select
             value={formData.rate_type}
-            onChange={handleChange}
-            className="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+            onValueChange={(value) => setFormData((prev) => ({ ...prev, rate_type: value }))}
           >
-            <option value="NOMINAL">{t('calculator.form.options.rateTypes.nominal')}</option>
-            <option value="EFFECTIVE">{t('calculator.form.options.rateTypes.effective')}</option>
-          </select>
+            <SelectTrigger id="rate_type">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="NOMINAL">
+                {t('calculator.form.options.rateTypes.nominal')}
+              </SelectItem>
+              <SelectItem value="EFFECTIVE">
+                {t('calculator.form.options.rateTypes.effective')}
+              </SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
-        <Input
-          label={t('calculator.form.loanTerm')}
-          type="number"
-          name="term_months"
-          value={formData.term_months}
-          onChange={handleChange}
-          placeholder={t('calculator.form.loanTermPlaceholder')}
-          required
-        />
+        <div className="space-y-2">
+          <Label htmlFor="term_months">{t('calculator.form.loanTerm')}</Label>
+          <Input
+            id="term_months"
+            type="number"
+            name="term_months"
+            value={formData.term_months}
+            onChange={handleChange}
+            placeholder={t('calculator.form.loanTermPlaceholder')}
+            required
+          />
+        </div>
 
-        <Input
-          label={t('calculator.form.gracePeriodMonths')}
-          type="number"
-          name="grace_period_months"
-          value={formData.grace_period_months}
-          onChange={handleChange}
-          placeholder={t('calculator.form.gracePeriodMonthsPlaceholder')}
-        />
+        <div className="space-y-2">
+          <Label htmlFor="grace_period_months">{t('calculator.form.gracePeriodMonths')}</Label>
+          <Input
+            id="grace_period_months"
+            type="number"
+            name="grace_period_months"
+            value={formData.grace_period_months}
+            onChange={handleChange}
+            placeholder={t('calculator.form.gracePeriodMonthsPlaceholder')}
+          />
+        </div>
 
-        <div className="flex flex-col">
-          <label className="text-sm font-medium text-gray-300 mb-1">{t('calculator.form.gracePeriodType')}</label>
-          <select
-            name="grace_period_type"
+        <div className="space-y-2">
+          <Label htmlFor="grace_period_type">{t('calculator.form.gracePeriodType')}</Label>
+          <Select
             value={formData.grace_period_type}
-            onChange={handleChange}
-            className="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+            onValueChange={(value) => setFormData((prev) => ({ ...prev, grace_period_type: value }))}
           >
-            <option value="NONE">{t('calculator.form.options.gracePeriodTypes.none')}</option>
-            <option value="TOTAL">{t('calculator.form.options.gracePeriodTypes.total')}</option>
-            <option value="PARTIAL">{t('calculator.form.options.gracePeriodTypes.partial')}</option>
-          </select>
+            <SelectTrigger id="grace_period_type">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="NONE">
+                {t('calculator.form.options.gracePeriodTypes.none')}
+              </SelectItem>
+              <SelectItem value="TOTAL">
+                {t('calculator.form.options.gracePeriodTypes.total')}
+              </SelectItem>
+              <SelectItem value="PARTIAL">
+                {t('calculator.form.options.gracePeriodTypes.partial')}
+              </SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
-        <div className="flex flex-col">
-          <label className="text-sm font-medium text-gray-300 mb-1">{t('calculator.form.currency')}</label>
-          <select
-            name="currency"
+        <div className="space-y-2">
+          <Label htmlFor="currency">{t('calculator.form.currency')}</Label>
+          <Select
             value={formData.currency}
-            onChange={handleChange}
-            className="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+            onValueChange={(value) => setFormData((prev) => ({ ...prev, currency: value }))}
           >
-            <option value="PEN">{t('calculator.form.options.currencies.pen')}</option>
-            <option value="USD">{t('calculator.form.options.currencies.usd')}</option>
-          </select>
+            <SelectTrigger id="currency">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="PEN">
+                {t('calculator.form.options.currencies.pen')}
+              </SelectItem>
+              <SelectItem value="USD">
+                {t('calculator.form.options.currencies.usd')}
+              </SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
-        <Input
-          label={t('calculator.form.npvDiscountRate')}
-          type="number"
-          name="npv_discount_rate"
-          value={formData.npv_discount_rate}
-          onChange={handleChange}
-          placeholder={t('calculator.form.npvDiscountRatePlaceholder')}
-          step="0.01"
-        />
+        <div className="space-y-2">
+          <Label htmlFor="npv_discount_rate">{t('calculator.form.npvDiscountRate')}</Label>
+          <Input
+            id="npv_discount_rate"
+            type="number"
+            name="npv_discount_rate"
+            value={formData.npv_discount_rate}
+            onChange={handleChange}
+            placeholder={t('calculator.form.npvDiscountRatePlaceholder')}
+            step="0.01"
+          />
+        </div>
       </div>
 
       <div className="flex justify-end">
         <Button type="submit" disabled={loading}>
-          {loading 
+          {loading
             ? t('shared:common.loading')
-            : (initialData ? t('shared:common.save') : t('calculator.form.calculate'))
-          }
+            : initialData
+            ? t('shared:common.save')
+            : t('calculator.form.calculate')}
         </Button>
       </div>
     </form>
