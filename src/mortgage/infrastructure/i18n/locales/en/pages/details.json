@@ -1,0 +1,47 @@
+{
+  "title": "Mortgage Calculation #{{id}}",
+  "subtitle": "Complete analysis of your mortgage calculation",
+  "createdOn": "Created on {{date}}",
+  "loanInfo": "Loan Information",
+  "paymentInfo": "Payment Information",
+  "amortizationSchedule": "Payment Schedule",
+  "exportOptions": "Export Options",
+  "exportPdf": "Export as PDF",
+  "exportExcel": "Export as Excel",
+  "shareCalculation": "Share Calculation",
+  "edit": "Edit",
+  "delete": "Delete",
+  "cancel": "Cancel",
+  "back": "Back",
+  "backToHistory": "Back to History",
+  "editTitle": "Edit Mortgage Calculation",
+  "summaryTitle": "Calculation Summary",
+  "confirmDelete": "Are you sure you want to delete this calculation?",
+  "fields": {
+    "propertyPrice": "Property Price:",
+    "downPayment": "Down Payment:",
+    "loanAmount": "Loan Amount:",
+    "bonusTechoPropio": "Bono Techo Propio:",
+    "interestRate": "Interest Rate:",
+    "gracePeriod": "Grace Period:",
+    "gracePeriodNone": "None",
+    "gracePeriodValue": "{{months}} months ({{type}})",
+    "termMonths": "{{months}} months"
+  },
+  "metrics": {
+    "fixedInstallment": "Fixed Installment",
+    "principalFinanced": "Principal Financed",
+    "totalInterestPaid": "Total Interest Paid",
+    "totalPaid": "Total Paid",
+    "tcea": "TCEA",
+    "periodicRate": "Periodic Rate",
+    "irr": "IRR",
+    "npv": "NPV",
+    "term": "Term"
+  },
+  "messages": {
+    "loadingError": "Failed to fetch mortgage details",
+    "updateError": "Failed to update mortgage",
+    "deleteError": "Failed to delete calculation"
+  }
+}

@@ -1,13 +1,13 @@
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
 const MortgageHistoryCard = ({ title, subtitle, currency, fields = [], actions }) => (
-  <Card className="border-border/70 bg-card/90">
-    <CardHeader className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+  <Card>
+    <CardHeader className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
       <div>
         <CardTitle>{title}</CardTitle>
-        {subtitle && <p className="text-sm text-muted-foreground">{subtitle}</p>}
+        {subtitle && <CardDescription>{subtitle}</CardDescription>}
       </div>
       {currency && (
         <Badge variant="secondary" className="w-fit">

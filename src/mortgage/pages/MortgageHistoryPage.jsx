@@ -25,14 +25,14 @@ const MortgageHistoryPage = () => {
       const data = await mortgageService.getMortgageHistory(50, 0);
       setHistory(data);
     } catch (err) {
-      setError(err?.message || t('history.messages.loadingError'));
+      setError(err?.message || t('pages.history.messages.loadingError'));
     } finally {
       setLoading(false);
     }
   }, [t]);
 
   const handleDelete = async (id) => {
-    if (!window.confirm(t('history.confirmDelete'))) {
+    if (!window.confirm(t('pages.history.confirmDelete'))) {
       return;
     }
 
@@ -40,7 +40,7 @@ const MortgageHistoryPage = () => {
       await mortgageService.deleteMortgage(id);
       fetchHistory();
     } catch (err) {
-      alert(t('history.messages.deleteFailed') + ': ' + (err?.message || 'Unknown error'));
+      alert(t('pages.history.messages.deleteFailed') + ': ' + (err?.message || 'Unknown error'));
     }
   };
 
@@ -71,11 +71,11 @@ const MortgageHistoryPage = () => {
 
     if (history.length === 0) {
       return (
-        <Card className="border-dashed border-border/60 bg-card/50 text-center">
-          <CardContent className="py-12">
-            <p className="text-muted-foreground">{t('history.empty')}</p>
-            <Button className="mt-4" onClick={() => navigate('/mortgage/calculator')}>
-              {t('history.emptySubtitle')}
+        <Card>
+          <CardContent className="flex flex-col items-center gap-4 py-12 text-center">
+            <p className="text-muted-foreground">{t('pages.history.empty')}</p>
+            <Button onClick={() => navigate('/mortgage/calculator')}>
+              {t('pages.history.emptySubtitle')}
             </Button>
           </CardContent>
         </Card>
@@ -87,43 +87,43 @@ const MortgageHistoryPage = () => {
         {history.map((item) => (
           <MortgageHistoryCard
             key={item.id}
-            title={t('history.card.calculationNumber', { number: item.id })}
+            title={t('pages.history.card.calculationNumber', { number: item.id })}
             subtitle={formatDate(item.created_at)}
             currency={item.currency}
             fields={[
               {
-                label: t('history.card.propertyPrice'),
+                label: t('pages.history.card.propertyPrice'),
                 value: formatCurrency(item.property_price, item.currency),
               },
               {
-                label: t('history.card.loanAmount'),
+                label: t('pages.history.card.loanAmount'),
                 value: formatCurrency(item.loan_amount, item.currency),
               },
               {
-                label: t('history.card.fixedInstallment'),
+                label: t('pages.history.card.fixedInstallment'),
                 value: formatCurrency(item.fixed_installment, item.currency),
               },
               {
-                label: t('history.card.term'),
-                value: t('history.card.termMonths', { months: item.term_months }),
+                label: t('pages.history.card.term'),
+                value: t('pages.history.card.termMonths', { months: item.term_months }),
               },
               {
-                label: t('history.card.tcea'),
+                label: t('pages.history.card.tcea'),
                 value: formatPercentageString(item.tcea, { fromDecimal: true }),
               },
               {
-                label: t('history.card.created'),
+                label: t('pages.history.card.created'),
                 value: formatDate(item.created_at),
               },
             ]}
             actions={[
               {
-                label: t('history.actions.view'),
+                label: t('pages.history.actions.view'),
                 variant: 'outline',
                 onClick: () => handleView(item.id),
               },
               {
-                label: t('history.actions.delete'),
+                label: t('pages.history.actions.delete'),
                 variant: 'ghost',
                 className: 'text-destructive hover:text-destructive',
                 onClick: () => handleDelete(item.id),
@@ -137,10 +137,10 @@ const MortgageHistoryPage = () => {
 
   return (
     <MortgagePageLayout
-      title={t('history.title')}
-      subtitle={t('history.subtitle')}
+      title={t('pages.history.title')}
+      subtitle={t('pages.history.subtitle')}
       actions={
-        <Button onClick={() => navigate('/mortgage/calculator')}>{t('history.createNew')}</Button>
+        <Button onClick={() => navigate('/mortgage/calculator')}>{t('pages.history.createNew')}</Button>
       }
     >
       {renderContent()}

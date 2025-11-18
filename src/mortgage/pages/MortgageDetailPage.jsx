@@ -32,7 +32,7 @@ const MortgageDetailPage = () => {
       const data = await mortgageService.getMortgageById(id);
       setMortgage(data);
     } catch (err) {
-      setError(err?.message || t('details.messages.loadingError'));
+      setError(err?.message || t('pages.details.messages.loadingError'));
     } finally {
       setLoading(false);
     }
@@ -47,14 +47,14 @@ const MortgageDetailPage = () => {
       setMortgage(updatedData);
       setIsEditing(false);
     } catch (err) {
-      setError(err?.message || t('details.messages.updateError'));
+      setError(err?.message || t('pages.details.messages.updateError'));
     } finally {
       setUpdateLoading(false);
     }
   };
 
   const handleDelete = async () => {
-    if (!window.confirm(t('details.confirmDelete'))) {
+    if (!window.confirm(t('pages.details.confirmDelete'))) {
       return;
     }
 
@@ -62,7 +62,7 @@ const MortgageDetailPage = () => {
       await mortgageService.deleteMortgage(id);
       navigate('/mortgage/history');
     } catch (err) {
-      alert(t('details.messages.deleteError') + ': ' + (err?.message || 'Unknown error'));
+      alert(t('pages.details.messages.deleteError') + ': ' + (err?.message || 'Unknown error'));
     }
   };
 
@@ -87,7 +87,7 @@ const MortgageDetailPage = () => {
           <AlertDescription>{error}</AlertDescription>
         </Alert>
         <Button variant="outline" onClick={() => navigate('/mortgage/history')}>
-          {t('details.backToHistory')}
+          {t('pages.details.backToHistory')}
         </Button>
       </MortgagePageLayout>
     );
@@ -99,70 +99,70 @@ const MortgageDetailPage = () => {
 
   const metrics = [
     {
-      label: t('details.metrics.fixedInstallment'),
+      label: t('pages.details.metrics.fixedInstallment'),
       value: formatCurrency(mortgage.fixed_installment, mortgage.currency),
     },
     {
-      label: t('details.metrics.principalFinanced'),
+      label: t('pages.details.metrics.principalFinanced'),
       value: formatCurrency(mortgage.principal_financed, mortgage.currency),
     },
     {
-      label: t('details.metrics.totalInterestPaid'),
+      label: t('pages.details.metrics.totalInterestPaid'),
       value: formatCurrency(mortgage.total_interest_paid, mortgage.currency),
     },
     {
-      label: t('details.metrics.totalPaid'),
+      label: t('pages.details.metrics.totalPaid'),
       value: formatCurrency(mortgage.total_paid, mortgage.currency),
     },
     {
-      label: t('details.metrics.tcea'),
+      label: t('pages.details.metrics.tcea'),
       value: formatPercentageString(mortgage.tcea, { decimals: 6 }),
     },
     {
-      label: t('details.metrics.periodicRate'),
+      label: t('pages.details.metrics.periodicRate'),
       value: formatPercentageString(mortgage.periodic_rate, { decimals: 6 }),
     },
     {
-      label: t('details.metrics.irr'),
+      label: t('pages.details.metrics.irr'),
       value: formatPercentageString(mortgage.irr, { decimals: 6 }),
     },
     mortgage.npv !== 0 && {
-      label: t('details.metrics.npv'),
+      label: t('pages.details.metrics.npv'),
       value: formatCurrency(mortgage.npv, mortgage.currency),
     },
     {
-      label: t('details.metrics.term'),
-      value: t('details.fields.termMonths', { months: mortgage.term_months }),
+      label: t('pages.details.metrics.term'),
+      value: t('pages.details.fields.termMonths', { months: mortgage.term_months }),
     },
   ].filter(Boolean);
 
   const summaryDetails = [
     {
-      label: t('details.fields.propertyPrice'),
+      label: t('pages.details.fields.propertyPrice'),
       value: formatCurrency(mortgage.property_price, mortgage.currency),
     },
     {
-      label: t('details.fields.downPayment'),
+      label: t('pages.details.fields.downPayment'),
       value: formatCurrency(mortgage.down_payment, mortgage.currency),
     },
     {
-      label: t('details.fields.loanAmount'),
+      label: t('pages.details.fields.loanAmount'),
       value: formatCurrency(mortgage.loan_amount, mortgage.currency),
     },
     {
-      label: t('details.fields.bonusTechoPropio'),
+      label: t('pages.details.fields.bonusTechoPropio'),
       value: formatCurrency(mortgage.bono_techo_propio, mortgage.currency),
     },
     {
-      label: t('details.fields.interestRate'),
+      label: t('pages.details.fields.interestRate'),
       value: `${mortgage.interest_rate}% (${mortgage.rate_type})`,
     },
     {
-      label: t('details.fields.gracePeriod'),
+      label: t('pages.details.fields.gracePeriod'),
       value:
         mortgage.grace_period_type === 'NONE'
-          ? t('details.fields.gracePeriodNone')
-          : t('details.fields.gracePeriodValue', {
+          ? t('pages.details.fields.gracePeriodNone')
+          : t('pages.details.fields.gracePeriodValue', {
               months: mortgage.grace_period_months,
               type: mortgage.grace_period_type,
             }),
@@ -177,23 +177,23 @@ const MortgageDetailPage = () => {
           className="mb-2 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden />
-          {t('details.back')}
+          {t('pages.details.back')}
         </button>
         <h1 className="text-3xl font-semibold text-foreground">
-          {t('details.title', { id: mortgage.id })}
+          {t('pages.details.title', { id: mortgage.id })}
         </h1>
         <p className="text-sm text-muted-foreground">
-          {t('details.createdOn', { date: formatDate(mortgage.created_at) })}
+          {t('pages.details.createdOn', { date: formatDate(mortgage.created_at) })}
         </p>
       </div>
       <div className="flex gap-2">
         {!isEditing ? (
           <>
             <Button variant="outline" onClick={() => setIsEditing(true)}>
-              {t('details.edit')}
+              {t('pages.details.edit')}
             </Button>
             <Button variant="ghost" className="text-destructive" onClick={handleDelete}>
-              {t('details.delete')}
+              {t('pages.details.delete')}
             </Button>
           </>
         ) : (
@@ -204,7 +204,7 @@ const MortgageDetailPage = () => {
               setError(null);
             }}
           >
-            {t('details.cancel')}
+            {t('pages.details.cancel')}
           </Button>
         )}
       </div>
@@ -222,7 +222,7 @@ const MortgageDetailPage = () => {
       {isEditing ? (
         <Card className="border-border/70 bg-card/90">
           <CardHeader>
-            <CardTitle>{t('details.editTitle')}</CardTitle>
+            <CardTitle>{t('pages.details.editTitle')}</CardTitle>
           </CardHeader>
           <CardContent>
             <MortgageCalculatorForm
@@ -248,7 +248,7 @@ const MortgageDetailPage = () => {
         <>
           <Card className="border-border/70 bg-card/90">
             <CardHeader>
-              <CardTitle>{t('details.summaryTitle')}</CardTitle>
+              <CardTitle>{t('pages.details.summaryTitle')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <MetricsGrid metrics={metrics} />
@@ -258,7 +258,7 @@ const MortgageDetailPage = () => {
 
           <Card className="border-border/70 bg-card/90">
             <CardHeader>
-              <CardTitle>{t('details.amortizationSchedule')}</CardTitle>
+              <CardTitle>{t('pages.details.amortizationSchedule')}</CardTitle>
             </CardHeader>
             <CardContent>
               <PaymentScheduleTable schedule={mortgage.payment_schedule} />

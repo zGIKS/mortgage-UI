@@ -26,12 +26,12 @@ const PaymentScheduleTable = ({ schedule }) => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>{t('amortization.table.period')}</TableHead>
-            <TableHead className="text-right">{t('amortization.table.installment')}</TableHead>
-            <TableHead className="text-right">{t('amortization.table.interest')}</TableHead>
-            <TableHead className="text-right">{t('amortization.table.amortization')}</TableHead>
-            <TableHead className="text-right">{t('amortization.table.balance')}</TableHead>
-            <TableHead className="text-center">{t('amortization.table.gracePeriod')}</TableHead>
+            <TableHead>{t('pages.calculator.amortization.table.period')}</TableHead>
+            <TableHead className="text-right">{t('pages.calculator.amortization.table.installment')}</TableHead>
+            <TableHead className="text-right">{t('pages.calculator.amortization.table.interest')}</TableHead>
+            <TableHead className="text-right">{t('pages.calculator.amortization.table.amortization')}</TableHead>
+            <TableHead className="text-right">{t('pages.calculator.amortization.table.balance')}</TableHead>
+            <TableHead className="text-center">{t('pages.calculator.amortization.table.gracePeriod')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -44,10 +44,10 @@ const PaymentScheduleTable = ({ schedule }) => {
               <TableCell className="text-right">{formatCurrency(payment.remaining_balance)}</TableCell>
               <TableCell className="text-center">
                 {payment.is_grace_period ? (
-                  <Badge variant="secondary">{t('amortization.table.yes')}</Badge>
+                  <Badge variant="secondary">{t('pages.calculator.amortization.table.yes')}</Badge>
                 ) : (
                   <Badge variant="outline" className="text-muted-foreground">
-                    {t('amortization.table.none')}
+                    {t('pages.calculator.amortization.table.none')}
                   </Badge>
                 )}
               </TableCell>

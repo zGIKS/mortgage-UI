@@ -1,0 +1,47 @@
+{
+  "title": "Cálculo Hipotecario #{{id}}",
+  "subtitle": "Análisis completo de tu cálculo hipotecario",
+  "createdOn": "Creado el {{date}}",
+  "loanInfo": "Información del Préstamo",
+  "paymentInfo": "Información de Pagos",
+  "amortizationSchedule": "Cronograma de Pagos",
+  "exportOptions": "Opciones de Exportación",
+  "exportPdf": "Exportar como PDF",
+  "exportExcel": "Exportar como Excel",
+  "shareCalculation": "Compartir Cálculo",
+  "edit": "Editar",
+  "delete": "Eliminar",
+  "cancel": "Cancelar",
+  "back": "Volver",
+  "backToHistory": "Volver al Historial",
+  "editTitle": "Editar Cálculo Hipotecario",
+  "summaryTitle": "Resumen del Cálculo",
+  "confirmDelete": "¿Estás seguro de que quieres eliminar este cálculo?",
+  "fields": {
+    "propertyPrice": "Precio del Inmueble:",
+    "downPayment": "Cuota Inicial:",
+    "loanAmount": "Monto del Préstamo:",
+    "bonusTechoPropio": "Bono Techo Propio:",
+    "interestRate": "Tasa de Interés:",
+    "gracePeriod": "Período de Gracia:",
+    "gracePeriodNone": "Ninguno",
+    "gracePeriodValue": "{{months}} meses ({{type}})",
+    "termMonths": "{{months}} meses"
+  },
+  "metrics": {
+    "fixedInstallment": "Cuota Fija",
+    "principalFinanced": "Principal Financiado",
+    "totalInterestPaid": "Total de Intereses Pagados",
+    "totalPaid": "Total Pagado",
+    "tcea": "TCEA",
+    "periodicRate": "Tasa Periódica",
+    "irr": "TIR",
+    "npv": "VAN",
+    "term": "Plazo"
+  },
+  "messages": {
+    "loadingError": "Error al cargar los detalles de la hipoteca",
+    "updateError": "Error al actualizar la hipoteca",
+    "deleteError": "Error al eliminar el cálculo"
+  }
+}

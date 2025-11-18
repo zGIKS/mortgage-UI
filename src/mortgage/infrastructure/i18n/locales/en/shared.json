@@ -1,0 +1,40 @@
+{
+  "financial": {
+    "terms": {
+      "principal": "Principal",
+      "interest": "Interest",
+      "apr": "Annual Percentage Rate",
+      "apy": "Annual Percentage Yield",
+      "amortization": "Amortization",
+      "escrow": "Escrow",
+      "equity": "Equity",
+      "ltv": "Loan-to-Value",
+      "dti": "Debt-to-Income",
+      "pmi": "Private Mortgage Insurance",
+      "arm": "Adjustable Rate Mortgage",
+      "fixed": "Fixed Rate Mortgage",
+      "refinance": "Refinance",
+      "preapproval": "Pre-approval",
+      "underwriting": "Underwriting",
+      "closing": "Closing",
+      "origination": "Origination"
+    },
+    "currency": {
+      "format": "${{amount, number}}",
+      "percentage": "{{rate, number}}%"
+    }
+  },
+  "errors": {
+    "calculationFailed": "Failed to calculate mortgage",
+    "loadingError": "Error loading mortgage data",
+    "saveError": "Error saving mortgage calculation",
+    "deleteError": "Error deleting mortgage calculation",
+    "exportError": "Error exporting data",
+    "networkError": "Network connection error"
+  },
+  "success": {
+    "calculationSaved": "Mortgage calculation saved successfully",
+    "calculationDeleted": "Mortgage calculation deleted successfully",
+    "dataExported": "Data exported successfully"
+  }
+}

@@ -26,7 +26,7 @@ const MortgageCalculatorPage = () => {
       const data = await mortgageService.calculateMortgage(formData);
       setResult(data);
     } catch (err) {
-      setError(err?.message || t('errors.calculationFailed'));
+      setError(err?.message || t('shared.errors.calculationFailed'));
     } finally {
       setLoading(false);
     }
@@ -35,22 +35,22 @@ const MortgageCalculatorPage = () => {
   const summaryMetrics = result
     ? [
         {
-          label: t('calculator.results.monthlyPayment'),
+          label: t('pages.calculator.results.monthlyPayment'),
           value: formatCurrency(result.fixed_installment, result.currency),
           accent: 'text-chart-1',
         },
         {
-          label: t('financial.terms.principal'),
+          label: t('shared.financial.terms.principal'),
           value: formatCurrency(result.principal_financed, result.currency),
           accent: 'text-chart-2',
         },
         {
-          label: t('calculator.results.totalInterest'),
+          label: t('pages.calculator.results.totalInterest'),
           value: formatCurrency(result.total_interest_paid, result.currency),
           accent: 'text-chart-3',
         },
         {
-          label: t('calculator.results.totalCost'),
+          label: t('pages.calculator.results.totalCost'),
           value: formatCurrency(result.total_paid, result.currency),
           accent: 'text-chart-4',
         },
@@ -60,7 +60,7 @@ const MortgageCalculatorPage = () => {
           accent: 'text-chart-5',
         },
         {
-          label: t('details.metrics.periodicRate'),
+          label: t('pages.details.metrics.periodicRate'),
           value: formatPercentageString(result.periodic_rate, { fromDecimal: true }),
           accent: 'text-destructive',
         },
@@ -75,8 +75,8 @@ const MortgageCalculatorPage = () => {
           accent: 'text-chart-2',
         },
         {
-          label: t('details.metrics.term'),
-          value: t('history.card.termMonths', { months: result.term_months }),
+          label: t('pages.details.metrics.term'),
+          value: t('pages.history.card.termMonths', { months: result.term_months }),
           accent: 'text-accent-foreground',
         },
       ].filter(Boolean)
@@ -85,31 +85,31 @@ const MortgageCalculatorPage = () => {
   const loanDetails = result
     ? [
         {
-          label: t('details.fields.propertyPrice'),
+          label: t('pages.details.fields.propertyPrice'),
           value: formatCurrency(result.property_price, result.currency),
         },
         {
-          label: t('details.fields.downPayment'),
+          label: t('pages.details.fields.downPayment'),
           value: formatCurrency(result.down_payment, result.currency),
         },
         {
-          label: t('details.fields.loanAmount'),
+          label: t('pages.details.fields.loanAmount'),
           value: formatCurrency(result.loan_amount, result.currency),
         },
         {
-          label: t('details.fields.bonusTechoPropio'),
+          label: t('pages.details.fields.bonusTechoPropio'),
           value: formatCurrency(result.bono_techo_propio, result.currency),
         },
         {
-          label: t('details.fields.interestRate'),
+          label: t('pages.details.fields.interestRate'),
           value: `${result.interest_rate}% (${result.rate_type})`,
         },
         {
-          label: t('details.fields.gracePeriod'),
+          label: t('pages.details.fields.gracePeriod'),
           value:
             result.grace_period_type === 'NONE'
-              ? t('details.fields.gracePeriodNone')
-              : t('details.fields.gracePeriodValue', {
+              ? t('pages.details.fields.gracePeriodNone')
+              : t('pages.details.fields.gracePeriodValue', {
                   months: result.grace_period_months,
                   type: result.grace_period_type,
                 }),
@@ -118,11 +118,14 @@ const MortgageCalculatorPage = () => {
     : [];
 
   return (
-    <MortgagePageLayout title={t('calculator.title')} subtitle={t('calculator.subtitle')}>
+    <MortgagePageLayout
+      title={t('pages.calculator.title')}
+      subtitle={t('pages.calculator.subtitle')}
+    >
       <Card className="border-border/70 bg-card/90">
         <CardHeader>
-          <CardTitle>{t('details.loanInfo')}</CardTitle>
-          <CardDescription>{t('calculator.subtitle')}</CardDescription>
+          <CardTitle>{t('pages.details.loanInfo')}</CardTitle>
+          <CardDescription>{t('pages.calculator.subtitle')}</CardDescription>
         </CardHeader>
         <CardContent>
           <MortgageCalculatorForm onCalculate={handleCalculate} loading={loading} />
@@ -139,7 +142,7 @@ const MortgageCalculatorPage = () => {
         <>
           <Card className="border-border/70 bg-card/90">
             <CardHeader>
-              <CardTitle>{t('calculator.results.title')}</CardTitle>
+              <CardTitle>{t('pages.calculator.results.title')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <MetricsGrid metrics={summaryMetrics} />
@@ -149,7 +152,7 @@ const MortgageCalculatorPage = () => {
 
           <Card className="border-border/70 bg-card/90">
             <CardHeader>
-              <CardTitle>{t('amortization.title')}</CardTitle>
+              <CardTitle>{t('pages.calculator.amortization.title')}</CardTitle>
             </CardHeader>
             <CardContent>
               <PaymentScheduleTable schedule={result.payment_schedule} />

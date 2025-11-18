@@ -1,0 +1,37 @@
+{
+  "title": "Historial de Hipotecas",
+  "subtitle": "Ve y gestiona tus cálculos hipotecarios",
+  "empty": "No se encontraron cálculos hipotecarios",
+  "emptySubtitle": "Crea tu Primer Cálculo",
+  "createNew": "Nuevo Cálculo",
+  "table": {
+    "date": "Fecha",
+    "loanAmount": "Monto del Préstamo",
+    "interestRate": "Tasa de Interés",
+    "term": "Plazo",
+    "monthlyPayment": "Pago Mensual",
+    "actions": "Acciones"
+  },
+  "card": {
+    "calculationNumber": "Cálculo #{{number}}",
+    "propertyPrice": "Precio de la Propiedad",
+    "loanAmount": "Monto del Préstamo",
+    "term": "Plazo",
+    "termMonths": "{{months}} meses",
+    "fixedInstallment": "Cuota Fija",
+    "tcea": "TCEA",
+    "created": "Creado"
+  },
+  "actions": {
+    "view": "Ver Detalles",
+    "duplicate": "Duplicar",
+    "delete": "Eliminar",
+    "export": "Exportar"
+  },
+  "confirmDelete": "¿Estás seguro de que quieres eliminar este cálculo?",
+  "messages": {
+    "deleteSuccess": "Cálculo eliminado exitosamente",
+    "deleteFailed": "Error al eliminar el cálculo",
+    "loadingError": "Error al cargar el historial"
+  }
+}
