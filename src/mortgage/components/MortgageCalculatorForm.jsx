@@ -230,7 +230,7 @@ const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
       </div>
 
       <div className="flex justify-end">
-        <Button type="submit" disabled={loading}>
+        <Button type="submit" disabled={loading} variant="default">
           {loading
             ? t('shared:common.loading')
             : initialData

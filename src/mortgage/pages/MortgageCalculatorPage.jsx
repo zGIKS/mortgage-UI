@@ -37,47 +37,47 @@ const MortgageCalculatorPage = () => {
         {
           label: t('pages.calculator.results.monthlyPayment'),
           value: formatCurrency(result.fixed_installment, result.currency),
-          accent: 'text-chart-1',
+          accent: 'text-primary',
         },
         {
           label: t('shared.financial.terms.principal'),
           value: formatCurrency(result.principal_financed, result.currency),
-          accent: 'text-chart-2',
+          accent: 'text-primary',
         },
         {
           label: t('pages.calculator.results.totalInterest'),
           value: formatCurrency(result.total_interest_paid, result.currency),
-          accent: 'text-chart-3',
+          accent: 'text-secondary',
         },
         {
           label: t('pages.calculator.results.totalCost'),
           value: formatCurrency(result.total_paid, result.currency),
-          accent: 'text-chart-4',
+          accent: 'text-secondary',
         },
         {
           label: 'TCEA',
           value: formatPercentageString(result.tcea, { fromDecimal: true }),
-          accent: 'text-chart-5',
+          accent: 'text-destructive',
         },
         {
           label: t('pages.details.metrics.periodicRate'),
           value: formatPercentageString(result.periodic_rate, { fromDecimal: true }),
-          accent: 'text-destructive',
+          accent: 'text-primary',
         },
         {
           label: 'IRR',
           value: formatPercentageString(result.irr, { fromDecimal: true }),
-          accent: 'text-muted-foreground',
+          accent: 'text-primary',
         },
         result.npv !== 0 && {
           label: 'NPV',
           value: formatCurrency(result.npv, result.currency),
-          accent: 'text-chart-2',
+          accent: 'text-secondary',
         },
         {
           label: t('pages.details.metrics.term'),
           value: t('pages.history.card.termMonths', { months: result.term_months }),
-          accent: 'text-accent-foreground',
+          accent: 'text-muted-foreground',
         },
       ].filter(Boolean)
     : [];

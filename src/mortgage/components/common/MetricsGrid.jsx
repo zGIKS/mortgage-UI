@@ -1,15 +1,15 @@
 import { cn } from '@/lib/utils';
 
 const defaultAccents = [
-  'text-chart-1',
-  'text-chart-2',
-  'text-chart-3',
-  'text-chart-4',
-  'text-chart-5',
+  'text-primary',
+  'text-primary',
+  'text-secondary',
+  'text-secondary',
   'text-destructive',
+  'text-primary',
+  'text-primary',
+  'text-secondary',
   'text-muted-foreground',
-  'text-chart-2',
-  'text-accent-foreground',
 ];
 
 const MetricsGrid = ({ metrics = [], accents = defaultAccents, className }) => (

@@ -5,6 +5,16 @@ import { mortgageService } from '../api/mortgageService';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import MortgagePageLayout from '../components/layout/MortgagePageLayout';
 import MortgageHistoryCard from '../components/history/MortgageHistoryCard';
 import { useFinancialFormatters } from '../hooks/useFinancialFormatters';
@@ -14,6 +24,8 @@ const MortgageHistoryPage = () => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [mortgageToDelete, setMortgageToDelete] = useState(null);
   const navigate = useNavigate();
   const { formatCurrency, formatPercentageString, formatDate } = useFinancialFormatters();
 
@@ -31,14 +43,19 @@ const MortgageHistoryPage = () => {
     }
   }, [t]);
 
-  const handleDelete = async (id) => {
-    if (!window.confirm(t('pages.history.confirmDelete'))) {
-      return;
-    }
+  const handleDelete = (id) => {
+    setMortgageToDelete(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!mortgageToDelete) return;
 
     try {
-      await mortgageService.deleteMortgage(id);
+      await mortgageService.deleteMortgage(mortgageToDelete);
       fetchHistory();
+      setDeleteDialogOpen(false);
+      setMortgageToDelete(null);
     } catch (err) {
       alert(t('pages.history.messages.deleteFailed') + ': ' + (err?.message || 'Unknown error'));
     }
@@ -74,7 +91,7 @@ const MortgageHistoryPage = () => {
         <Card>
           <CardContent className="flex flex-col items-center gap-4 py-12 text-center">
             <p className="text-muted-foreground">{t('pages.history.empty')}</p>
-            <Button onClick={() => navigate('/mortgage/calculator')}>
+            <Button variant="default" onClick={() => navigate('/mortgage/calculator')}>
               {t('pages.history.emptySubtitle')}
             </Button>
           </CardContent>
@@ -119,13 +136,12 @@ const MortgageHistoryPage = () => {
             actions={[
               {
                 label: t('pages.history.actions.view'),
-                variant: 'outline',
+                variant: 'default',
                 onClick: () => handleView(item.id),
               },
               {
                 label: t('pages.history.actions.delete'),
-                variant: 'ghost',
-                className: 'text-destructive hover:text-destructive',
+                variant: 'destructive',
                 onClick: () => handleDelete(item.id),
               },
             ]}
@@ -140,10 +156,29 @@ const MortgageHistoryPage = () => {
       title={t('pages.history.title')}
       subtitle={t('pages.history.subtitle')}
       actions={
-        <Button onClick={() => navigate('/mortgage/calculator')}>{t('pages.history.createNew')}</Button>
+        <Button variant="default" onClick={() => navigate('/mortgage/calculator')}>{t('pages.history.createNew')}</Button>
       }
     >
       {renderContent()}
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('pages.history.confirmDeleteTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('pages.history.confirmDelete')}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setMortgageToDelete(null)}>
+              {t('shared:common.cancel')}
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete}>
+              {t('pages.history.actions.delete')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </MortgagePageLayout>
   );
 };

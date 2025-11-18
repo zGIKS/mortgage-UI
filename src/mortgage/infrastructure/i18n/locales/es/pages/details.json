@@ -17,6 +17,7 @@
   "editTitle": "Editar Cálculo Hipotecario",
   "summaryTitle": "Resumen del Cálculo",
   "confirmDelete": "¿Estás seguro de que quieres eliminar este cálculo?",
+  "confirmDeleteTitle": "Eliminar Cálculo",
   "fields": {
     "propertyPrice": "Precio del Inmueble:",
     "downPayment": "Cuota Inicial:",

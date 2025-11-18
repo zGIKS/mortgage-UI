@@ -17,6 +17,7 @@
   "editTitle": "Edit Mortgage Calculation",
   "summaryTitle": "Calculation Summary",
   "confirmDelete": "Are you sure you want to delete this calculation?",
+  "confirmDeleteTitle": "Delete Calculation",
   "fields": {
     "propertyPrice": "Property Price:",
     "downPayment": "Down Payment:",

@@ -8,6 +8,16 @@ import MortgageCalculatorForm from '../components/MortgageCalculatorForm';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import MortgagePageLayout from '../components/layout/MortgagePageLayout';
 import MetricsGrid from '../components/common/MetricsGrid';
 import KeyValueGrid from '../components/common/KeyValueGrid';
@@ -22,6 +32,7 @@ const MortgageDetailPage = () => {
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [updateLoading, setUpdateLoading] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const { formatCurrency, formatPercentageString, formatDate } = useFinancialFormatters();
 
   const fetchMortgage = useCallback(async () => {
@@ -53,11 +64,11 @@ const MortgageDetailPage = () => {
     }
   };
 
-  const handleDelete = async () => {
-    if (!window.confirm(t('pages.details.confirmDelete'))) {
-      return;
-    }
+  const handleDelete = () => {
+    setDeleteDialogOpen(true);
+  };
 
+  const confirmDelete = async () => {
     try {
       await mortgageService.deleteMortgage(id);
       navigate('/mortgage/history');
@@ -101,38 +112,47 @@ const MortgageDetailPage = () => {
     {
       label: t('pages.details.metrics.fixedInstallment'),
       value: formatCurrency(mortgage.fixed_installment, mortgage.currency),
+      accent: 'text-primary',
     },
     {
       label: t('pages.details.metrics.principalFinanced'),
       value: formatCurrency(mortgage.principal_financed, mortgage.currency),
+      accent: 'text-primary',
     },
     {
       label: t('pages.details.metrics.totalInterestPaid'),
       value: formatCurrency(mortgage.total_interest_paid, mortgage.currency),
+      accent: 'text-secondary',
     },
     {
       label: t('pages.details.metrics.totalPaid'),
       value: formatCurrency(mortgage.total_paid, mortgage.currency),
+      accent: 'text-secondary',
     },
     {
       label: t('pages.details.metrics.tcea'),
       value: formatPercentageString(mortgage.tcea, { decimals: 6 }),
+      accent: 'text-destructive',
     },
     {
       label: t('pages.details.metrics.periodicRate'),
       value: formatPercentageString(mortgage.periodic_rate, { decimals: 6 }),
+      accent: 'text-primary',
     },
     {
       label: t('pages.details.metrics.irr'),
       value: formatPercentageString(mortgage.irr, { decimals: 6 }),
+      accent: 'text-primary',
     },
     mortgage.npv !== 0 && {
       label: t('pages.details.metrics.npv'),
       value: formatCurrency(mortgage.npv, mortgage.currency),
+      accent: 'text-secondary',
     },
     {
       label: t('pages.details.metrics.term'),
       value: t('pages.details.fields.termMonths', { months: mortgage.term_months }),
+      accent: 'text-muted-foreground',
     },
   ].filter(Boolean);
 
@@ -172,13 +192,15 @@ const MortgageDetailPage = () => {
   const headerContent = (
     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
       <div>
-        <button
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={() => navigate('/mortgage/history')}
-          className="mb-2 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+          className="mb-2 gap-2"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden />
           {t('pages.details.back')}
-        </button>
+        </Button>
         <h1 className="text-3xl font-semibold text-foreground">
           {t('pages.details.title', { id: mortgage.id })}
         </h1>
@@ -189,16 +211,16 @@ const MortgageDetailPage = () => {
       <div className="flex gap-2">
         {!isEditing ? (
           <>
-            <Button variant="outline" onClick={() => setIsEditing(true)}>
+            <Button variant="default" onClick={() => setIsEditing(true)}>
               {t('pages.details.edit')}
             </Button>
-            <Button variant="ghost" className="text-destructive" onClick={handleDelete}>
+            <Button variant="destructive" onClick={handleDelete}>
               {t('pages.details.delete')}
             </Button>
           </>
         ) : (
           <Button
-            variant="outline"
+            variant="secondary"
             onClick={() => {
               setIsEditing(false);
               setError(null);
@@ -266,6 +288,25 @@ const MortgageDetailPage = () => {
           </Card>
         </>
       )}
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('pages.details.confirmDeleteTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('pages.details.confirmDelete')}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>
+              {t('shared:common.cancel')}
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete}>
+              {t('pages.details.delete')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </MortgagePageLayout>
   );
 };

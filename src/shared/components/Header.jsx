@@ -16,7 +16,7 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-30 border-b border-border/60 bg-background/80 backdrop-blur lg:left-72 lg:w-[calc(100%-18rem)]">
+    <header className="sticky top-0 z-30 border-b border-border bg-card backdrop-blur lg:left-72 lg:w-[calc(100%-18rem)]">
       <div className="px-4 sm:px-6 lg:px-10">
         <div className="flex h-16 items-center justify-between">
           <p className="text-lg font-semibold tracking-tight text-foreground">
@@ -24,7 +24,7 @@ export function Header() {
           </p>
           <div className="flex items-center gap-3">
             <LanguageToggle />
-            <Button variant="secondary" size="sm" className="gap-2" onClick={handleLogout}>
+            <Button variant="outline" className="h-10 gap-2 border-border/70 bg-background/80" onClick={handleLogout}>
               <LogOut className="h-4 w-4" aria-hidden />
               {t('header.logout')}
             </Button>

@@ -29,6 +29,7 @@
     "export": "Export"
   },
   "confirmDelete": "Are you sure you want to delete this calculation?",
+  "confirmDeleteTitle": "Delete Calculation",
   "messages": {
     "deleteSuccess": "Calculation deleted successfully",
     "deleteFailed": "Failed to delete calculation",
