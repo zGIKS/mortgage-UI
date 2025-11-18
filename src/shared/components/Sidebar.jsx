@@ -69,8 +69,8 @@ export function Sidebar() {
         <SheetContent side="left" className="w-72 border-r border-border/60 px-0">
           <div className="flex h-full flex-col">
             <div className="border-b border-border/60 px-6 py-6">
-              <p className="text-base font-semibold text-white">{t('header.brand')}</p>
-              <p className="text-sm text-white/70">{t('navigation.dashboard')}</p>
+              <p className="text-base font-semibold text-foreground">{t('header.brand')}</p>
+              <p className="text-sm text-muted-foreground">{t('navigation.dashboard')}</p>
             </div>
             <div className="flex-1 overflow-y-auto px-4 py-6">{navContent(true)}</div>
           </div>
@@ -80,8 +80,8 @@ export function Sidebar() {
       <aside className="hidden lg:flex lg:fixed lg:inset-y-0 lg:left-0 lg:w-72 lg:flex-col border-r border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
         <div className="flex h-16 items-center border-b border-border/60 px-6">
           <div>
-            <p className="text-lg font-semibold text-white">{t('header.brand')}</p>
-            <p className="text-xs text-white/70">{t('navigation.dashboard')}</p>
+            <p className="text-lg font-semibold text-foreground">{t('header.brand')}</p>
+            <p className="text-xs text-muted-foreground">{t('navigation.dashboard')}</p>
           </div>
         </div>
         <div className="flex-1 overflow-y-auto px-4 py-6">{navContent()}</div>

@@ -13,21 +13,21 @@ const dashboardCards = (t) => [
     description: t('dashboard.cards.profile.description'),
     icon: UserRound,
     href: '/profile',
-    accent: 'text-sky-400 bg-sky-950/40',
+    accent: 'text-primary bg-primary/10',
   },
   {
     title: t('dashboard.cards.calculator.title'),
     description: t('dashboard.cards.calculator.description'),
     icon: Calculator,
     href: '/mortgage/calculator',
-    accent: 'text-emerald-400 bg-emerald-950/40',
+    accent: 'text-secondary-foreground bg-secondary/20',
   },
   {
     title: t('dashboard.cards.history.title'),
     description: t('dashboard.cards.history.description'),
     icon: History,
     href: '/mortgage/history',
-    accent: 'text-purple-400 bg-purple-950/40',
+    accent: 'text-accent-foreground bg-accent/20',
   },
 ];
 

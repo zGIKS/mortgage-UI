@@ -44,11 +44,9 @@ const PaymentScheduleTable = ({ schedule }) => {
               <TableCell className="text-right">{formatCurrency(payment.remaining_balance)}</TableCell>
               <TableCell className="text-center">
                 {payment.is_grace_period ? (
-                  <Badge variant="secondary" className="bg-amber-500/20 text-amber-400">
-                    {t('amortization.table.yes')}
-                  </Badge>
+                  <Badge variant="secondary">{t('amortization.table.yes')}</Badge>
                 ) : (
-                  <Badge variant="outline" className="border-border/60 text-muted-foreground">
+                  <Badge variant="outline" className="text-muted-foreground">
                     {t('amortization.table.none')}
                   </Badge>
                 )}

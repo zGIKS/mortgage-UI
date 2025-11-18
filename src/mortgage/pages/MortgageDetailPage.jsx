@@ -12,15 +12,15 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const metricAccent = [
-  'text-sky-400',
-  'text-emerald-400',
-  'text-purple-400',
-  'text-indigo-400',
-  'text-amber-400',
-  'text-pink-400',
-  'text-slate-200',
-  'text-teal-400',
-  'text-orange-400',
+  'text-chart-1',
+  'text-chart-2',
+  'text-chart-3',
+  'text-chart-4',
+  'text-chart-5',
+  'text-destructive',
+  'text-muted-foreground',
+  'text-chart-2',
+  'text-accent-foreground',
 ];
 
 const MortgageDetailPage = () => {

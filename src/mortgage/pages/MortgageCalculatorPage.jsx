@@ -49,47 +49,47 @@ const MortgageCalculatorPage = () => {
         {
           label: t('calculator.results.monthlyPayment'),
           value: `${result.currency} ${formatCurrency(result.fixed_installment)}`,
-          accent: 'text-sky-400',
+          accent: 'text-chart-1',
         },
         {
           label: t('financial.terms.principal'),
           value: `${result.currency} ${formatCurrency(result.principal_financed)}`,
-          accent: 'text-emerald-400',
+          accent: 'text-chart-2',
         },
         {
           label: t('calculator.results.totalInterest'),
           value: `${result.currency} ${formatCurrency(result.total_interest_paid)}`,
-          accent: 'text-purple-400',
+          accent: 'text-chart-3',
         },
         {
           label: t('calculator.results.totalCost'),
           value: `${result.currency} ${formatCurrency(result.total_paid)}`,
-          accent: 'text-indigo-400',
+          accent: 'text-chart-4',
         },
         {
           label: 'TCEA',
           value: `${formatPercentage(result.tcea)}%`,
-          accent: 'text-amber-400',
+          accent: 'text-chart-5',
         },
         {
           label: t('details.metrics.periodicRate'),
           value: `${formatPercentage(result.periodic_rate)}%`,
-          accent: 'text-pink-400',
+          accent: 'text-destructive',
         },
         {
           label: 'IRR',
           value: `${formatPercentage(result.irr)}%`,
-          accent: 'text-slate-200',
+          accent: 'text-muted-foreground',
         },
         result.npv !== 0 && {
           label: 'NPV',
           value: `${result.currency} ${formatCurrency(result.npv)}`,
-          accent: 'text-teal-400',
+          accent: 'text-chart-2',
         },
         {
           label: t('details.metrics.term'),
           value: t('history.card.termMonths', { months: result.term_months }),
-          accent: 'text-orange-400',
+          accent: 'text-accent-foreground',
         },
       ].filter(Boolean)
     : [];
