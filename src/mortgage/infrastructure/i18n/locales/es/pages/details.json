@@ -43,6 +43,8 @@
   "messages": {
     "loadingError": "Error al cargar los detalles de la hipoteca",
     "updateError": "Error al actualizar la hipoteca",
-    "deleteError": "Error al eliminar el cálculo"
+    "updateSuccess": "Hipoteca actualizada exitosamente",
+    "deleteError": "Error al eliminar el cálculo",
+    "deleteSuccess": "Cálculo eliminado exitosamente"
   }
 }

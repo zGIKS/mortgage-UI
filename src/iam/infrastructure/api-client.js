@@ -35,10 +35,11 @@ export const apiClient = {
     return response.json();
   },
 
-  async updateProfile(token, email, password) {
+  async updateProfile(token, email, password, full_name) {
     const body = {};
     if (email) body.email = email;
     if (password) body.password = password;
+    if (full_name) body.full_name = full_name;
 
     const response = await fetch(`${API_BASE_URL}/iam/profile`, {
       method: 'PUT',

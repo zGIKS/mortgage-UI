@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { authService } from '../../application/auth-service';
 import { LanguageToggle } from '../../../shared/components/LanguageToggle';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export function RegisterPage() {
   const navigate = useNavigate();
@@ -17,7 +17,6 @@ export function RegisterPage() {
     password: '',
     full_name: '',
   });
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -25,19 +24,18 @@ export function RegisterPage() {
       ...formData,
       [e.target.name]: e.target.value,
     });
-    setError('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
 
     try {
       await authService.register(formData.email, formData.password, formData.full_name);
+      toast.success(t('auth.success.accountCreated'));
       navigate('/login');
     } catch (err) {
-      setError(err.message || t('auth.errors.registerFailed'));
+      toast.error(err.message || t('auth.errors.registerFailed'));
     } finally {
       setLoading(false);
     }
@@ -94,12 +92,6 @@ export function RegisterPage() {
                 required
               />
             </div>
-
-            {error && (
-              <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
 
             <Button type="submit" disabled={loading} className="w-full">
               {loading ? t('shared:common.loading') : t('auth.register.submit')}

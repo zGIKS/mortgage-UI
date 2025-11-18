@@ -32,6 +32,11 @@
     "exportError": "Error exporting data",
     "networkError": "Network connection error"
   },
+  "messages": {
+    "calculationSuccess": "Mortgage calculated successfully",
+    "updateSuccess": "Mortgage updated successfully",
+    "deleteSuccess": "Mortgage deleted successfully"
+  },
   "success": {
     "calculationSaved": "Mortgage calculation saved successfully",
     "calculationDeleted": "Mortgage calculation deleted successfully",

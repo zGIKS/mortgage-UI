@@ -15,11 +15,11 @@ export const authService = {
     return data;
   },
 
-  async updateProfile(email, password) {
+  async updateProfile(email, password, full_name) {
     const token = localStorage.getItem('token');
     if (!token) throw new Error('No token found');
 
-    const data = await apiClient.updateProfile(token, email, password);
+    const data = await apiClient.updateProfile(token, email, password, full_name);
     localStorage.setItem('user', JSON.stringify(data));
     return data;
   },

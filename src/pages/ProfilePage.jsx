@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { authService } from '../iam/application/auth-service';
 import { Header } from '../shared/components/Header';
 import { Sidebar } from '../shared/components/Sidebar';
@@ -8,15 +9,12 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export function ProfilePage() {
   const navigate = useNavigate();
   const { t } = useTranslation('iam');
   const [user, setUser] = useState(null);
-  const [formData, setFormData] = useState({ email: '', password: '' });
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [formData, setFormData] = useState({ email: '', password: '', full_name: '' });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -26,7 +24,7 @@ export function ProfilePage() {
       return;
     }
     setUser(currentUser);
-    setFormData({ email: currentUser.email, password: '' });
+    setFormData({ email: currentUser.email, password: '', full_name: currentUser.full_name });
   }, [navigate]);
 
   const handleChange = (e) => {
@@ -34,26 +32,23 @@ export function ProfilePage() {
       ...formData,
       [e.target.name]: e.target.value,
     });
-    setError('');
-    setSuccess('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
-    setSuccess('');
 
     try {
       const updatedUser = await authService.updateProfile(
         formData.email !== user.email ? formData.email : null,
-        formData.password || null
+        formData.password || null,
+        formData.full_name !== user.full_name ? formData.full_name : null
       );
       setUser(updatedUser);
-      setSuccess(t('profile.messages.updateSuccess'));
-      setFormData({ ...formData, password: '' });
+      toast.success(t('profile.messages.updateSuccess'));
+      setFormData({ email: updatedUser.email, password: '', full_name: updatedUser.full_name });
     } catch (err) {
-      setError(err.message || t('profile.messages.updateFailed'));
+      toast.error(err.message || t('profile.messages.updateFailed'));
     } finally {
       setLoading(false);
     }
@@ -99,6 +94,18 @@ export function ProfilePage() {
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
+                  <Label htmlFor="full_name">{t('profile.updateProfile.fullName')}</Label>
+                  <Input
+                    id="full_name"
+                    type="text"
+                    name="full_name"
+                    value={formData.full_name}
+                    onChange={handleChange}
+                    placeholder={t('profile.updateProfile.fullNamePlaceholder')}
+                  />
+                </div>
+
+                <div className="space-y-2">
                   <Label htmlFor="email">{t('profile.updateProfile.email')}</Label>
                   <Input
                     id="email"
@@ -121,18 +128,6 @@ export function ProfilePage() {
                     placeholder={t('profile.updateProfile.passwordPlaceholder')}
                   />
                 </div>
-
-                {error && (
-                  <Alert variant="destructive">
-                    <AlertDescription>{error}</AlertDescription>
-                  </Alert>
-                )}
-
-                {success && (
-                  <Alert>
-                    <AlertDescription>{success}</AlertDescription>
-                  </Alert>
-                )}
 
                 <Button type="submit" disabled={loading} className="w-full">
                   {loading ? t('shared:common.loading') : t('profile.updateProfile.submit')}

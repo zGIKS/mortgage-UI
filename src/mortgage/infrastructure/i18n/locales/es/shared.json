@@ -32,6 +32,11 @@
     "exportError": "Error al exportar los datos",
     "networkError": "Error de conexión de red"
   },
+  "messages": {
+    "calculationSuccess": "Hipoteca calculada exitosamente",
+    "updateSuccess": "Hipoteca actualizada exitosamente",
+    "deleteSuccess": "Hipoteca eliminada exitosamente"
+  },
   "success": {
     "calculationSaved": "Cálculo hipotecario guardado exitosamente",
     "calculationDeleted": "Cálculo hipotecario eliminado exitosamente",

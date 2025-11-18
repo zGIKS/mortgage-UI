@@ -43,6 +43,8 @@
   "messages": {
     "loadingError": "Failed to fetch mortgage details",
     "updateError": "Failed to update mortgage",
-    "deleteError": "Failed to delete calculation"
+    "updateSuccess": "Mortgage updated successfully",
+    "deleteError": "Failed to delete calculation",
+    "deleteSuccess": "Calculation deleted successfully"
   }
 }

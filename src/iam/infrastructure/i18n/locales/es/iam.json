@@ -53,6 +53,8 @@
     },
     "updateProfile": {
       "title": "Actualizar Perfil",
+      "fullName": "Nombre Completo",
+      "fullNamePlaceholder": "Ingresa tu nombre completo",
       "email": "Correo Electrónico",
       "emailPlaceholder": "Ingresa un nuevo correo electrónico",
       "newPassword": "Nueva Contraseña",

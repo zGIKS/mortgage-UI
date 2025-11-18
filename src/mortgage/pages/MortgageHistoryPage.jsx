@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { mortgageService } from '../api/mortgageService';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,7 +23,6 @@ const MortgageHistoryPage = () => {
   const { t } = useTranslation('mortgage');
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [mortgageToDelete, setMortgageToDelete] = useState(null);
   const navigate = useNavigate();
@@ -31,13 +30,12 @@ const MortgageHistoryPage = () => {
 
   const fetchHistory = useCallback(async () => {
     setLoading(true);
-    setError(null);
 
     try {
       const data = await mortgageService.getMortgageHistory(50, 0);
       setHistory(data);
     } catch (err) {
-      setError(err?.message || t('pages.history.messages.loadingError'));
+      toast.error(err?.message || t('pages.history.messages.loadingError'));
     } finally {
       setLoading(false);
     }
@@ -53,11 +51,12 @@ const MortgageHistoryPage = () => {
 
     try {
       await mortgageService.deleteMortgage(mortgageToDelete);
+      toast.success(t('pages.history.messages.deleteSuccess'));
       fetchHistory();
       setDeleteDialogOpen(false);
       setMortgageToDelete(null);
     } catch (err) {
-      alert(t('pages.history.messages.deleteFailed') + ': ' + (err?.message || 'Unknown error'));
+      toast.error(err?.message || t('pages.history.messages.deleteFailed'));
     }
   };
 
@@ -75,14 +74,6 @@ const MortgageHistoryPage = () => {
         <div className="flex h-64 items-center justify-center">
           <span className="text-muted-foreground">{t('shared:common.loading')}</span>
         </div>
-      );
-    }
-
-    if (error) {
-      return (
-        <Alert variant="destructive">
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
       );
     }
 

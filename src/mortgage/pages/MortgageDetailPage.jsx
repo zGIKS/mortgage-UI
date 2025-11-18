@@ -1,13 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { ArrowLeft } from 'lucide-react';
 import { mortgageService } from '../api/mortgageService';
 import PaymentScheduleTable from '../components/PaymentScheduleTable';
 import MortgageCalculatorForm from '../components/MortgageCalculatorForm';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,7 +29,6 @@ const MortgageDetailPage = () => {
   const { t } = useTranslation('mortgage');
   const [mortgage, setMortgage] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [updateLoading, setUpdateLoading] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -37,13 +36,12 @@ const MortgageDetailPage = () => {
 
   const fetchMortgage = useCallback(async () => {
     setLoading(true);
-    setError(null);
 
     try {
       const data = await mortgageService.getMortgageById(id);
       setMortgage(data);
     } catch (err) {
-      setError(err?.message || t('pages.details.messages.loadingError'));
+      toast.error(err?.message || t('pages.details.messages.loadingError'));
     } finally {
       setLoading(false);
     }
@@ -51,14 +49,14 @@ const MortgageDetailPage = () => {
 
   const handleUpdate = async (formData) => {
     setUpdateLoading(true);
-    setError(null);
 
     try {
       const updatedData = await mortgageService.updateMortgage(id, formData);
       setMortgage(updatedData);
       setIsEditing(false);
+      toast.success(t('pages.details.messages.updateSuccess'));
     } catch (err) {
-      setError(err?.message || t('pages.details.messages.updateError'));
+      toast.error(err?.message || t('pages.details.messages.updateError'));
     } finally {
       setUpdateLoading(false);
     }
@@ -71,9 +69,10 @@ const MortgageDetailPage = () => {
   const confirmDelete = async () => {
     try {
       await mortgageService.deleteMortgage(id);
+      toast.success(t('pages.details.messages.deleteSuccess'));
       navigate('/mortgage/history');
     } catch (err) {
-      alert(t('pages.details.messages.deleteError') + ': ' + (err?.message || 'Unknown error'));
+      toast.error(err?.message || t('pages.details.messages.deleteError'));
     }
   };
 
@@ -91,21 +90,16 @@ const MortgageDetailPage = () => {
     );
   }
 
-  if (error && !mortgage) {
+  if (!mortgage) {
     return (
       <MortgagePageLayout header={null}>
-        <Alert variant="destructive">
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-        <Button variant="outline" onClick={() => navigate('/mortgage/history')}>
-          {t('pages.details.backToHistory')}
-        </Button>
+        <div className="flex h-64 items-center justify-center">
+          <Button variant="outline" onClick={() => navigate('/mortgage/history')}>
+            {t('pages.details.backToHistory')}
+          </Button>
+        </div>
       </MortgagePageLayout>
     );
-  }
-
-  if (!mortgage) {
-    return null;
   }
 
   const metrics = [
@@ -221,10 +215,7 @@ const MortgageDetailPage = () => {
         ) : (
           <Button
             variant="secondary"
-            onClick={() => {
-              setIsEditing(false);
-              setError(null);
-            }}
+            onClick={() => setIsEditing(false)}
           >
             {t('pages.details.cancel')}
           </Button>
@@ -235,12 +226,6 @@ const MortgageDetailPage = () => {
 
   return (
     <MortgagePageLayout header={headerContent}>
-      {error && mortgage && (
-        <Alert variant="destructive">
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
-
       {isEditing ? (
         <Card className="border-border/70 bg-card/90">
           <CardHeader>

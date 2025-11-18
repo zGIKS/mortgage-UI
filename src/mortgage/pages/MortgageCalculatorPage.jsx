@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import MortgageCalculatorForm from '../components/MortgageCalculatorForm';
 import PaymentScheduleTable from '../components/PaymentScheduleTable';
 import { mortgageService } from '../api/mortgageService';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import MortgagePageLayout from '../components/layout/MortgagePageLayout';
 import MetricsGrid from '../components/common/MetricsGrid';
 import KeyValueGrid from '../components/common/KeyValueGrid';
@@ -14,19 +14,18 @@ const MortgageCalculatorPage = () => {
   const { t } = useTranslation('mortgage');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
-  const [error, setError] = useState(null);
   const { formatCurrency, formatPercentageString } = useFinancialFormatters();
 
   const handleCalculate = async (formData) => {
     setLoading(true);
-    setError(null);
     setResult(null);
 
     try {
       const data = await mortgageService.calculateMortgage(formData);
       setResult(data);
+      toast.success(t('shared.messages.calculationSuccess'));
     } catch (err) {
-      setError(err?.message || t('shared.errors.calculationFailed'));
+      toast.error(err?.message || t('shared.errors.calculationFailed'));
     } finally {
       setLoading(false);
     }
@@ -131,12 +130,6 @@ const MortgageCalculatorPage = () => {
           <MortgageCalculatorForm onCalculate={handleCalculate} loading={loading} />
         </CardContent>
       </Card>
-
-      {error && (
-        <Alert variant="destructive">
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
 
       {result && (
         <>
