@@ -7,6 +7,9 @@
     "esModuleInterop": true,
     "strict": false,
     "jsx": "react-jsx",
+    "allowJs": true,
+    "checkJs": false,
+    "noEmit": true,
     "baseUrl": ".",
     "paths": {
       "@/*": [
@@ -15,6 +18,13 @@
     }
   },
   "include": [
-    "src"
+    "src/**/*.js",
+    "src/**/*.jsx",
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
   ]
 }

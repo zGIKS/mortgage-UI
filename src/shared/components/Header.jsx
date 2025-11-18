@@ -19,14 +19,9 @@ export function Header() {
     <header className="sticky top-0 z-30 border-b border-border/60 bg-background/80 backdrop-blur lg:left-72 lg:w-[calc(100%-18rem)]">
       <div className="px-4 sm:px-6 lg:px-10">
         <div className="flex h-16 items-center justify-between">
-          <div className="flex flex-col gap-0.5">
-            <span className="text-base font-semibold tracking-tight text-white">
-              {t('header.brand')}
-            </span>
-            <p className="text-sm text-white/70">
-              {t('header.hello', { name: user?.full_name })}
-            </p>
-          </div>
+          <p className="text-lg font-semibold tracking-tight text-foreground">
+            {t('header.hello', { name: user?.full_name })}
+          </p>
           <div className="flex items-center gap-3">
             <LanguageToggle />
             <Button variant="secondary" size="sm" className="gap-2" onClick={handleLogout}>
