@@ -34,7 +34,7 @@ i18n
     resources,
     fallbackLng: 'es',
     lng: 'es', // Fuerza el idioma inicial a español
-    debug: process.env.NODE_ENV === 'development',
+    debug: import.meta.env.DEV,
     
     interpolation: {
       escapeValue: false
