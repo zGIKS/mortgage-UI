@@ -2,25 +2,33 @@
   "title": "Calculadora Hipotecaria",
   "subtitle": "Calcula tus pagos mensuales y tabla de amortización",
   "form": {
+    "selectBank": "Selecciona un Banco",
+    "bankInfo": {
+      "selected": "Banco seleccionado",
+      "rateType": "Tipo de tasa",
+      "frequency": "Frecuencia de pago",
+      "daysInYear": "Días por año",
+      "days": "días"
+    },
     "propertyPrice": "Precio de la Propiedad",
     "propertyPricePlaceholder": "Ingresa el valor de la propiedad",
-    "downPayment": "Inicial",
-    "downPaymentPlaceholder": "Ingresa el monto de la inicial",
+    "downPayment": "Cuota Inicial",
+    "downPaymentPlaceholder": "Ingresa el monto de la cuota inicial",
     "loanAmount": "Monto del Préstamo",
     "loanAmountPlaceholder": "Ingresa el monto principal",
     "bonusTechoPropio": "Bono Techo Propio",
     "bonusTechoPropioPlaceholder": "Ingresa el monto del bono",
-    "interestRate": "Tasa de Interés Anual",
-    "interestRatePlaceholder": "Ingresa la TAE (%)",
+    "interestRate": "Tasa de Interés Anual (TEA)",
+    "interestRatePlaceholder": "Ingresa la TEA (%)",
     "rateType": "Tipo de Tasa",
-    "loanTerm": "Plazo del Préstamo",
-    "loanTermPlaceholder": "Ingresa el plazo en años",
+    "loanTerm": "Plazo del Préstamo (meses)",
+    "loanTermPlaceholder": "Ingresa el plazo en meses",
     "gracePeriodMonths": "Período de Gracia (meses)",
-    "gracePeriodMonthsPlaceholder": "Ingresa el período de gracia en meses",
+    "gracePeriodMonthsPlaceholder": "Ingresa el período de gracia",
     "gracePeriodType": "Tipo de Período de Gracia",
     "currency": "Moneda",
     "npvDiscountRate": "Tasa de Descuento para VAN (%)",
-    "npvDiscountRatePlaceholder": "Ingresa el porcentaje de tasa de descuento",
+    "npvDiscountRatePlaceholder": "Ingresa la tasa de descuento",
     "calculate": "Calcular Hipoteca",
     "reset": "Reiniciar Formulario",
     "options": {
@@ -41,11 +49,11 @@
   },
   "results": {
     "title": "Resumen del Préstamo",
-    "monthlyPayment": "Pago Mensual",
+    "monthlyPayment": "Cuota Mensual",
     "principalAndInterest": "Capital e Interés",
-    "escrow": "Depósito en Garantía (Impuestos y Seguro)",
-    "totalMonthlyPayment": "Pago Mensual Total",
-    "totalInterest": "Interés Total Pagado",
+    "escrow": "Depósito en Garantía",
+    "totalMonthlyPayment": "Cuota Mensual Total",
+    "totalInterest": "Total de Intereses",
     "totalCost": "Costo Total del Préstamo",
     "loanToValue": "Relación Préstamo-Valor",
     "debtToIncome": "Relación Deuda-Ingresos",
@@ -57,17 +65,17 @@
     "interestRateRequired": "La tasa de interés es obligatoria",
     "interestRateValid": "La tasa de interés debe estar entre 0.1% y 30%",
     "loanTermRequired": "El plazo del préstamo es obligatorio",
-    "loanTermValid": "El plazo del préstamo debe estar entre 1 y 50 años",
-    "downPaymentValid": "La inicial no puede exceder el monto del préstamo"
+    "loanTermValid": "El plazo del préstamo debe estar entre 1 y 600 meses",
+    "downPaymentValid": "La cuota inicial no puede exceder el precio de la propiedad"
   },
   "amortization": {
-    "title": "Tabla de Amortización",
-    "subtitle": "Desglose detallado de tus pagos de préstamo a lo largo del tiempo",
+    "title": "Cronograma de Pagos",
+    "subtitle": "Desglose detallado de tus pagos a lo largo del tiempo",
     "table": {
       "payment": "Pago #",
       "date": "Fecha de Pago",
       "beginningBalance": "Saldo Inicial",
-      "monthlyPayment": "Pago Mensual",
+      "monthlyPayment": "Cuota Mensual",
       "principal": "Capital",
       "interest": "Interés",
       "endingBalance": "Saldo Final",
@@ -79,13 +87,13 @@
       "balance": "Saldo",
       "gracePeriod": "Período de Gracia",
       "yes": "Sí",
-      "none": "Ninguno"
+      "none": "No"
     },
     "summary": {
-      "totalPayments": "Pagos Totales",
+      "totalPayments": "Total de Pagos",
       "totalPrincipal": "Capital Total",
       "totalInterest": "Interés Total",
-      "averageMonthlyPayment": "Pago Mensual Promedio"
+      "averageMonthlyPayment": "Cuota Mensual Promedio"
     },
     "filters": {
       "showAll": "Mostrar Todos los Pagos",

@@ -36,14 +36,14 @@ const PaymentScheduleTable = ({ schedule }) => {
         </TableHeader>
         <TableBody>
           {schedule.map((payment, index) => (
-            <TableRow key={`${payment.period}-${index}`} className="hover:bg-muted/40">
-              <TableCell className="font-medium">{payment.period}</TableCell>
-              <TableCell className="text-right">{formatCurrency(payment.installment)}</TableCell>
-              <TableCell className="text-right">{formatCurrency(payment.interest)}</TableCell>
-              <TableCell className="text-right">{formatCurrency(payment.amortization)}</TableCell>
-              <TableCell className="text-right">{formatCurrency(payment.remaining_balance)}</TableCell>
+            <TableRow key={`${payment.periodo}-${index}`} className="hover:bg-muted/40">
+              <TableCell className="font-medium">{payment.periodo}</TableCell>
+              <TableCell className="text-right">{formatCurrency(payment.cuota)}</TableCell>
+              <TableCell className="text-right">{formatCurrency(payment.interes)}</TableCell>
+              <TableCell className="text-right">{formatCurrency(payment.amortizacion)}</TableCell>
+              <TableCell className="text-right">{formatCurrency(payment.saldo_final)}</TableCell>
               <TableCell className="text-center">
-                {payment.is_grace_period ? (
+                {payment.es_periodo_gracia ? (
                   <Badge variant="secondary">{t('pages.calculator.amortization.table.yes')}</Badge>
                 ) : (
                   <Badge variant="outline" className="text-muted-foreground">

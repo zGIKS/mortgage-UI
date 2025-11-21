@@ -105,22 +105,22 @@ const MortgageDetailPage = () => {
   const metrics = [
     {
       label: t('pages.details.metrics.fixedInstallment'),
-      value: formatCurrency(mortgage.fixed_installment, mortgage.currency),
+      value: formatCurrency(mortgage.cuota_fija, mortgage.moneda),
       accent: 'text-primary',
     },
     {
       label: t('pages.details.metrics.principalFinanced'),
-      value: formatCurrency(mortgage.principal_financed, mortgage.currency),
+      value: formatCurrency(mortgage.saldo_financiar, mortgage.moneda),
       accent: 'text-primary',
     },
     {
       label: t('pages.details.metrics.totalInterestPaid'),
-      value: formatCurrency(mortgage.total_interest_paid, mortgage.currency),
+      value: formatCurrency(mortgage.total_intereses, mortgage.moneda),
       accent: 'text-secondary',
     },
     {
       label: t('pages.details.metrics.totalPaid'),
-      value: formatCurrency(mortgage.total_paid, mortgage.currency),
+      value: formatCurrency(mortgage.total_pagado, mortgage.moneda),
       accent: 'text-secondary',
     },
     {
@@ -130,55 +130,59 @@ const MortgageDetailPage = () => {
     },
     {
       label: t('pages.details.metrics.periodicRate'),
-      value: formatPercentageString(mortgage.periodic_rate, { decimals: 6 }),
+      value: formatPercentageString(mortgage.tasa_periodo, { decimals: 6 }),
       accent: 'text-primary',
     },
     {
       label: t('pages.details.metrics.irr'),
-      value: formatPercentageString(mortgage.irr, { decimals: 6 }),
+      value: formatPercentageString(mortgage.tir, { decimals: 6 }),
       accent: 'text-primary',
     },
-    mortgage.npv !== 0 && {
+    mortgage.van !== 0 && {
       label: t('pages.details.metrics.npv'),
-      value: formatCurrency(mortgage.npv, mortgage.currency),
+      value: formatCurrency(mortgage.van, mortgage.moneda),
       accent: 'text-secondary',
     },
     {
       label: t('pages.details.metrics.term'),
-      value: t('pages.details.fields.termMonths', { months: mortgage.term_months }),
+      value: t('pages.details.fields.termMonths', { months: mortgage.plazo_meses }),
       accent: 'text-muted-foreground',
     },
   ].filter(Boolean);
 
   const summaryDetails = [
     {
+      label: t('pages.details.fields.bank'),
+      value: mortgage.banco_nombre,
+    },
+    {
       label: t('pages.details.fields.propertyPrice'),
-      value: formatCurrency(mortgage.property_price, mortgage.currency),
+      value: formatCurrency(mortgage.precio_venta, mortgage.moneda),
     },
     {
       label: t('pages.details.fields.downPayment'),
-      value: formatCurrency(mortgage.down_payment, mortgage.currency),
+      value: formatCurrency(mortgage.cuota_inicial, mortgage.moneda),
     },
     {
       label: t('pages.details.fields.loanAmount'),
-      value: formatCurrency(mortgage.loan_amount, mortgage.currency),
+      value: formatCurrency(mortgage.monto_prestamo, mortgage.moneda),
     },
     {
       label: t('pages.details.fields.bonusTechoPropio'),
-      value: formatCurrency(mortgage.bono_techo_propio, mortgage.currency),
+      value: formatCurrency(mortgage.bono_techo_propio, mortgage.moneda),
     },
     {
       label: t('pages.details.fields.interestRate'),
-      value: `${mortgage.interest_rate}% (${mortgage.rate_type})`,
+      value: `${mortgage.tea}% (${mortgage.tipo_tasa})`,
     },
     {
       label: t('pages.details.fields.gracePeriod'),
       value:
-        mortgage.grace_period_type === 'NONE'
+        mortgage.tipo_gracia === 'NONE'
           ? t('pages.details.fields.gracePeriodNone')
           : t('pages.details.fields.gracePeriodValue', {
-              months: mortgage.grace_period_months,
-              type: mortgage.grace_period_type,
+              months: mortgage.meses_gracia,
+              type: mortgage.tipo_gracia,
             }),
     },
   ];
@@ -236,17 +240,17 @@ const MortgageDetailPage = () => {
               onCalculate={handleUpdate}
               loading={updateLoading}
               initialData={{
-                property_price: mortgage.property_price,
-                down_payment: mortgage.down_payment,
-                loan_amount: mortgage.loan_amount,
+                banco_id: mortgage.banco_id,
+                precio_venta: mortgage.precio_venta,
+                cuota_inicial: mortgage.cuota_inicial,
+                monto_prestamo: mortgage.monto_prestamo,
                 bono_techo_propio: mortgage.bono_techo_propio,
-                interest_rate: mortgage.interest_rate,
-                rate_type: mortgage.rate_type,
-                term_months: mortgage.term_months,
-                grace_period_months: mortgage.grace_period_months,
-                grace_period_type: mortgage.grace_period_type,
-                currency: mortgage.currency,
-                npv_discount_rate: mortgage.npv_discount_rate || 0,
+                tea: mortgage.tea,
+                plazo_meses: mortgage.plazo_meses,
+                meses_gracia: mortgage.meses_gracia,
+                tipo_gracia: mortgage.tipo_gracia,
+                moneda: mortgage.moneda,
+                tasa_descuento: mortgage.tasa_descuento || 0,
               }}
             />
           </CardContent>
@@ -268,7 +272,7 @@ const MortgageDetailPage = () => {
               <CardTitle>{t('pages.details.amortizationSchedule')}</CardTitle>
             </CardHeader>
             <CardContent>
-              <PaymentScheduleTable schedule={mortgage.payment_schedule} />
+              <PaymentScheduleTable schedule={mortgage.cronograma_pagos} />
             </CardContent>
           </Card>
         </>

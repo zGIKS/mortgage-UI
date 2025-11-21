@@ -35,22 +35,22 @@ const MortgageCalculatorPage = () => {
     ? [
         {
           label: t('pages.calculator.results.monthlyPayment'),
-          value: formatCurrency(result.fixed_installment, result.currency),
+          value: formatCurrency(result.cuota_fija, result.moneda),
           accent: 'text-primary',
         },
         {
           label: t('shared.financial.terms.principal'),
-          value: formatCurrency(result.principal_financed, result.currency),
+          value: formatCurrency(result.saldo_financiar, result.moneda),
           accent: 'text-primary',
         },
         {
           label: t('pages.calculator.results.totalInterest'),
-          value: formatCurrency(result.total_interest_paid, result.currency),
+          value: formatCurrency(result.total_intereses, result.moneda),
           accent: 'text-secondary',
         },
         {
           label: t('pages.calculator.results.totalCost'),
-          value: formatCurrency(result.total_paid, result.currency),
+          value: formatCurrency(result.total_pagado, result.moneda),
           accent: 'text-secondary',
         },
         {
@@ -60,22 +60,22 @@ const MortgageCalculatorPage = () => {
         },
         {
           label: t('pages.details.metrics.periodicRate'),
-          value: formatPercentageString(result.periodic_rate, { fromDecimal: true }),
+          value: formatPercentageString(result.tasa_periodo, { fromDecimal: true }),
           accent: 'text-primary',
         },
         {
-          label: 'IRR',
-          value: formatPercentageString(result.irr, { fromDecimal: true }),
+          label: 'TIR',
+          value: formatPercentageString(result.tir, { fromDecimal: true }),
           accent: 'text-primary',
         },
-        result.npv !== 0 && {
-          label: 'NPV',
-          value: formatCurrency(result.npv, result.currency),
+        result.van !== 0 && {
+          label: 'VAN',
+          value: formatCurrency(result.van, result.moneda),
           accent: 'text-secondary',
         },
         {
           label: t('pages.details.metrics.term'),
-          value: t('pages.history.card.termMonths', { months: result.term_months }),
+          value: t('pages.history.card.termMonths', { months: result.plazo_meses }),
           accent: 'text-muted-foreground',
         },
       ].filter(Boolean)
@@ -84,33 +84,37 @@ const MortgageCalculatorPage = () => {
   const loanDetails = result
     ? [
         {
+          label: t('pages.details.fields.bank'),
+          value: result.banco_nombre,
+        },
+        {
           label: t('pages.details.fields.propertyPrice'),
-          value: formatCurrency(result.property_price, result.currency),
+          value: formatCurrency(result.precio_venta, result.moneda),
         },
         {
           label: t('pages.details.fields.downPayment'),
-          value: formatCurrency(result.down_payment, result.currency),
+          value: formatCurrency(result.cuota_inicial, result.moneda),
         },
         {
           label: t('pages.details.fields.loanAmount'),
-          value: formatCurrency(result.loan_amount, result.currency),
+          value: formatCurrency(result.monto_prestamo, result.moneda),
         },
         {
           label: t('pages.details.fields.bonusTechoPropio'),
-          value: formatCurrency(result.bono_techo_propio, result.currency),
+          value: formatCurrency(result.bono_techo_propio, result.moneda),
         },
         {
           label: t('pages.details.fields.interestRate'),
-          value: `${result.interest_rate}% (${result.rate_type})`,
+          value: `${result.tea}% (${result.tipo_tasa})`,
         },
         {
           label: t('pages.details.fields.gracePeriod'),
           value:
-            result.grace_period_type === 'NONE'
+            result.tipo_gracia === 'NONE'
               ? t('pages.details.fields.gracePeriodNone')
               : t('pages.details.fields.gracePeriodValue', {
-                  months: result.grace_period_months,
-                  type: result.grace_period_type,
+                  months: result.meses_gracia,
+                  type: result.tipo_gracia,
                 }),
         },
       ]
@@ -148,7 +152,7 @@ const MortgageCalculatorPage = () => {
               <CardTitle>{t('pages.calculator.amortization.title')}</CardTitle>
             </CardHeader>
             <CardContent>
-              <PaymentScheduleTable schedule={result.payment_schedule} />
+              <PaymentScheduleTable schedule={result.cronograma_pagos} />
             </CardContent>
           </Card>
         </>

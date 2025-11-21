@@ -96,24 +96,24 @@ const MortgageHistoryPage = () => {
           <MortgageHistoryCard
             key={item.id}
             title={t('pages.history.card.calculationNumber', { number: item.id })}
-            subtitle={formatDate(item.created_at)}
-            currency={item.currency}
+            subtitle={`${item.banco_nombre} - ${formatDate(item.created_at)}`}
+            currency={item.moneda}
             fields={[
               {
                 label: t('pages.history.card.propertyPrice'),
-                value: formatCurrency(item.property_price, item.currency),
+                value: formatCurrency(item.precio_venta, item.moneda),
               },
               {
                 label: t('pages.history.card.loanAmount'),
-                value: formatCurrency(item.loan_amount, item.currency),
+                value: formatCurrency(item.monto_prestamo, item.moneda),
               },
               {
                 label: t('pages.history.card.fixedInstallment'),
-                value: formatCurrency(item.fixed_installment, item.currency),
+                value: formatCurrency(item.cuota_fija, item.moneda),
               },
               {
                 label: t('pages.history.card.term'),
-                value: t('pages.history.card.termMonths', { months: item.term_months }),
+                value: t('pages.history.card.termMonths', { months: item.plazo_meses }),
               },
               {
                 label: t('pages.history.card.tcea'),
