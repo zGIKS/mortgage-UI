@@ -1,63 +1,62 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { mortgageService } from '../api/mortgageService';
-import { Button } from '../../shared/components/Button';
-import { Header } from '../../shared/components/Header';
-import { Sidebar } from '../../shared/components/Sidebar';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import MortgagePageLayout from '../components/layout/MortgagePageLayout';
+import MortgageHistoryCard from '../components/history/MortgageHistoryCard';
+import { useFinancialFormatters } from '../hooks/useFinancialFormatters';
 
 const MortgageHistoryPage = () => {
   const { t } = useTranslation('mortgage');
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [mortgageToDelete, setMortgageToDelete] = useState(null);
   const navigate = useNavigate();
+  const { formatCurrency, formatPercentageString, formatDate } = useFinancialFormatters();
 
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(value);
-  };
-
-  const formatPercentage = (value) => {
-    return (value * 100).toFixed(4);
-  };
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
-  const fetchHistory = async () => {
+  const fetchHistory = useCallback(async () => {
     setLoading(true);
-    setError(null);
 
     try {
       const data = await mortgageService.getMortgageHistory(50, 0);
       setHistory(data);
     } catch (err) {
-      setError(err?.message || t('history.messages.loadingError'));
+      toast.error(err?.message || t('pages.history.messages.loadingError'));
     } finally {
       setLoading(false);
     }
+  }, [t]);
+
+  const handleDelete = (id) => {
+    setMortgageToDelete(id);
+    setDeleteDialogOpen(true);
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm(t('history.confirmDelete'))) {
-      return;
-    }
+  const confirmDelete = async () => {
+    if (!mortgageToDelete) return;
 
     try {
-      await mortgageService.deleteMortgage(id);
+      await mortgageService.deleteMortgage(mortgageToDelete);
+      toast.success(t('pages.history.messages.deleteSuccess'));
       fetchHistory();
+      setDeleteDialogOpen(false);
+      setMortgageToDelete(null);
     } catch (err) {
-      alert(t('history.messages.deleteFailed') + ': ' + (err?.message || 'Unknown error'));
+      toast.error(err?.message || t('pages.history.messages.deleteFailed'));
     }
   };
 
@@ -67,125 +66,111 @@ const MortgageHistoryPage = () => {
 
   useEffect(() => {
     fetchHistory();
-  }, []);
+  }, [fetchHistory]);
 
-  if (loading) {
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <div className="flex h-64 items-center justify-center">
+          <span className="text-muted-foreground">{t('shared:common.loading')}</span>
+        </div>
+      );
+    }
+
+    if (history.length === 0) {
+      return (
+        <Card>
+          <CardContent className="flex flex-col items-center gap-4 py-12 text-center">
+            <p className="text-muted-foreground">{t('pages.history.empty')}</p>
+            <Button variant="default" onClick={() => navigate('/mortgage/calculator')}>
+              {t('pages.history.emptySubtitle')}
+            </Button>
+          </CardContent>
+        </Card>
+      );
+    }
+
     return (
-      <div className="min-h-screen bg-gray-950">
-        <Sidebar />
-        <Header />
-        <main className="lg:ml-64 px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex items-center justify-center h-64">
-            <div className="text-gray-400">{t('shared:common.loading')}</div>
-          </div>
-        </main>
+      <div className="grid gap-6">
+        {history.map((item) => (
+          <MortgageHistoryCard
+            key={item.id}
+            title={t('pages.history.card.calculationNumber', { number: item.id })}
+            subtitle={`${item.banco_nombre} - ${formatDate(item.created_at)}`}
+            currency={item.moneda}
+            fields={[
+              {
+                label: t('pages.history.card.propertyPrice'),
+                value: formatCurrency(item.precio_venta, item.moneda),
+              },
+              {
+                label: t('pages.history.card.loanAmount'),
+                value: formatCurrency(item.monto_prestamo, item.moneda),
+              },
+              {
+                label: t('pages.history.card.fixedInstallment'),
+                value: formatCurrency(item.cuota_fija, item.moneda),
+              },
+              {
+                label: t('pages.history.card.term'),
+                value: t('pages.history.card.termMonths', { months: item.plazo_meses }),
+              },
+              {
+                label: t('pages.history.card.tcea'),
+                value: formatPercentageString(item.tcea, { fromDecimal: true }),
+              },
+              {
+                label: t('pages.history.card.created'),
+                value: formatDate(item.created_at),
+              },
+            ]}
+            actions={[
+              {
+                label: t('pages.history.actions.view'),
+                variant: 'default',
+                onClick: () => handleView(item.id),
+              },
+              {
+                label: t('pages.history.actions.delete'),
+                variant: 'destructive',
+                onClick: () => handleDelete(item.id),
+              },
+            ]}
+          />
+        ))}
       </div>
     );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gray-950">
-        <Sidebar />
-        <Header />
-        <main className="lg:ml-64 px-4 sm:px-6 lg:px-8 py-8">
-          <div className="bg-red-900/20 border border-red-800 rounded-lg p-4">
-            <p className="text-red-400">{error}</p>
-          </div>
-        </main>
-      </div>
-    );
-  }
+  };
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      <Sidebar />
-      <Header />
+    <MortgagePageLayout
+      title={t('pages.history.title')}
+      subtitle={t('pages.history.subtitle')}
+      actions={
+        <Button variant="default" onClick={() => navigate('/mortgage/calculator')}>{t('pages.history.createNew')}</Button>
+      }
+    >
+      {renderContent()}
 
-      <main className="lg:ml-64 px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-white">{t('history.title')}</h1>
-            <p className="mt-2 text-gray-400">{t('history.subtitle')}</p>
-          </div>
-          <div className="mt-4 md:mt-0">
-            <Button onClick={() => navigate('/mortgage/calculator')}>
-              {t('history.createNew')}
-            </Button>
-          </div>
-        </div>
-
-        {history.length === 0 ? (
-          <div className="bg-gray-900 border border-gray-800 rounded-lg p-12 text-center">
-            <p className="text-gray-400 mb-4">{t('history.empty')}</p>
-            <Button onClick={() => navigate('/mortgage/calculator')}>
-              {t('history.emptySubtitle')}
-            </Button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-6">
-            {history.map((item) => (
-              <div key={item.id} className="bg-gray-900 border border-gray-800 rounded-lg p-6 hover:border-gray-700 transition-colors">
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center mb-4">
-                      <h3 className="text-lg font-semibold text-white">
-                        {t('history.card.calculationNumber', { number: item.id })}
-                      </h3>
-                      <span className="ml-3 inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-900/30 text-blue-400 border border-blue-800">
-                        {item.currency}
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                      <div>
-                        <p className="text-gray-400">{t('history.card.propertyPrice')}</p>
-                        <p className="font-semibold text-white">{item.currency} {formatCurrency(item.property_price)}</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-400">{t('history.card.loanAmount')}</p>
-                        <p className="font-semibold text-white">{item.currency} {formatCurrency(item.loan_amount)}</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-400">{t('history.card.term')}</p>
-                        <p className="font-semibold text-white">{t('history.card.termMonths', { months: item.term_months })}</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-400">{t('history.card.fixedInstallment')}</p>
-                        <p className="font-semibold text-white">{item.currency} {formatCurrency(item.fixed_installment)}</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-400">{t('history.card.tcea')}</p>
-                        <p className="font-semibold text-white">{formatPercentage(item.tcea)}%</p>
-                      </div>
-                      <div className="col-span-2 md:col-span-3">
-                        <p className="text-gray-400">{t('history.card.created')}</p>
-                        <p className="font-semibold text-white">{formatDate(item.created_at)}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-4 lg:mt-0 lg:ml-6 flex flex-row lg:flex-col gap-2">
-                    <Button
-                      onClick={() => handleView(item.id)}
-                      className="flex-1 lg:flex-none"
-                    >
-                      {t('history.actions.view')}
-                    </Button>
-                    <button
-                      onClick={() => handleDelete(item.id)}
-                      className="flex-1 lg:flex-none px-4 py-2 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-900/20 border border-red-800 rounded-lg transition-colors"
-                    >
-                      {t('history.actions.delete')}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </main>
-    </div>
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('pages.history.confirmDeleteTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('pages.history.confirmDelete')}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setMortgageToDelete(null)}>
+              {t('shared:common.cancel')}
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete}>
+              {t('pages.history.actions.delete')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </MortgagePageLayout>
   );
 };
 

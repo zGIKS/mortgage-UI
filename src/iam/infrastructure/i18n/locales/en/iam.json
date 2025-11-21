@@ -53,6 +53,8 @@
     },
     "updateProfile": {
       "title": "Update Profile",
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "Enter your full name",
       "email": "Email",
       "emailPlaceholder": "Enter new email",
       "newPassword": "New Password",

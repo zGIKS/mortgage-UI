@@ -1,0 +1,45 @@
+{
+  "financial": {
+    "terms": {
+      "principal": "Capital",
+      "interest": "Interés",
+      "apr": "Tasa Anual Efectiva",
+      "apy": "Rendimiento Porcentual Anual",
+      "amortization": "Amortización",
+      "escrow": "Depósito en Garantía",
+      "equity": "Patrimonio",
+      "ltv": "Préstamo-Valor",
+      "dti": "Deuda-Ingresos",
+      "pmi": "Seguro Hipotecario Privado",
+      "arm": "Hipoteca de Tasa Ajustable",
+      "fixed": "Hipoteca de Tasa Fija",
+      "refinance": "Refinanciamiento",
+      "preapproval": "Preaprobación",
+      "underwriting": "Suscripción",
+      "closing": "Cierre",
+      "origination": "Originación"
+    },
+    "currency": {
+      "format": "${{amount, number}}",
+      "percentage": "{{rate, number}}%"
+    }
+  },
+  "errors": {
+    "calculationFailed": "Error al calcular la hipoteca",
+    "loadingError": "Error al cargar los datos hipotecarios",
+    "saveError": "Error al guardar el cálculo hipotecario",
+    "deleteError": "Error al eliminar el cálculo hipotecario",
+    "exportError": "Error al exportar los datos",
+    "networkError": "Error de conexión de red"
+  },
+  "messages": {
+    "calculationSuccess": "Hipoteca calculada exitosamente",
+    "updateSuccess": "Hipoteca actualizada exitosamente",
+    "deleteSuccess": "Hipoteca eliminada exitosamente"
+  },
+  "success": {
+    "calculationSaved": "Cálculo hipotecario guardado exitosamente",
+    "calculationDeleted": "Cálculo hipotecario eliminado exitosamente",
+    "dataExported": "Datos exportados exitosamente"
+  }
+}

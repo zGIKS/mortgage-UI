@@ -1,0 +1,38 @@
+{
+  "title": "Transactions",
+  "subtitle": "View and manage your mortgage calculations",
+  "empty": "No mortgage calculations found",
+  "emptySubtitle": "Create Your First Calculation",
+  "createNew": "New Calculation",
+  "table": {
+    "date": "Date",
+    "loanAmount": "Loan Amount",
+    "interestRate": "Interest Rate",
+    "term": "Term",
+    "monthlyPayment": "Monthly Payment",
+    "actions": "Actions"
+  },
+  "card": {
+    "calculationNumber": "Calculation #{{number}}",
+    "propertyPrice": "Property Price",
+    "loanAmount": "Loan Amount",
+    "term": "Term",
+    "termMonths": "{{months}} months",
+    "fixedInstallment": "Fixed Installment",
+    "tcea": "TCEA",
+    "created": "Created"
+  },
+  "actions": {
+    "view": "View Details",
+    "duplicate": "Duplicate",
+    "delete": "Delete",
+    "export": "Export"
+  },
+  "confirmDelete": "Are you sure you want to delete this calculation?",
+  "confirmDeleteTitle": "Delete Calculation",
+  "messages": {
+    "deleteSuccess": "Calculation deleted successfully",
+    "deleteFailed": "Failed to delete calculation",
+    "loadingError": "Failed to fetch history"
+  }
+}

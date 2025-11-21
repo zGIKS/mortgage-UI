@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { authService } from '../../application/auth-service';
-import { Input } from '../../../shared/components/Input';
-import { Button } from '../../../shared/components/Button';
-import { Card } from '../../../shared/components/Card';
 import { LanguageToggle } from '../../../shared/components/LanguageToggle';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -14,7 +16,6 @@ export function LoginPage() {
     email: '',
     password: '',
   });
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -22,74 +23,74 @@ export function LoginPage() {
       ...formData,
       [e.target.name]: e.target.value,
     });
-    setError('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
 
     try {
       await authService.login(formData.email, formData.password);
+      toast.success(t('auth.success.loginSuccess'));
       navigate('/home');
     } catch (err) {
-      setError(err.message || t('auth.errors.loginFailed'));
+      toast.error(err.message || t('auth.errors.loginFailed'));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
-      <div className="absolute top-4 right-4">
+    <div className="relative flex min-h-screen items-center justify-center bg-background px-4 py-8">
+      <div className="absolute right-6 top-6">
         <LanguageToggle />
       </div>
-      
-      <Card className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">{t('auth.login.title')}</h1>
-          <p className="text-gray-400">{t('auth.login.subtitle')}</p>
-        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <Input
-            label={t('auth.login.email')}
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder={t('auth.login.email')}
-            required
-          />
-
-          <Input
-            label={t('auth.login.password')}
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder={t('auth.login.password')}
-            required
-          />
-
-          {error && (
-            <div className="bg-red-900/20 border border-red-900 text-red-400 px-4 py-3 rounded-lg">
-              {error}
+      <Card className="w-full max-w-md border-border/70 bg-card/95">
+        <CardHeader className="space-y-2 text-center">
+          <CardTitle className="text-3xl">{t('auth.login.title')}</CardTitle>
+          <CardDescription>{t('auth.login.subtitle')}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="login-email">{t('auth.login.email')}</Label>
+              <Input
+                id="login-email"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder={t('auth.login.email')}
+                required
+              />
             </div>
-          )}
 
-          <Button type="submit" disabled={loading} className="w-full">
-            {loading ? t('shared:common.loading') : t('auth.login.submit')}
-          </Button>
+            <div className="space-y-2">
+              <Label htmlFor="login-password">{t('auth.login.password')}</Label>
+              <Input
+                id="login-password"
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder={t('auth.login.password')}
+                required
+              />
+            </div>
 
-          <p className="text-center text-gray-400 text-sm">
-            {t('auth.login.noAccount')}{' '}
-            <Link to="/register" className="text-blue-500 hover:text-blue-400 font-medium">
-              {t('auth.login.createAccount')}
-            </Link>
-          </p>
-        </form>
+            <Button type="submit" disabled={loading} className="w-full">
+              {loading ? t('shared:common.loading') : t('auth.login.submit')}
+            </Button>
+
+            <p className="text-center text-sm text-muted-foreground">
+              {t('auth.login.noAccount')}{' '}
+              <Link to="/register" className="font-medium text-primary hover:underline">
+                {t('auth.login.createAccount')}
+              </Link>
+            </p>
+          </form>
+        </CardContent>
       </Card>
     </div>
   );

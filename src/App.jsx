@@ -7,6 +7,7 @@ import MortgageCalculatorPage from './mortgage/pages/MortgageCalculatorPage';
 import MortgageHistoryPage from './mortgage/pages/MortgageHistoryPage';
 import MortgageDetailPage from './mortgage/pages/MortgageDetailPage';
 import { authService } from './iam/application/auth-service';
+import { Toaster } from '@/components/ui/sonner';
 
 function PrivateRoute({ children }) {
   return authService.isAuthenticated() ? children : <Navigate to="/login" />;
@@ -15,6 +16,7 @@ function PrivateRoute({ children }) {
 function App() {
   return (
     <Router>
+      <Toaster />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />

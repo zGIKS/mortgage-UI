@@ -11,8 +11,8 @@ import iamEn from '../../iam/infrastructure/i18n/locales/en/iam.json';
 import iamEs from '../../iam/infrastructure/i18n/locales/es/iam.json';
 
 // Import Mortgage translations
-import mortgageEn from '../../mortgage/infrastructure/i18n/locales/en/mortgage.json';
-import mortgageEs from '../../mortgage/infrastructure/i18n/locales/es/mortgage.json';
+import mortgageEn from '../../mortgage/infrastructure/i18n/locales/en';
+import mortgageEs from '../../mortgage/infrastructure/i18n/locales/es';
 
 const resources = {
   en: {

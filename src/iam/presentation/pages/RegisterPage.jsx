@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { authService } from '../../application/auth-service';
-import { Input } from '../../../shared/components/Input';
-import { Button } from '../../../shared/components/Button';
-import { Card } from '../../../shared/components/Card';
 import { LanguageToggle } from '../../../shared/components/LanguageToggle';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 export function RegisterPage() {
   const navigate = useNavigate();
@@ -15,7 +17,6 @@ export function RegisterPage() {
     password: '',
     full_name: '',
   });
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -23,84 +24,87 @@ export function RegisterPage() {
       ...formData,
       [e.target.name]: e.target.value,
     });
-    setError('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
 
     try {
       await authService.register(formData.email, formData.password, formData.full_name);
+      toast.success(t('auth.success.accountCreated'));
       navigate('/login');
     } catch (err) {
-      setError(err.message || t('auth.errors.registerFailed'));
+      toast.error(err.message || t('auth.errors.registerFailed'));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
-      <div className="absolute top-4 right-4">
+    <div className="relative flex min-h-screen items-center justify-center bg-background px-4 py-8">
+      <div className="absolute right-6 top-6">
         <LanguageToggle />
       </div>
-      
-      <Card className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">{t('auth.register.title')}</h1>
-          <p className="text-gray-400">{t('auth.register.subtitle')}</p>
-        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <Input
-            label={t('auth.register.firstName')}
-            type="text"
-            name="full_name"
-            value={formData.full_name}
-            onChange={handleChange}
-            placeholder={t('auth.register.firstName')}
-            required
-          />
-
-          <Input
-            label={t('auth.register.email')}
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder={t('auth.register.email')}
-            required
-          />
-
-          <Input
-            label={t('auth.register.password')}
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder={t('auth.register.password')}
-            required
-          />
-
-          {error && (
-            <div className="bg-red-900/20 border border-red-900 text-red-400 px-4 py-3 rounded-lg">
-              {error}
+      <Card className="w-full max-w-md border-border/70 bg-card/95">
+        <CardHeader className="space-y-2 text-center">
+          <CardTitle className="text-3xl">{t('auth.register.title')}</CardTitle>
+          <CardDescription>{t('auth.register.subtitle')}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="register-name">{t('auth.register.firstName')}</Label>
+              <Input
+                id="register-name"
+                type="text"
+                name="full_name"
+                value={formData.full_name}
+                onChange={handleChange}
+                placeholder={t('auth.register.firstName')}
+                required
+              />
             </div>
-          )}
 
-          <Button type="submit" disabled={loading} className="w-full">
-            {loading ? t('shared:common.loading') : t('auth.register.submit')}
-          </Button>
+            <div className="space-y-2">
+              <Label htmlFor="register-email">{t('auth.register.email')}</Label>
+              <Input
+                id="register-email"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder={t('auth.register.email')}
+                required
+              />
+            </div>
 
-          <p className="text-center text-gray-400 text-sm">
-            {t('auth.register.hasAccount')}{' '}
-            <Link to="/login" className="text-blue-500 hover:text-blue-400 font-medium">
-              {t('auth.register.signIn')}
-            </Link>
-          </p>
-        </form>
+            <div className="space-y-2">
+              <Label htmlFor="register-password">{t('auth.register.password')}</Label>
+              <Input
+                id="register-password"
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder={t('auth.register.password')}
+                required
+              />
+            </div>
+
+            <Button type="submit" disabled={loading} className="w-full">
+              {loading ? t('shared:common.loading') : t('auth.register.submit')}
+            </Button>
+
+            <p className="text-center text-sm text-muted-foreground">
+              {t('auth.register.hasAccount')}{' '}
+              <Link to="/login" className="font-medium text-primary hover:underline">
+                {t('auth.register.signIn')}
+              </Link>
+            </p>
+          </form>
+        </CardContent>
       </Card>
     </div>
   );

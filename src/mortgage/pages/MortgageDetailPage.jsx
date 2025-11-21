@@ -1,12 +1,27 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
+import { ArrowLeft } from 'lucide-react';
 import { mortgageService } from '../api/mortgageService';
 import PaymentScheduleTable from '../components/PaymentScheduleTable';
 import MortgageCalculatorForm from '../components/MortgageCalculatorForm';
-import { Button } from '../../shared/components/Button';
-import { Header } from '../../shared/components/Header';
-import { Sidebar } from '../../shared/components/Sidebar';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import MortgagePageLayout from '../components/layout/MortgagePageLayout';
+import MetricsGrid from '../components/common/MetricsGrid';
+import KeyValueGrid from '../components/common/KeyValueGrid';
+import { useFinancialFormatters } from '../hooks/useFinancialFormatters';
 
 const MortgageDetailPage = () => {
   const { id } = useParams();
@@ -14,287 +29,274 @@ const MortgageDetailPage = () => {
   const { t } = useTranslation('mortgage');
   const [mortgage, setMortgage] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [updateLoading, setUpdateLoading] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const { formatCurrency, formatPercentageString, formatDate } = useFinancialFormatters();
 
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(value);
-  };
-
-  const formatPercentage = (value) => {
-    return value ? parseFloat(value).toFixed(6) : '0.000000';
-  };
-
-  const formatRateType = (rateType) => {
-    return rateType === 'EFFECTIVE' ? t('calculator.form.options.rateTypes.effective') : t('calculator.form.options.rateTypes.nominal');
-  };
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
-  const fetchMortgage = async () => {
+  const fetchMortgage = useCallback(async () => {
     setLoading(true);
-    setError(null);
 
     try {
       const data = await mortgageService.getMortgageById(id);
       setMortgage(data);
     } catch (err) {
-      setError(err?.message || t('details.messages.loadingError'));
+      toast.error(err?.message || t('pages.details.messages.loadingError'));
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, t]);
 
   const handleUpdate = async (formData) => {
     setUpdateLoading(true);
-    setError(null);
 
     try {
       const updatedData = await mortgageService.updateMortgage(id, formData);
       setMortgage(updatedData);
       setIsEditing(false);
+      toast.success(t('pages.details.messages.updateSuccess'));
     } catch (err) {
-      setError(err?.message || t('details.messages.updateError'));
+      toast.error(err?.message || t('pages.details.messages.updateError'));
     } finally {
       setUpdateLoading(false);
     }
   };
 
-  const handleDelete = async () => {
-    if (!window.confirm(t('details.confirmDelete'))) {
-      return;
-    }
+  const handleDelete = () => {
+    setDeleteDialogOpen(true);
+  };
 
+  const confirmDelete = async () => {
     try {
       await mortgageService.deleteMortgage(id);
+      toast.success(t('pages.details.messages.deleteSuccess'));
       navigate('/mortgage/history');
     } catch (err) {
-      alert(t('details.messages.deleteError') + ': ' + (err?.message || 'Unknown error'));
+      toast.error(err?.message || t('pages.details.messages.deleteError'));
     }
   };
 
   useEffect(() => {
     fetchMortgage();
-  }, [id]);
+  }, [fetchMortgage]);
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-950">
-        <Sidebar />
-        <Header />
-        <main className="lg:ml-64 px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex items-center justify-center h-64">
-            <div className="text-gray-400">Loading...</div>
-          </div>
-        </main>
-      </div>
-    );
-  }
-
-  if (error && !mortgage) {
-    return (
-      <div className="min-h-screen bg-gray-950">
-        <Sidebar />
-        <Header />
-        <main className="lg:ml-64 px-4 sm:px-6 lg:px-8 py-8">
-          <div className="bg-red-900/20 border border-red-800 rounded-lg p-4 mb-4">
-            <p className="text-red-400">{error}</p>
-          </div>
-          <Button onClick={() => navigate('/mortgage/history')}>
-            {t('details.backToHistory')}
-          </Button>
-        </main>
-      </div>
+      <MortgagePageLayout header={null}>
+        <div className="flex h-64 items-center justify-center">
+          <span className="text-muted-foreground">{t('shared:common.loading')}</span>
+        </div>
+      </MortgagePageLayout>
     );
   }
 
   if (!mortgage) {
-    return null;
+    return (
+      <MortgagePageLayout header={null}>
+        <div className="flex h-64 items-center justify-center">
+          <Button variant="outline" onClick={() => navigate('/mortgage/history')}>
+            {t('pages.details.backToHistory')}
+          </Button>
+        </div>
+      </MortgagePageLayout>
+    );
   }
 
-  return (
-    <div className="min-h-screen bg-gray-950">
-      <Sidebar />
-      <Header />
+  const metrics = [
+    {
+      label: t('pages.details.metrics.fixedInstallment'),
+      value: formatCurrency(mortgage.cuota_fija, mortgage.moneda),
+      accent: 'text-primary',
+    },
+    {
+      label: t('pages.details.metrics.principalFinanced'),
+      value: formatCurrency(mortgage.saldo_financiar, mortgage.moneda),
+      accent: 'text-primary',
+    },
+    {
+      label: t('pages.details.metrics.totalInterestPaid'),
+      value: formatCurrency(mortgage.total_intereses, mortgage.moneda),
+      accent: 'text-secondary',
+    },
+    {
+      label: t('pages.details.metrics.totalPaid'),
+      value: formatCurrency(mortgage.total_pagado, mortgage.moneda),
+      accent: 'text-secondary',
+    },
+    {
+      label: t('pages.details.metrics.tcea'),
+      value: formatPercentageString(mortgage.tcea, { decimals: 6 }),
+      accent: 'text-destructive',
+    },
+    {
+      label: t('pages.details.metrics.periodicRate'),
+      value: formatPercentageString(mortgage.tasa_periodo, { decimals: 6 }),
+      accent: 'text-primary',
+    },
+    {
+      label: t('pages.details.metrics.irr'),
+      value: formatPercentageString(mortgage.tir, { decimals: 6 }),
+      accent: 'text-primary',
+    },
+    mortgage.van !== 0 && {
+      label: t('pages.details.metrics.npv'),
+      value: formatCurrency(mortgage.van, mortgage.moneda),
+      accent: 'text-secondary',
+    },
+    {
+      label: t('pages.details.metrics.term'),
+      value: t('pages.details.fields.termMonths', { months: mortgage.plazo_meses }),
+      accent: 'text-muted-foreground',
+    },
+  ].filter(Boolean);
 
-      <main className="lg:ml-64 px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
-          <div>
-            <div className="flex items-center gap-4 mb-2">
-              <button
-                onClick={() => navigate('/mortgage/history')}
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                {t('details.back')}
-              </button>
-            </div>
-            <h1 className="text-3xl font-bold text-white">{t('details.title', { id: mortgage.id })}</h1>
-            <p className="mt-2 text-gray-400">{t('details.createdOn', { date: formatDate(mortgage.created_at) })}</p>
-          </div>
-          <div className="mt-4 md:mt-0 flex gap-2">
-            {!isEditing ? (
-              <>
-                <Button onClick={() => setIsEditing(true)}>
-                  {t('details.edit')}
-                </Button>
-                <button
-                  onClick={handleDelete}
-                  className="px-4 py-2 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-900/20 border border-red-800 rounded-lg transition-colors"
-                >
-                  {t('details.delete')}
-                </button>
-              </>
-            ) : (
-              <Button
-                onClick={() => {
-                  setIsEditing(false);
-                  setError(null);
-                }}
-                variant="outline"
-              >
-                {t('details.cancel')}
-              </Button>
-            )}
-          </div>
-        </div>
+  const summaryDetails = [
+    {
+      label: t('pages.details.fields.bank'),
+      value: mortgage.banco_nombre,
+    },
+    {
+      label: t('pages.details.fields.propertyPrice'),
+      value: formatCurrency(mortgage.precio_venta, mortgage.moneda),
+    },
+    {
+      label: t('pages.details.fields.downPayment'),
+      value: formatCurrency(mortgage.cuota_inicial, mortgage.moneda),
+    },
+    {
+      label: t('pages.details.fields.loanAmount'),
+      value: formatCurrency(mortgage.monto_prestamo, mortgage.moneda),
+    },
+    {
+      label: t('pages.details.fields.bonusTechoPropio'),
+      value: formatCurrency(mortgage.bono_techo_propio, mortgage.moneda),
+    },
+    {
+      label: t('pages.details.fields.interestRate'),
+      value: `${mortgage.tea}% (${mortgage.tipo_tasa})`,
+    },
+    {
+      label: t('pages.details.fields.gracePeriod'),
+      value:
+        mortgage.tipo_gracia === 'NONE'
+          ? t('pages.details.fields.gracePeriodNone')
+          : t('pages.details.fields.gracePeriodValue', {
+              months: mortgage.meses_gracia,
+              type: mortgage.tipo_gracia,
+            }),
+    },
+  ];
 
-        {error && mortgage && (
-          <div className="bg-red-900/20 border border-red-800 rounded-lg p-4 mb-8">
-            <p className="text-red-400">{error}</p>
-          </div>
+  const headerContent = (
+    <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => navigate('/mortgage/history')}
+          className="mb-2 gap-2"
+        >
+          <ArrowLeft className="h-4 w-4" aria-hidden />
+          {t('pages.details.back')}
+        </Button>
+        <h1 className="text-3xl font-semibold text-foreground">
+          {t('pages.details.title', { id: mortgage.id })}
+        </h1>
+        <p className="text-sm text-muted-foreground">
+          {t('pages.details.createdOn', { date: formatDate(mortgage.created_at) })}
+        </p>
+      </div>
+      <div className="flex gap-2">
+        {!isEditing ? (
+          <>
+            <Button variant="default" onClick={() => setIsEditing(true)}>
+              {t('pages.details.edit')}
+            </Button>
+            <Button variant="destructive" onClick={handleDelete}>
+              {t('pages.details.delete')}
+            </Button>
+          </>
+        ) : (
+          <Button
+            variant="secondary"
+            onClick={() => setIsEditing(false)}
+          >
+            {t('pages.details.cancel')}
+          </Button>
         )}
+      </div>
+    </div>
+  );
 
-        {isEditing ? (
-          <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 mb-8">
-            <h2 className="text-xl font-semibold text-white mb-6">{t('details.editTitle')}</h2>
+  return (
+    <MortgagePageLayout header={headerContent}>
+      {isEditing ? (
+        <Card className="border-border/70 bg-card/90">
+          <CardHeader>
+            <CardTitle>{t('pages.details.editTitle')}</CardTitle>
+          </CardHeader>
+          <CardContent>
             <MortgageCalculatorForm
               onCalculate={handleUpdate}
               loading={updateLoading}
               initialData={{
-                property_price: mortgage.property_price,
-                down_payment: mortgage.down_payment,
-                loan_amount: mortgage.loan_amount,
+                banco_id: mortgage.banco_id,
+                precio_venta: mortgage.precio_venta,
+                cuota_inicial: mortgage.cuota_inicial,
+                monto_prestamo: mortgage.monto_prestamo,
                 bono_techo_propio: mortgage.bono_techo_propio,
-                interest_rate: mortgage.interest_rate,
-                rate_type: mortgage.rate_type,
-                term_months: mortgage.term_months,
-                grace_period_months: mortgage.grace_period_months,
-                grace_period_type: mortgage.grace_period_type,
-                currency: mortgage.currency,
-                npv_discount_rate: mortgage.npv_discount_rate || 0
+                tea: mortgage.tea,
+                plazo_meses: mortgage.plazo_meses,
+                meses_gracia: mortgage.meses_gracia,
+                tipo_gracia: mortgage.tipo_gracia,
+                moneda: mortgage.moneda,
+                tasa_descuento: mortgage.tasa_descuento || 0,
               }}
             />
-          </div>
-        ) : (
-          <>
-            <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 mb-8">
-              <h2 className="text-xl font-semibold text-white mb-6">{t('details.summaryTitle')}</h2>
+          </CardContent>
+        </Card>
+      ) : (
+        <>
+          <Card className="border-border/70 bg-card/90">
+            <CardHeader>
+              <CardTitle>{t('pages.details.summaryTitle')}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <MetricsGrid metrics={metrics} />
+              <KeyValueGrid items={summaryDetails} />
+            </CardContent>
+          </Card>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div className="bg-blue-900/20 border border-blue-800 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">{t('details.metrics.fixedInstallment')}</p>
-                  <p className="text-2xl font-bold text-blue-400">{mortgage.currency} {formatCurrency(mortgage.fixed_installment)}</p>
-                </div>
+          <Card className="border-border/70 bg-card/90">
+            <CardHeader>
+              <CardTitle>{t('pages.details.amortizationSchedule')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <PaymentScheduleTable schedule={mortgage.cronograma_pagos} />
+            </CardContent>
+          </Card>
+        </>
+      )}
 
-                <div className="bg-green-900/20 border border-green-800 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">{t('details.metrics.principalFinanced')}</p>
-                  <p className="text-2xl font-bold text-green-400">{mortgage.currency} {formatCurrency(mortgage.principal_financed)}</p>
-                </div>
-
-                <div className="bg-purple-900/20 border border-purple-800 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">{t('details.metrics.totalInterestPaid')}</p>
-                  <p className="text-2xl font-bold text-purple-400">{mortgage.currency} {formatCurrency(mortgage.total_interest_paid)}</p>
-                </div>
-
-                <div className="bg-indigo-900/20 border border-indigo-800 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">{t('details.metrics.totalPaid')}</p>
-                  <p className="text-2xl font-bold text-indigo-400">{mortgage.currency} {formatCurrency(mortgage.total_paid)}</p>
-                </div>
-
-                <div className="bg-yellow-900/20 border border-yellow-800 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">{t('details.metrics.tcea')}</p>
-                  <p className="text-2xl font-bold text-yellow-400">{formatPercentage(mortgage.tcea)}%</p>
-                </div>
-
-                <div className="bg-pink-900/20 border border-pink-800 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">{t('details.metrics.periodicRate')}</p>
-                  <p className="text-2xl font-bold text-pink-400">{formatPercentage(mortgage.periodic_rate)}%</p>
-                </div>
-
-                <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">{t('details.metrics.irr')}</p>
-                  <p className="text-2xl font-bold text-gray-300">{formatPercentage(mortgage.irr)}%</p>
-                </div>
-
-                {mortgage.npv !== 0 && (
-                  <div className="bg-teal-900/20 border border-teal-800 rounded-lg p-4">
-                    <p className="text-sm text-gray-400 mb-1">{t('details.metrics.npv')}</p>
-                    <p className="text-2xl font-bold text-teal-400">{mortgage.currency} {formatCurrency(mortgage.npv)}</p>
-                  </div>
-                )}
-
-                <div className="bg-orange-900/20 border border-orange-800 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">{t('details.metrics.term')}</p>
-                  <p className="text-2xl font-bold text-orange-400">{t('details.fields.termMonths', { months: mortgage.term_months })}</p>
-                </div>
-              </div>
-
-              <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div className="flex justify-between py-2 border-b border-gray-800">
-                  <span className="text-gray-400">{t('details.fields.propertyPrice')}</span>
-                  <span className="font-semibold text-white">{mortgage.currency} {formatCurrency(mortgage.property_price)}</span>
-                </div>
-                <div className="flex justify-between py-2 border-b border-gray-800">
-                  <span className="text-gray-400">{t('details.fields.downPayment')}</span>
-                  <span className="font-semibold text-white">{mortgage.currency} {formatCurrency(mortgage.down_payment)}</span>
-                </div>
-                <div className="flex justify-between py-2 border-b border-gray-800">
-                  <span className="text-gray-400">{t('details.fields.loanAmount')}</span>
-                  <span className="font-semibold text-white">{mortgage.currency} {formatCurrency(mortgage.loan_amount)}</span>
-                </div>
-                <div className="flex justify-between py-2 border-b border-gray-800">
-                  <span className="text-gray-400">{t('details.fields.bonusTechoPropio')}</span>
-                  <span className="font-semibold text-white">{mortgage.currency} {formatCurrency(mortgage.bono_techo_propio)}</span>
-                </div>
-                <div className="flex justify-between py-2 border-b border-gray-800">
-                  <span className="text-gray-400">{t('details.fields.interestRate')}</span>
-                  <span className="font-semibold text-white">{mortgage.interest_rate}% ({formatRateType(mortgage.rate_type)})</span>
-                </div>
-                <div className="flex justify-between py-2 border-b border-gray-800">
-                  <span className="text-gray-400">{t('details.fields.gracePeriod')}</span>
-                  <span className="font-semibold text-white">
-                    {mortgage.grace_period_type === 'NONE' ? 
-                      t('details.fields.gracePeriodNone') : 
-                      t('details.fields.gracePeriodValue', { 
-                        months: mortgage.grace_period_months, 
-                        type: mortgage.grace_period_type 
-                      })
-                    }
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
-              <h2 className="text-xl font-semibold text-white mb-6">{t('details.amortizationSchedule')}</h2>
-              <PaymentScheduleTable schedule={mortgage.payment_schedule} />
-            </div>
-          </>
-        )}
-      </main>
-    </div>
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('pages.details.confirmDeleteTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('pages.details.confirmDelete')}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>
+              {t('shared:common.cancel')}
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete}>
+              {t('pages.details.delete')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </MortgagePageLayout>
   );
 };
 

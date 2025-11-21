@@ -1,157 +1,163 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import MortgageCalculatorForm from '../components/MortgageCalculatorForm';
 import PaymentScheduleTable from '../components/PaymentScheduleTable';
 import { mortgageService } from '../api/mortgageService';
-import { Header } from '../../shared/components/Header';
-import { Sidebar } from '../../shared/components/Sidebar';
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import MortgagePageLayout from '../components/layout/MortgagePageLayout';
+import MetricsGrid from '../components/common/MetricsGrid';
+import KeyValueGrid from '../components/common/KeyValueGrid';
+import { useFinancialFormatters } from '../hooks/useFinancialFormatters';
 
 const MortgageCalculatorPage = () => {
   const { t } = useTranslation('mortgage');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
-  const [error, setError] = useState(null);
-
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(value);
-  };
-
-  const formatPercentage = (value) => {
-    return (value * 100).toFixed(4);
-  };
+  const { formatCurrency, formatPercentageString } = useFinancialFormatters();
 
   const handleCalculate = async (formData) => {
     setLoading(true);
-    setError(null);
     setResult(null);
 
     try {
       const data = await mortgageService.calculateMortgage(formData);
       setResult(data);
+      toast.success(t('shared.messages.calculationSuccess'));
     } catch (err) {
-      setError(err?.message || t('errors.calculationFailed'));
+      toast.error(err?.message || t('shared.errors.calculationFailed'));
     } finally {
       setLoading(false);
     }
   };
 
+  const summaryMetrics = result
+    ? [
+        {
+          label: t('pages.calculator.results.monthlyPayment'),
+          value: formatCurrency(result.cuota_fija, result.moneda),
+          accent: 'text-primary',
+        },
+        {
+          label: t('shared.financial.terms.principal'),
+          value: formatCurrency(result.saldo_financiar, result.moneda),
+          accent: 'text-primary',
+        },
+        {
+          label: t('pages.calculator.results.totalInterest'),
+          value: formatCurrency(result.total_intereses, result.moneda),
+          accent: 'text-secondary',
+        },
+        {
+          label: t('pages.calculator.results.totalCost'),
+          value: formatCurrency(result.total_pagado, result.moneda),
+          accent: 'text-secondary',
+        },
+        {
+          label: 'TCEA',
+          value: formatPercentageString(result.tcea, { fromDecimal: true }),
+          accent: 'text-destructive',
+        },
+        {
+          label: t('pages.details.metrics.periodicRate'),
+          value: formatPercentageString(result.tasa_periodo, { fromDecimal: true }),
+          accent: 'text-primary',
+        },
+        {
+          label: 'TIR',
+          value: formatPercentageString(result.tir, { fromDecimal: true }),
+          accent: 'text-primary',
+        },
+        result.van !== 0 && {
+          label: 'VAN',
+          value: formatCurrency(result.van, result.moneda),
+          accent: 'text-secondary',
+        },
+        {
+          label: t('pages.details.metrics.term'),
+          value: t('pages.history.card.termMonths', { months: result.plazo_meses }),
+          accent: 'text-muted-foreground',
+        },
+      ].filter(Boolean)
+    : [];
+
+  const loanDetails = result
+    ? [
+        {
+          label: t('pages.details.fields.bank'),
+          value: result.banco_nombre,
+        },
+        {
+          label: t('pages.details.fields.propertyPrice'),
+          value: formatCurrency(result.precio_venta, result.moneda),
+        },
+        {
+          label: t('pages.details.fields.downPayment'),
+          value: formatCurrency(result.cuota_inicial, result.moneda),
+        },
+        {
+          label: t('pages.details.fields.loanAmount'),
+          value: formatCurrency(result.monto_prestamo, result.moneda),
+        },
+        {
+          label: t('pages.details.fields.bonusTechoPropio'),
+          value: formatCurrency(result.bono_techo_propio, result.moneda),
+        },
+        {
+          label: t('pages.details.fields.interestRate'),
+          value: `${result.tea}% (${result.tipo_tasa})`,
+        },
+        {
+          label: t('pages.details.fields.gracePeriod'),
+          value:
+            result.tipo_gracia === 'NONE'
+              ? t('pages.details.fields.gracePeriodNone')
+              : t('pages.details.fields.gracePeriodValue', {
+                  months: result.meses_gracia,
+                  type: result.tipo_gracia,
+                }),
+        },
+      ]
+    : [];
+
   return (
-    <div className="min-h-screen bg-gray-950">
-      <Sidebar />
-      <Header />
-
-      <main className="lg:ml-64 px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white">{t('calculator.title')}</h1>
-          <p className="mt-2 text-gray-400">{t('calculator.subtitle')}</p>
-        </div>
-
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 mb-8">
-          <h2 className="text-xl font-semibold text-white mb-6">{t('details.loanInfo')}</h2>
+    <MortgagePageLayout
+      title={t('pages.calculator.title')}
+      subtitle={t('pages.calculator.subtitle')}
+    >
+      <Card className="border-border/70 bg-card/90">
+        <CardHeader>
+          <CardTitle>{t('pages.details.loanInfo')}</CardTitle>
+          <CardDescription>{t('pages.calculator.subtitle')}</CardDescription>
+        </CardHeader>
+        <CardContent>
           <MortgageCalculatorForm onCalculate={handleCalculate} loading={loading} />
-        </div>
+        </CardContent>
+      </Card>
 
-        {error && (
-          <div className="bg-red-900/20 border border-red-800 rounded-lg p-4 mb-8">
-            <p className="text-red-400">{error}</p>
-          </div>
-        )}
+      {result && (
+        <>
+          <Card className="border-border/70 bg-card/90">
+            <CardHeader>
+              <CardTitle>{t('pages.calculator.results.title')}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <MetricsGrid metrics={summaryMetrics} />
+              <KeyValueGrid items={loanDetails} />
+            </CardContent>
+          </Card>
 
-        {result && (
-          <>
-            <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 mb-8">
-              <h2 className="text-xl font-semibold text-white mb-6">{t('calculator.results.title')}</h2>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div className="bg-blue-900/20 border border-blue-800 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">{t('calculator.results.monthlyPayment')}</p>
-                  <p className="text-2xl font-bold text-blue-400">{result.currency} {formatCurrency(result.fixed_installment)}</p>
-                </div>
-
-                <div className="bg-green-900/20 border border-green-800 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">{t('financial.terms.principal')}</p>
-                  <p className="text-2xl font-bold text-green-400">{result.currency} {formatCurrency(result.principal_financed)}</p>
-                </div>
-
-                <div className="bg-purple-900/20 border border-purple-800 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">{t('calculator.results.totalInterest')}</p>
-                  <p className="text-2xl font-bold text-purple-400">{result.currency} {formatCurrency(result.total_interest_paid)}</p>
-                </div>
-
-                <div className="bg-indigo-900/20 border border-indigo-800 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">{t('calculator.results.totalCost')}</p>
-                  <p className="text-2xl font-bold text-indigo-400">{result.currency} {formatCurrency(result.total_paid)}</p>
-                </div>
-
-                <div className="bg-yellow-900/20 border border-yellow-800 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">TCEA</p>
-                  <p className="text-2xl font-bold text-yellow-400">{formatPercentage(result.tcea)}%</p>
-                </div>
-
-                <div className="bg-pink-900/20 border border-pink-800 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">Periodic Rate</p>
-                  <p className="text-2xl font-bold text-pink-400">{formatPercentage(result.periodic_rate)}%</p>
-                </div>
-
-                <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">IRR</p>
-                  <p className="text-2xl font-bold text-gray-300">{formatPercentage(result.irr)}%</p>
-                </div>
-
-                {result.npv !== 0 && (
-                  <div className="bg-teal-900/20 border border-teal-800 rounded-lg p-4">
-                    <p className="text-sm text-gray-400 mb-1">NPV</p>
-                    <p className="text-2xl font-bold text-teal-400">{result.currency} {formatCurrency(result.npv)}</p>
-                  </div>
-                )}
-
-                <div className="bg-orange-900/20 border border-orange-800 rounded-lg p-4">
-                  <p className="text-sm text-gray-400 mb-1">Term</p>
-                  <p className="text-2xl font-bold text-orange-400">{result.term_months} months</p>
-                </div>
-              </div>
-
-              <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div className="flex justify-between py-2 border-b border-gray-800">
-                  <span className="text-gray-400">Property Price:</span>
-                  <span className="font-semibold text-white">{result.currency} {formatCurrency(result.property_price)}</span>
-                </div>
-                <div className="flex justify-between py-2 border-b border-gray-800">
-                  <span className="text-gray-400">{t('calculator.form.downPayment')}:</span>
-                  <span className="font-semibold text-white">{result.currency} {formatCurrency(result.down_payment)}</span>
-                </div>
-                <div className="flex justify-between py-2 border-b border-gray-800">
-                  <span className="text-gray-400">{t('calculator.form.loanAmount')}:</span>
-                  <span className="font-semibold text-white">{result.currency} {formatCurrency(result.loan_amount)}</span>
-                </div>
-                <div className="flex justify-between py-2 border-b border-gray-800">
-                  <span className="text-gray-400">Bono Techo Propio:</span>
-                  <span className="font-semibold text-white">{result.currency} {formatCurrency(result.bono_techo_propio)}</span>
-                </div>
-                <div className="flex justify-between py-2 border-b border-gray-800">
-                  <span className="text-gray-400">{t('calculator.form.interestRate')}:</span>
-                  <span className="font-semibold text-white">{result.interest_rate}% ({result.rate_type})</span>
-                </div>
-                <div className="flex justify-between py-2 border-b border-gray-800">
-                  <span className="text-gray-400">Grace Period:</span>
-                  <span className="font-semibold text-white">
-                    {result.grace_period_type === 'NONE' ? 'None' : `${result.grace_period_months} months (${result.grace_period_type})`}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
-              <h2 className="text-xl font-semibold text-white mb-6">{t('amortization.title')}</h2>
-              <PaymentScheduleTable schedule={result.payment_schedule} />
-            </div>
-          </>
-        )}
-      </main>
-    </div>
+          <Card className="border-border/70 bg-card/90">
+            <CardHeader>
+              <CardTitle>{t('pages.calculator.amortization.title')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <PaymentScheduleTable schedule={result.cronograma_pagos} />
+            </CardContent>
+          </Card>
+        </>
+      )}
+    </MortgagePageLayout>
   );
 };
 
