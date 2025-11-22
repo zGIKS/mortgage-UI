@@ -25,17 +25,29 @@ const mapBankFromApi = (data) => ({
   paymentFrequencyDays: data.payment_frequency_days,
   daysInYear: data.days_in_year,
   includesInflation: data.includes_inflation,
+  tea: data.tea,
+  fechaTea: data.fecha_tea,
+  moneda: data.moneda,
   createdAt: data.created_at,
 });
 
 export const bankService = {
   /**
-   * Get all available banks with their configuration
-   * @returns {Promise<Array>} List of banks
+   * Get all available banks with their configuration and current TEA from SBS
+   * @param {Object} options - Query options
+   * @param {string} [options.fecha] - Date to query TEA (YYYY-MM-DD). Uses current SBS date if not provided
+   * @param {string} [options.moneda='PEN'] - Currency: 'PEN' (soles) or 'USD' (dollars)
+   * @returns {Promise<Array>} List of banks with TEA
    */
-  getAllBanks: async () => {
+  getAllBanks: async ({ fecha, moneda = 'PEN' } = {}) => {
     try {
+      const params = { moneda };
+      if (fecha) {
+        params.fecha = fecha;
+      }
+
       const response = await axios.get(API_BASE_URL, {
+        params,
         headers: getAuthHeaders()
       });
       return response.data.map(mapBankFromApi);
@@ -45,13 +57,22 @@ export const bankService = {
   },
 
   /**
-   * Get a specific bank by ID
+   * Get a specific bank by ID with current TEA from SBS
    * @param {string} id - Bank ID (UUID)
-   * @returns {Promise<Object>} Bank details
+   * @param {Object} options - Query options
+   * @param {string} [options.fecha] - Date to query TEA (YYYY-MM-DD). Uses current SBS date if not provided
+   * @param {string} [options.moneda='PEN'] - Currency: 'PEN' (soles) or 'USD' (dollars)
+   * @returns {Promise<Object>} Bank details with TEA
    */
-  getBankById: async (id) => {
+  getBankById: async (id, { fecha, moneda = 'PEN' } = {}) => {
     try {
+      const params = { moneda };
+      if (fecha) {
+        params.fecha = fecha;
+      }
+
       const response = await axios.get(`${API_BASE_URL}/${id}`, {
+        params,
         headers: getAuthHeaders()
       });
       return mapBankFromApi(response.data);

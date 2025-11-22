@@ -17,6 +17,7 @@ const getAuthHeaders = () => {
 
 /**
  * Maps frontend calculate request to API format
+ * Note: TEA is automatically fetched from SBS API based on selected bank
  */
 const mapCalculateRequestToApi = (data) => ({
   banco_id: data.banco_id,
@@ -24,7 +25,6 @@ const mapCalculateRequestToApi = (data) => ({
   cuota_inicial: data.cuota_inicial,
   monto_prestamo: data.monto_prestamo,
   bono_techo_propio: data.bono_techo_propio || 0,
-  tea: data.tea,
   plazo_meses: data.plazo_meses,
   meses_gracia: data.meses_gracia || 0,
   tipo_gracia: data.tipo_gracia || 'NONE',
@@ -41,7 +41,6 @@ const mapUpdateRequestToApi = (data) => ({
   cuota_inicial: data.cuota_inicial,
   monto_prestamo: data.monto_prestamo,
   bono_techo_propio: data.bono_techo_propio || 0,
-  tea: data.tea,
   plazo_meses: data.plazo_meses,
   meses_gracia: data.meses_gracia || 0,
   tipo_gracia: data.tipo_gracia || 'NONE',

@@ -8,7 +8,13 @@
       "rateType": "Tipo de tasa",
       "frequency": "Frecuencia de pago",
       "daysInYear": "Días por año",
-      "days": "días"
+      "days": "días",
+      "teaFromSBS": "Las tasas TEA se obtienen automáticamente de la SBS según la fecha seleccionada",
+      "teaDate": "Fecha de consulta TEA",
+      "teaCurrency": "Moneda",
+      "teaDateLabel": "Fecha TEA",
+      "selectDate": "Seleccionar fecha",
+      "noBanks": "No hay bancos disponibles para la fecha seleccionada"
     },
     "propertyPrice": "Precio de la Propiedad",
     "propertyPricePlaceholder": "Ingresa el valor de la propiedad",

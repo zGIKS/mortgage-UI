@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,15 +12,22 @@ import {
   SelectContent,
   SelectItem,
 } from '@/components/ui/select';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Building2 } from 'lucide-react';
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Building2, CalendarIcon } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { bankService } from '../api/bankService';
 
 const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
-  const { t } = useTranslation('mortgage');
+  const { t, i18n } = useTranslation('mortgage');
   const [banks, setBanks] = useState([]);
   const [loadingBanks, setLoadingBanks] = useState(true);
   const [selectedBank, setSelectedBank] = useState(null);
+
+  // Bank query params
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedCurrency, setSelectedCurrency] = useState('PEN');
 
   const [formData, setFormData] = useState(initialData || {
     banco_id: '',
@@ -26,7 +35,6 @@ const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
     cuota_inicial: '',
     monto_prestamo: '',
     bono_techo_propio: '',
-    tea: '',
     plazo_meses: '',
     meses_gracia: '',
     tipo_gracia: 'NONE',
@@ -34,19 +42,28 @@ const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
     tasa_descuento: ''
   });
 
-  useEffect(() => {
-    const fetchBanks = async () => {
-      try {
-        const data = await bankService.getAllBanks();
-        setBanks(data);
-      } catch (error) {
-        console.error('Error fetching banks:', error);
-      } finally {
-        setLoadingBanks(false);
+  const fetchBanks = async () => {
+    setLoadingBanks(true);
+    try {
+      const fechaStr = format(selectedDate, 'yyyy-MM-dd');
+      const data = await bankService.getAllBanks({ fecha: fechaStr, moneda: selectedCurrency });
+      setBanks(data);
+
+      // Update selected bank if it exists
+      if (formData.banco_id) {
+        const updatedBank = data.find(b => b.id === formData.banco_id);
+        setSelectedBank(updatedBank || null);
       }
-    };
+    } catch (error) {
+      console.error('Error fetching banks:', error);
+    } finally {
+      setLoadingBanks(false);
+    }
+  };
+
+  useEffect(() => {
     fetchBanks();
-  }, []);
+  }, [selectedDate, selectedCurrency]);
 
   useEffect(() => {
     if (formData.banco_id) {
@@ -56,6 +73,11 @@ const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
       setSelectedBank(null);
     }
   }, [formData.banco_id, banks]);
+
+  // Sync currency selector with form currency
+  useEffect(() => {
+    setFormData(prev => ({ ...prev, moneda: selectedCurrency }));
+  }, [selectedCurrency]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -81,7 +103,6 @@ const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
       cuota_inicial: parseFloat(formData.cuota_inicial),
       monto_prestamo: parseFloat(formData.monto_prestamo),
       bono_techo_propio: parseFloat(formData.bono_techo_propio) || 0,
-      tea: parseFloat(formData.tea),
       plazo_meses: parseInt(formData.plazo_meses),
       meses_gracia: parseInt(formData.meses_gracia) || 0,
       tipo_gracia: formData.tipo_gracia,
@@ -92,6 +113,8 @@ const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
     onCalculate(payload);
   };
 
+  const calendarLocale = i18n.language === 'es' ? es : undefined;
+
   return (
     <div className="space-y-6">
       {/* Bank Selection Card */}
@@ -101,10 +124,67 @@ const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
             <Building2 className="h-5 w-5" />
             {t('pages.calculator.form.selectBank')}
           </CardTitle>
+          <CardDescription>
+            {t('pages.calculator.form.bankInfo.teaFromSBS')}
+          </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
+          {/* Date and Currency filters */}
+          <div className="flex flex-wrap gap-4">
+            <div className="space-y-2">
+              <Label>{t('pages.calculator.form.bankInfo.teaDate')}</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-[200px] justify-start text-left font-normal",
+                      !selectedDate && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {selectedDate ? format(selectedDate, "PPP", { locale: calendarLocale }) : t('pages.calculator.form.bankInfo.selectDate')}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={(date) => date && setSelectedDate(date)}
+                    disabled={(date) => date > new Date()}
+                    initialFocus
+                    locale={calendarLocale}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            <div className="space-y-2">
+              <Label>{t('pages.calculator.form.bankInfo.teaCurrency')}</Label>
+              <Select
+                value={selectedCurrency}
+                onValueChange={setSelectedCurrency}
+              >
+                <SelectTrigger className="w-[200px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="PEN">
+                    {t('pages.calculator.form.options.currencies.pen')}
+                  </SelectItem>
+                  <SelectItem value="USD">
+                    {t('pages.calculator.form.options.currencies.usd')}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Banks grid */}
           {loadingBanks ? (
             <p className="text-muted-foreground">{t('shared:common.loading')}</p>
+          ) : banks.length === 0 ? (
+            <p className="text-muted-foreground">{t('pages.calculator.form.bankInfo.noBanks')}</p>
           ) : (
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {banks.map((bank) => (
@@ -119,22 +199,28 @@ const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
                   }`}
                 >
                   <span className="font-medium">{bank.name}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg font-bold text-primary">{bank.tea}%</span>
+                    <span className="text-xs text-muted-foreground">TEA</span>
+                  </div>
                   <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-                    <span>{t('pages.calculator.form.bankInfo.rateType')}: {bank.rateType}</span>
+                    <span>{bank.rateType}</span>
                     <span>•</span>
-                    <span>{t('pages.calculator.form.bankInfo.frequency')}: {bank.paymentFrequencyDays} {t('pages.calculator.form.bankInfo.days')}</span>
+                    <span>{bank.paymentFrequencyDays} {t('pages.calculator.form.bankInfo.days')}</span>
                   </div>
                 </button>
               ))}
             </div>
           )}
+
           {selectedBank && (
             <div className="mt-4 rounded-md bg-muted/50 p-3 text-sm">
               <p className="font-medium">{t('pages.calculator.form.bankInfo.selected')}: {selectedBank.name}</p>
               <div className="mt-1 flex flex-wrap gap-4 text-muted-foreground">
+                <span>TEA: <strong className="text-foreground">{selectedBank.tea}%</strong></span>
                 <span>{t('pages.calculator.form.bankInfo.rateType')}: {selectedBank.rateType}</span>
                 <span>{t('pages.calculator.form.bankInfo.daysInYear')}: {selectedBank.daysInYear}</span>
-                <span>{t('pages.calculator.form.bankInfo.frequency')}: {selectedBank.paymentFrequencyDays} {t('pages.calculator.form.bankInfo.days')}</span>
+                <span>{t('pages.calculator.form.bankInfo.teaDateLabel')}: {selectedBank.fechaTea}</span>
               </div>
             </div>
           )}
@@ -200,20 +286,6 @@ const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="tea">{t('pages.calculator.form.interestRate')}</Label>
-            <Input
-              id="tea"
-              type="number"
-              name="tea"
-              value={formData.tea}
-              onChange={handleChange}
-              placeholder={t('pages.calculator.form.interestRatePlaceholder')}
-              required
-              step="0.01"
-            />
-          </div>
-
-          <div className="space-y-2">
             <Label htmlFor="plazo_meses">{t('pages.calculator.form.loanTerm')}</Label>
             <Input
               id="plazo_meses"
@@ -256,26 +328,6 @@ const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
                 </SelectItem>
                 <SelectItem value="PARCIAL">
                   {t('pages.calculator.form.options.gracePeriodTypes.partial')}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="moneda">{t('pages.calculator.form.currency')}</Label>
-            <Select
-              value={formData.moneda}
-              onValueChange={(value) => setFormData((prev) => ({ ...prev, moneda: value }))}
-            >
-              <SelectTrigger id="moneda">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="PEN">
-                  {t('pages.calculator.form.options.currencies.pen')}
-                </SelectItem>
-                <SelectItem value="USD">
-                  {t('pages.calculator.form.options.currencies.usd')}
                 </SelectItem>
               </SelectContent>
             </Select>

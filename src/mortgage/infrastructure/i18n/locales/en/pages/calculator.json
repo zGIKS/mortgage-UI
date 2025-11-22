@@ -8,7 +8,13 @@
       "rateType": "Rate type",
       "frequency": "Payment frequency",
       "daysInYear": "Days per year",
-      "days": "days"
+      "days": "days",
+      "teaFromSBS": "TEA rates are automatically fetched from SBS based on the selected date",
+      "teaDate": "TEA Query Date",
+      "teaCurrency": "Currency",
+      "teaDateLabel": "TEA Date",
+      "selectDate": "Select date",
+      "noBanks": "No banks available for the selected date"
     },
     "propertyPrice": "Property Price",
     "propertyPricePlaceholder": "Enter property value",
