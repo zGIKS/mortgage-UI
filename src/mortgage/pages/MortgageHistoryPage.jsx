@@ -96,7 +96,7 @@ const MortgageHistoryPage = () => {
           <MortgageHistoryCard
             key={item.id}
             title={t('pages.history.card.calculationNumber', { number: item.id })}
-            subtitle={`${item.banco_nombre} - ${formatDate(item.created_at)}`}
+            subtitle={formatDate(item.created_at)}
             currency={item.moneda}
             fields={[
               {

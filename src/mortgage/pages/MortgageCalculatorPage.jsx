@@ -84,10 +84,6 @@ const MortgageCalculatorPage = () => {
   const loanDetails = result
     ? [
         {
-          label: t('pages.details.fields.bank'),
-          value: result.banco_nombre,
-        },
-        {
           label: t('pages.details.fields.propertyPrice'),
           value: formatCurrency(result.precio_venta, result.moneda),
         },
@@ -105,7 +101,15 @@ const MortgageCalculatorPage = () => {
         },
         {
           label: t('pages.details.fields.interestRate'),
-          value: `${result.tea}% (${result.tipo_tasa})`,
+          value: `${result.tasa_anual}% (${result.tipo_tasa})`,
+        },
+        {
+          label: t('pages.details.fields.daysInYear'),
+          value: result.dias_anio,
+        },
+        {
+          label: t('pages.details.fields.paymentFrequency'),
+          value: `${result.frecuencia_pago} ${t('pages.calculator.form.options.days')}`,
         },
         {
           label: t('pages.details.fields.gracePeriod'),

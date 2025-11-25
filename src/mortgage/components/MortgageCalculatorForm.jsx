@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,51 +11,25 @@ import {
   SelectItem,
 } from '@/components/ui/select';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Building2 } from 'lucide-react';
-import { bankService } from '../api/bankService';
 
 const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
   const { t } = useTranslation('mortgage');
-  const [banks, setBanks] = useState([]);
-  const [loadingBanks, setLoadingBanks] = useState(true);
-  const [selectedBank, setSelectedBank] = useState(null);
 
   const [formData, setFormData] = useState(initialData || {
-    banco_id: '',
     precio_venta: '',
     cuota_inicial: '',
     monto_prestamo: '',
     bono_techo_propio: '',
-    tea: '',
+    tasa_anual: '',
+    tipo_tasa: 'NOMINAL',
     plazo_meses: '',
     meses_gracia: '',
     tipo_gracia: 'NONE',
     moneda: 'PEN',
-    tasa_descuento: ''
+    tasa_descuento: '',
+    dias_anio: '360',
+    frecuencia_pago: '30'
   });
-
-  useEffect(() => {
-    const fetchBanks = async () => {
-      try {
-        const data = await bankService.getAllBanks();
-        setBanks(data);
-      } catch (error) {
-        console.error('Error fetching banks:', error);
-      } finally {
-        setLoadingBanks(false);
-      }
-    };
-    fetchBanks();
-  }, []);
-
-  useEffect(() => {
-    if (formData.banco_id) {
-      const bank = banks.find(b => b.id === formData.banco_id);
-      setSelectedBank(bank || null);
-    } else {
-      setSelectedBank(null);
-    }
-  }, [formData.banco_id, banks]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -65,82 +39,31 @@ const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
     }));
   };
 
-  const handleBankSelect = (bankId) => {
-    setFormData(prev => ({
-      ...prev,
-      banco_id: bankId
-    }));
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const payload = {
-      banco_id: formData.banco_id,
       precio_venta: parseFloat(formData.precio_venta),
       cuota_inicial: parseFloat(formData.cuota_inicial),
       monto_prestamo: parseFloat(formData.monto_prestamo),
       bono_techo_propio: parseFloat(formData.bono_techo_propio) || 0,
-      tea: parseFloat(formData.tea),
+      tasa_anual: parseFloat(formData.tasa_anual),
+      tipo_tasa: formData.tipo_tasa,
       plazo_meses: parseInt(formData.plazo_meses),
       meses_gracia: parseInt(formData.meses_gracia) || 0,
       tipo_gracia: formData.tipo_gracia,
       moneda: formData.moneda,
-      tasa_descuento: parseFloat(formData.tasa_descuento) || 0
+      tasa_descuento: parseFloat(formData.tasa_descuento) || 0,
+      dias_anio: parseInt(formData.dias_anio),
+      frecuencia_pago: parseInt(formData.frecuencia_pago)
     };
 
+    console.log('🔍 Payload being sent:', JSON.stringify(payload, null, 2));
     onCalculate(payload);
   };
 
   return (
     <div className="space-y-6">
-      {/* Bank Selection Card */}
-      <Card className="border-primary/20 bg-primary/5">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Building2 className="h-5 w-5" />
-            {t('pages.calculator.form.selectBank')}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {loadingBanks ? (
-            <p className="text-muted-foreground">{t('shared:common.loading')}</p>
-          ) : (
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {banks.map((bank) => (
-                <button
-                  key={bank.id}
-                  type="button"
-                  onClick={() => handleBankSelect(bank.id)}
-                  className={`flex flex-col items-start gap-1 rounded-lg border p-4 text-left transition-all hover:border-primary/50 hover:bg-primary/10 ${
-                    formData.banco_id === bank.id
-                      ? 'border-primary bg-primary/10 ring-2 ring-primary/20'
-                      : 'border-border'
-                  }`}
-                >
-                  <span className="font-medium">{bank.name}</span>
-                  <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-                    <span>{t('pages.calculator.form.bankInfo.rateType')}: {bank.rateType}</span>
-                    <span>•</span>
-                    <span>{t('pages.calculator.form.bankInfo.frequency')}: {bank.paymentFrequencyDays} {t('pages.calculator.form.bankInfo.days')}</span>
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
-          {selectedBank && (
-            <div className="mt-4 rounded-md bg-muted/50 p-3 text-sm">
-              <p className="font-medium">{t('pages.calculator.form.bankInfo.selected')}: {selectedBank.name}</p>
-              <div className="mt-1 flex flex-wrap gap-4 text-muted-foreground">
-                <span>{t('pages.calculator.form.bankInfo.rateType')}: {selectedBank.rateType}</span>
-                <span>{t('pages.calculator.form.bankInfo.daysInYear')}: {selectedBank.daysInYear}</span>
-                <span>{t('pages.calculator.form.bankInfo.frequency')}: {selectedBank.paymentFrequencyDays} {t('pages.calculator.form.bankInfo.days')}</span>
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
       {/* Mortgage Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -200,17 +123,37 @@ const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="tea">{t('pages.calculator.form.interestRate')}</Label>
+            <Label htmlFor="tasa_anual">{t('pages.calculator.form.interestRate')}</Label>
             <Input
-              id="tea"
+              id="tasa_anual"
               type="number"
-              name="tea"
-              value={formData.tea}
+              name="tasa_anual"
+              value={formData.tasa_anual}
               onChange={handleChange}
               placeholder={t('pages.calculator.form.interestRatePlaceholder')}
               required
               step="0.01"
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="tipo_tasa">{t('pages.calculator.form.rateType')}</Label>
+            <Select
+              value={formData.tipo_tasa}
+              onValueChange={(value) => setFormData((prev) => ({ ...prev, tipo_tasa: value }))}
+            >
+              <SelectTrigger id="tipo_tasa">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="NOMINAL">
+                  {t('pages.calculator.form.options.rateTypes.nominal')}
+                </SelectItem>
+                <SelectItem value="EFFECTIVE">
+                  {t('pages.calculator.form.options.rateTypes.effective')}
+                </SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-2">
@@ -254,7 +197,7 @@ const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
                 <SelectItem value="TOTAL">
                   {t('pages.calculator.form.options.gracePeriodTypes.total')}
                 </SelectItem>
-                <SelectItem value="PARCIAL">
+                <SelectItem value="PARTIAL">
                   {t('pages.calculator.form.options.gracePeriodTypes.partial')}
                 </SelectItem>
               </SelectContent>
@@ -293,12 +236,38 @@ const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
               step="0.01"
             />
           </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="dias_anio">{t('pages.calculator.form.daysInYear')}</Label>
+            <Input
+              id="dias_anio"
+              type="number"
+              name="dias_anio"
+              value={formData.dias_anio}
+              onChange={handleChange}
+              placeholder={t('pages.calculator.form.daysInYearPlaceholder')}
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="frecuencia_pago">{t('pages.calculator.form.paymentFrequency')}</Label>
+            <Input
+              id="frecuencia_pago"
+              type="number"
+              name="frecuencia_pago"
+              value={formData.frecuencia_pago}
+              onChange={handleChange}
+              placeholder={t('pages.calculator.form.paymentFrequencyPlaceholder')}
+              required
+            />
+          </div>
         </div>
 
         <div className="flex justify-end">
           <Button
             type="submit"
-            disabled={loading || !formData.banco_id}
+            disabled={loading}
             variant="default"
           >
             {loading
