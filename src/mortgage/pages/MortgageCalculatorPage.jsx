@@ -184,21 +184,6 @@ const MortgageCalculatorPage = () => {
       title={t('pages.calculator.title')}
       subtitle={t('pages.calculator.subtitle')}
     >
-      {/* Información del banco si viene desde la página de bancos */}
-      {bankInfo && (
-        <Alert className="bg-primary/5 border-primary/20">
-          <Info className="h-4 w-4 text-primary" />
-          <AlertDescription>
-            <strong className="text-primary">{bankInfo.name}</strong> - Tasa: {bankInfo.rate}% TEA |
-            Moneda: {bankInfo.currency} | Fecha: {bankInfo.date}
-            <br />
-            <span className="text-xs text-muted-foreground">
-              Los campos de tasa, tipo de tasa y moneda han sido pre-llenados. Complete los demás campos para calcular.
-            </span>
-          </AlertDescription>
-        </Alert>
-      )}
-
       <Card className="border-border/70 bg-card/90">
         <CardHeader>
           <CardTitle>{t('pages.details.loanInfo')}</CardTitle>
@@ -213,6 +198,21 @@ const MortgageCalculatorPage = () => {
           />
         </CardContent>
       </Card>
+
+      {/* Información del banco si viene desde la página de bancos */}
+      {bankInfo && (
+        <Alert className="bg-primary/5 border-primary/20">
+          <Info className="h-4 w-4 text-primary" />
+          <AlertDescription>
+            <strong className="text-primary">{bankInfo.name}</strong> - Tasa: {bankInfo.rate}% TEA |
+            Moneda: {bankInfo.currency} | Fecha: {bankInfo.date}
+            <br />
+            <span className="text-xs text-muted-foreground">
+              Los campos de tasa, tipo de tasa y moneda han sido pre-llenados. Complete los demás campos para calcular.
+            </span>
+          </AlertDescription>
+        </Alert>
+      )}
 
       {result && (
         <>
