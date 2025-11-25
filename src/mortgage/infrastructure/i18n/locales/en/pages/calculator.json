@@ -2,14 +2,6 @@
   "title": "Mortgage Calculator",
   "subtitle": "Calculate your monthly payments and amortization schedule",
   "form": {
-    "selectBank": "Select a Bank",
-    "bankInfo": {
-      "selected": "Selected bank",
-      "rateType": "Rate type",
-      "frequency": "Payment frequency",
-      "daysInYear": "Days per year",
-      "days": "days"
-    },
     "propertyPrice": "Property Price",
     "propertyPricePlaceholder": "Enter property value",
     "downPayment": "Down Payment",
@@ -18,8 +10,8 @@
     "loanAmountPlaceholder": "Enter the principal amount",
     "bonusTechoPropio": "Government Housing Bonus",
     "bonusTechoPropioPlaceholder": "Enter bonus amount",
-    "interestRate": "Annual Interest Rate (TEA)",
-    "interestRatePlaceholder": "Enter the TEA (%)",
+    "interestRate": "Annual Interest Rate",
+    "interestRatePlaceholder": "Enter the annual rate (%)",
     "rateType": "Rate Type",
     "loanTerm": "Loan Term (months)",
     "loanTermPlaceholder": "Enter term in months",
@@ -29,6 +21,10 @@
     "currency": "Currency",
     "npvDiscountRate": "NPV Discount Rate (%)",
     "npvDiscountRatePlaceholder": "Enter discount rate",
+    "daysInYear": "Days per Year",
+    "daysInYearPlaceholder": "Enter days per year (360 or 365)",
+    "paymentFrequency": "Payment Frequency (days)",
+    "paymentFrequencyPlaceholder": "Enter payment frequency in days",
     "calculate": "Calculate Mortgage",
     "reset": "Reset Form",
     "options": {
@@ -44,7 +40,8 @@
       "currencies": {
         "pen": "Peruvian Sol (PEN)",
         "usd": "US Dollar (USD)"
-      }
+      },
+      "days": "days"
     }
   },
   "results": {

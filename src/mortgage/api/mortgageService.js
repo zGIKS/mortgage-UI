@@ -19,37 +19,38 @@ const getAuthHeaders = () => {
  * Maps frontend calculate request to API format
  */
 const mapCalculateRequestToApi = (data) => ({
-  banco_id: data.banco_id,
   precio_venta: data.precio_venta,
   cuota_inicial: data.cuota_inicial,
   monto_prestamo: data.monto_prestamo,
   bono_techo_propio: data.bono_techo_propio || 0,
-  tea: data.tea,
+  tasa_anual: data.tasa_anual,
+  tipo_tasa: data.tipo_tasa || 'NOMINAL',
   plazo_meses: data.plazo_meses,
   meses_gracia: data.meses_gracia || 0,
   tipo_gracia: data.tipo_gracia || 'NONE',
   moneda: data.moneda || 'PEN',
   tasa_descuento: data.tasa_descuento || 0,
+  dias_anio: data.dias_anio || 360,
+  frecuencia_pago: data.frecuencia_pago || 30,
 });
 
 /**
  * Maps frontend update request to API format
  */
 const mapUpdateRequestToApi = (data) => ({
-  banco_id: data.banco_id,
   precio_venta: data.precio_venta,
   cuota_inicial: data.cuota_inicial,
   monto_prestamo: data.monto_prestamo,
   bono_techo_propio: data.bono_techo_propio || 0,
-  tea: data.tea,
+  tasa_anual: data.tasa_anual,
+  tipo_tasa: data.tipo_tasa || 'NOMINAL',
   plazo_meses: data.plazo_meses,
   meses_gracia: data.meses_gracia || 0,
   tipo_gracia: data.tipo_gracia || 'NONE',
   moneda: data.moneda || 'PEN',
   tasa_descuento: data.tasa_descuento || 0,
-  dias_anio: data.dias_anio,
-  frecuencia_pago: data.frecuencia_pago,
-  tipo_tasa: data.tipo_tasa || 'NOMINAL',
+  dias_anio: data.dias_anio || 360,
+  frecuencia_pago: data.frecuencia_pago || 30,
 });
 
 /**
@@ -70,14 +71,12 @@ const mapPaymentScheduleItem = (item) => ({
 const mapResponseFromApi = (data) => ({
   id: data.id,
   user_id: data.user_id,
-  banco_id: data.banco_id,
-  banco_nombre: data.banco_nombre,
   precio_venta: data.precio_venta,
   cuota_inicial: data.cuota_inicial,
   monto_prestamo: data.monto_prestamo,
   saldo_financiar: data.saldo_financiar,
   bono_techo_propio: data.bono_techo_propio,
-  tea: data.tea,
+  tasa_anual: data.tasa_anual,
   tipo_tasa: data.tipo_tasa,
   plazo_meses: data.plazo_meses,
   meses_gracia: data.meses_gracia,
@@ -102,8 +101,6 @@ const mapResponseFromApi = (data) => ({
 const mapHistoryItemFromApi = (data) => ({
   id: data.id,
   user_id: data.user_id,
-  banco_id: data.banco_id,
-  banco_nombre: data.banco_nombre,
   precio_venta: data.precio_venta,
   monto_prestamo: data.monto_prestamo,
   cuota_fija: data.cuota_fija,
@@ -122,11 +119,13 @@ export const mortgageService = {
   calculateMortgage: async (data) => {
     try {
       const apiRequest = mapCalculateRequestToApi(data);
+      console.log('📤 Sending to API:', JSON.stringify(apiRequest, null, 2));
       const response = await axios.post(`${API_BASE_URL}/calculate`, apiRequest, {
         headers: getAuthHeaders()
       });
       return mapResponseFromApi(response.data);
     } catch (error) {
+      console.error('❌ API Error:', error.response?.data || error.message);
       throw error.response?.data || error.message;
     }
   },

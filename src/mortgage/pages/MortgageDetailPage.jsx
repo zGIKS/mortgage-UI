@@ -152,10 +152,6 @@ const MortgageDetailPage = () => {
 
   const summaryDetails = [
     {
-      label: t('pages.details.fields.bank'),
-      value: mortgage.banco_nombre,
-    },
-    {
       label: t('pages.details.fields.propertyPrice'),
       value: formatCurrency(mortgage.precio_venta, mortgage.moneda),
     },
@@ -173,7 +169,15 @@ const MortgageDetailPage = () => {
     },
     {
       label: t('pages.details.fields.interestRate'),
-      value: `${mortgage.tea}% (${mortgage.tipo_tasa})`,
+      value: `${mortgage.tasa_anual}% (${mortgage.tipo_tasa})`,
+    },
+    {
+      label: t('pages.details.fields.daysInYear'),
+      value: mortgage.dias_anio,
+    },
+    {
+      label: t('pages.details.fields.paymentFrequency'),
+      value: `${mortgage.frecuencia_pago} ${t('pages.calculator.form.options.days')}`,
     },
     {
       label: t('pages.details.fields.gracePeriod'),
@@ -240,17 +244,19 @@ const MortgageDetailPage = () => {
               onCalculate={handleUpdate}
               loading={updateLoading}
               initialData={{
-                banco_id: mortgage.banco_id,
                 precio_venta: mortgage.precio_venta,
                 cuota_inicial: mortgage.cuota_inicial,
                 monto_prestamo: mortgage.monto_prestamo,
                 bono_techo_propio: mortgage.bono_techo_propio,
-                tea: mortgage.tea,
+                tasa_anual: mortgage.tasa_anual,
+                tipo_tasa: mortgage.tipo_tasa,
                 plazo_meses: mortgage.plazo_meses,
                 meses_gracia: mortgage.meses_gracia,
                 tipo_gracia: mortgage.tipo_gracia,
                 moneda: mortgage.moneda,
                 tasa_descuento: mortgage.tasa_descuento || 0,
+                dias_anio: mortgage.dias_anio,
+                frecuencia_pago: mortgage.frecuencia_pago,
               }}
             />
           </CardContent>
