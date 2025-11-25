@@ -27,7 +27,8 @@
     "dashboard": "Dashboard",
     "mortgages": "Mortgages",
     "calculator": "Calculator",
-    "history": "History"
+    "history": "History",
+    "banks": "Banks"
   },
   "dashboard": {
     "welcome": "Welcome to your Dashboard",

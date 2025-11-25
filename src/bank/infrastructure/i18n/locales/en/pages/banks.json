@@ -1,0 +1,15 @@
+{
+  "title": "Bank Interest Rates",
+  "subtitle": "Current mortgage rates from major banks in national currency (MN)",
+  "loading": "Loading bank rates...",
+  "error": "Error loading bank rates",
+  "noData": "No data available for the selected date",
+  "lastUpdate": "Last update",
+  "card": {
+    "rate": "Rate",
+    "annual": "annual",
+    "noRate": "Not available"
+  },
+  "note": "Note: Interest rates are referential and correspond to mortgage loans for housing in national currency.",
+  "source": "Source: Superintendence of Banking, Insurance and AFP (SBS)"
+}

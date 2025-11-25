@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Home, UserRound, Calculator, History, Menu } from 'lucide-react';
+import { Home, UserRound, Calculator, History, Building2, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { HouseIcon } from './icons/HouseIcon';
@@ -9,9 +9,10 @@ import { cn } from '@/lib/utils';
 
 const NAV_ITEMS = [
   { path: '/home', icon: Home, labelKey: 'shared:common.home' },
-  { path: '/profile', icon: UserRound, labelKey: 'shared:common.profile' },
+  { path: '/banks', icon: Building2, labelKey: 'shared:navigation.banks' },
   { path: '/mortgage/calculator', icon: Calculator, labelKey: 'shared:navigation.calculator' },
   { path: '/mortgage/history', icon: History, labelKey: 'shared:navigation.history' },
+  { path: '/profile', icon: UserRound, labelKey: 'shared:common.profile' },
 ];
 
 export function Sidebar() {

@@ -6,6 +6,7 @@ import { ProfilePage } from './pages/ProfilePage';
 import MortgageCalculatorPage from './mortgage/pages/MortgageCalculatorPage';
 import MortgageHistoryPage from './mortgage/pages/MortgageHistoryPage';
 import MortgageDetailPage from './mortgage/pages/MortgageDetailPage';
+import { BanksPage } from './bank/pages/BanksPage';
 import { authService } from './iam/application/auth-service';
 import { Toaster } from '@/components/ui/sonner';
 
@@ -57,6 +58,14 @@ function App() {
           element={
             <PrivateRoute>
               <MortgageDetailPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/banks"
+          element={
+            <PrivateRoute>
+              <BanksPage />
             </PrivateRoute>
           }
         />

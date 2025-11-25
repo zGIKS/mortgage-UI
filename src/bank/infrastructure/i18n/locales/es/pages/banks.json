@@ -1,0 +1,15 @@
+{
+  "title": "Tasas de Interés Bancarias",
+  "subtitle": "Tasas hipotecarias actuales de los principales bancos en moneda nacional (MN)",
+  "loading": "Cargando tasas bancarias...",
+  "error": "Error al cargar las tasas bancarias",
+  "noData": "No hay datos disponibles para la fecha seleccionada",
+  "lastUpdate": "Última actualización",
+  "card": {
+    "rate": "Tasa",
+    "annual": "anual",
+    "noRate": "No disponible"
+  },
+  "note": "Nota: Las tasas de interés tienen carácter referencial y corresponden a créditos hipotecarios para vivienda en moneda nacional.",
+  "source": "Fuente: Superintendencia de Banca, Seguros y AFP (SBS)"
+}
