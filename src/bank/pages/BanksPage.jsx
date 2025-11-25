@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -16,6 +17,7 @@ import MortgagePageLayout from '../../mortgage/components/layout/MortgagePageLay
 
 const BanksPage = () => {
   const { t, i18n } = useTranslation('bank');
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [bankData, setBankData] = useState(null);
   const [currency, setCurrency] = useState('mn');
@@ -59,6 +61,21 @@ const BanksPage = () => {
 
   const handleCurrencyChange = (value) => {
     setCurrency(value);
+  };
+
+  const handleBankClick = (bank) => {
+    // Navegar a la calculadora con los datos del banco pre-llenados
+    const params = new URLSearchParams({
+      bankName: bank.name,
+      tasa_anual: bank.rate.toString(),
+      tipo_tasa: 'EFFECTIVE', // Los bancos peruanos usan tasa efectiva
+      moneda: currency === 'mn' ? 'PEN' : 'USD',
+      dias_anio: '360',
+      frecuencia_pago: '30',
+      date: bankData.date
+    });
+
+    navigate(`/mortgage/calculator?${params.toString()}`);
   };
 
   const renderFilters = () => (
@@ -143,7 +160,8 @@ const BanksPage = () => {
           {bankData.banks.map((bank) => (
             <Card
               key={bank.name}
-              className="overflow-hidden transition-all hover:shadow-lg hover:border-primary/50"
+              className="overflow-hidden transition-all hover:shadow-lg hover:border-primary/50 cursor-pointer"
+              onClick={() => handleBankClick(bank)}
             >
               <CardHeader className="bg-gradient-to-br from-primary/10 to-primary/5 pb-4">
                 <div className="flex items-center gap-3">

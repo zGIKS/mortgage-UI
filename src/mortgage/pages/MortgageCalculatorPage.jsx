@@ -1,10 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import MortgageCalculatorForm from '../components/MortgageCalculatorForm';
 import PaymentScheduleTable from '../components/PaymentScheduleTable';
 import { mortgageService } from '../api/mortgageService';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Info } from 'lucide-react';
 import MortgagePageLayout from '../components/layout/MortgagePageLayout';
 import MetricsGrid from '../components/common/MetricsGrid';
 import KeyValueGrid from '../components/common/KeyValueGrid';
@@ -12,9 +15,61 @@ import { useFinancialFormatters } from '../hooks/useFinancialFormatters';
 
 const MortgageCalculatorPage = () => {
   const { t } = useTranslation('mortgage');
+  const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const [initialData, setInitialData] = useState(null);
+  const [bankInfo, setBankInfo] = useState(null);
   const { formatCurrency, formatPercentageString } = useFinancialFormatters();
+
+  // Leer parámetros de URL cuando viene desde la página de bancos
+  useEffect(() => {
+    const bankName = searchParams.get('bankName');
+    const tasaAnual = searchParams.get('tasa_anual');
+    const tipoTasa = searchParams.get('tipo_tasa');
+    const moneda = searchParams.get('moneda');
+    const diasAnio = searchParams.get('dias_anio');
+    const frecuenciaPago = searchParams.get('frecuencia_pago');
+    const date = searchParams.get('date');
+
+    console.log('📋 URL Params:', {
+      bankName,
+      tasaAnual,
+      tipoTasa,
+      moneda,
+      diasAnio,
+      frecuenciaPago,
+      date
+    });
+
+    if (bankName && tasaAnual) {
+      setBankInfo({
+        name: bankName,
+        rate: tasaAnual,
+        date: date,
+        currency: moneda === 'PEN' ? 'Soles (MN)' : 'Dólares (USD)'
+      });
+
+      const newInitialData = {
+        precio_venta: '',
+        cuota_inicial: '',
+        monto_prestamo: '',
+        bono_techo_propio: '',
+        tasa_anual: tasaAnual,
+        tipo_tasa: tipoTasa || 'EFFECTIVE',
+        plazo_meses: '',
+        meses_gracia: '',
+        tipo_gracia: 'NONE',
+        moneda: moneda || 'PEN',
+        tasa_descuento: '',
+        dias_anio: diasAnio || '360',
+        frecuencia_pago: frecuenciaPago || '30'
+      };
+
+      console.log('🎯 Setting initialData in Calculator Page:', newInitialData);
+      setInitialData(newInitialData);
+    }
+  }, [searchParams]);
 
   const handleCalculate = async (formData) => {
     setLoading(true);
@@ -129,13 +184,33 @@ const MortgageCalculatorPage = () => {
       title={t('pages.calculator.title')}
       subtitle={t('pages.calculator.subtitle')}
     >
+      {/* Información del banco si viene desde la página de bancos */}
+      {bankInfo && (
+        <Alert className="bg-primary/5 border-primary/20">
+          <Info className="h-4 w-4 text-primary" />
+          <AlertDescription>
+            <strong className="text-primary">{bankInfo.name}</strong> - Tasa: {bankInfo.rate}% TEA |
+            Moneda: {bankInfo.currency} | Fecha: {bankInfo.date}
+            <br />
+            <span className="text-xs text-muted-foreground">
+              Los campos de tasa, tipo de tasa y moneda han sido pre-llenados. Complete los demás campos para calcular.
+            </span>
+          </AlertDescription>
+        </Alert>
+      )}
+
       <Card className="border-border/70 bg-card/90">
         <CardHeader>
           <CardTitle>{t('pages.details.loanInfo')}</CardTitle>
           <CardDescription>{t('pages.calculator.subtitle')}</CardDescription>
         </CardHeader>
         <CardContent>
-          <MortgageCalculatorForm onCalculate={handleCalculate} loading={loading} />
+          <MortgageCalculatorForm
+            key={initialData ? JSON.stringify(initialData) : 'default'}
+            onCalculate={handleCalculate}
+            loading={loading}
+            initialData={initialData}
+          />
         </CardContent>
       </Card>
 
