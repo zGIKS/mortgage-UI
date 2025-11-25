@@ -2,14 +2,6 @@
   "title": "Calculadora Hipotecaria",
   "subtitle": "Calcula tus pagos mensuales y tabla de amortización",
   "form": {
-    "selectBank": "Selecciona un Banco",
-    "bankInfo": {
-      "selected": "Banco seleccionado",
-      "rateType": "Tipo de tasa",
-      "frequency": "Frecuencia de pago",
-      "daysInYear": "Días por año",
-      "days": "días"
-    },
     "propertyPrice": "Precio de la Propiedad",
     "propertyPricePlaceholder": "Ingresa el valor de la propiedad",
     "downPayment": "Cuota Inicial",
@@ -18,8 +10,8 @@
     "loanAmountPlaceholder": "Ingresa el monto principal",
     "bonusTechoPropio": "Bono Techo Propio",
     "bonusTechoPropioPlaceholder": "Ingresa el monto del bono",
-    "interestRate": "Tasa de Interés Anual (TEA)",
-    "interestRatePlaceholder": "Ingresa la TEA (%)",
+    "interestRate": "Tasa de Interés Anual",
+    "interestRatePlaceholder": "Ingresa la tasa anual (%)",
     "rateType": "Tipo de Tasa",
     "loanTerm": "Plazo del Préstamo (meses)",
     "loanTermPlaceholder": "Ingresa el plazo en meses",
@@ -29,6 +21,10 @@
     "currency": "Moneda",
     "npvDiscountRate": "Tasa de Descuento para VAN (%)",
     "npvDiscountRatePlaceholder": "Ingresa la tasa de descuento",
+    "daysInYear": "Días por Año",
+    "daysInYearPlaceholder": "Ingresa los días por año (360 o 365)",
+    "paymentFrequency": "Frecuencia de Pago (días)",
+    "paymentFrequencyPlaceholder": "Ingresa la frecuencia de pago en días",
     "calculate": "Calcular Hipoteca",
     "reset": "Reiniciar Formulario",
     "options": {
@@ -44,7 +40,8 @@
       "currencies": {
         "pen": "Sol Peruano (PEN)",
         "usd": "Dólar Americano (USD)"
-      }
+      },
+      "days": "días"
     }
   },
   "results": {
