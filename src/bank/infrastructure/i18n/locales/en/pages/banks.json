@@ -1,15 +1,21 @@
 {
   "title": "Bank Interest Rates",
-  "subtitle": "Current mortgage rates from major banks in national currency (MN)",
+  "subtitle": "Mortgage rates from major banks",
   "loading": "Loading bank rates...",
   "error": "Error loading bank rates",
   "noData": "No data available for the selected date",
-  "lastUpdate": "Last update",
+  "filters": {
+    "date": "Date",
+    "selectDate": "Select date",
+    "currency": "Currency",
+    "mn": "Soles (MN)",
+    "usd": "Dollars (USD)"
+  },
   "card": {
     "rate": "Rate",
     "annual": "annual",
     "noRate": "Not available"
   },
-  "note": "Note: Interest rates are referential and correspond to mortgage loans for housing in national currency.",
+  "note": "Note: Interest rates are referential and correspond to mortgage loans for housing.",
   "source": "Source: Superintendence of Banking, Insurance and AFP (SBS)"
 }

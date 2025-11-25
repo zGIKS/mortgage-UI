@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_BANK_RATES_API_URL || 'http://127.0.0.1:8082';
+const API_BASE_URL = import.meta.env.VITE_BANK_RATES_API_URL;
 
 /**
  * Obtiene la fecha actual en formato YYYY-MM-DD restando un día
@@ -34,17 +34,18 @@ export const bankRatesService = {
   /**
    * Obtiene las tasas hipotecarias de los bancos
    * @param {string} currency - 'mn' o 'usd'
+   * @param {string} date - Fecha en formato YYYY-MM-DD (opcional, por defecto usa ayer)
    * @returns {Promise<Object>}
    */
-  getMortgageRates: async (currency = 'mn') => {
+  getMortgageRates: async (currency = 'mn', date = null) => {
     try {
-      const date = getYesterdayDate();
+      const queryDate = date || getYesterdayDate();
 
-      console.log('Fetching bank rates with params:', { date, currency });
+      console.log('Fetching bank rates with params:', { date: queryDate, currency });
 
       const response = await axios.get(`${API_BASE_URL}/rates`, {
         params: {
-          date: date,
+          date: queryDate,
           currency: currency
         }
       });
@@ -70,9 +71,14 @@ export const bankRatesService = {
         throw new Error('No se encontraron datos de créditos hipotecarios');
       }
 
-      // Obtener todos los bancos que tengan tasa
+      // Lista de bancos específicos a mostrar (sin Promedio)
+      const targetBanks = ['BBVA', 'Bancom', 'Crédito', 'Pichincha', 'BIF', 'Scotiabank', 'Citibank', 'Interbank', 'Mibanco', 'GNB'];
+
+      // Filtrar solo los bancos específicos que tengan tasa (excluye Promedio)
       const bankRates = Object.entries(mortgageRow.rates)
-        .filter(([name, rate]) => rate !== null && rate !== undefined)
+        .filter(([name, rate]) =>
+          targetBanks.includes(name) && rate !== null && rate !== undefined
+        )
         .map(([name, rate]) => ({
           name,
           rate,
@@ -99,17 +105,31 @@ export const bankRatesService = {
 
   /**
    * Obtiene las tasas en moneda nacional (soles)
+   * @param {string} date - Fecha en formato YYYY-MM-DD (opcional)
    * @returns {Promise<Object>}
    */
-  getMNRates: async () => {
-    return bankRatesService.getMortgageRates('mn');
+  getMNRates: async (date = null) => {
+    return bankRatesService.getMortgageRates('mn', date);
   },
 
   /**
    * Obtiene las tasas en dólares
+   * @param {string} date - Fecha en formato YYYY-MM-DD (opcional)
    * @returns {Promise<Object>}
    */
-  getUSDRates: async () => {
-    return bankRatesService.getMortgageRates('usd');
+  getUSDRates: async (date = null) => {
+    return bankRatesService.getMortgageRates('usd', date);
+  },
+
+  /**
+   * Formatea una fecha de objeto Date a YYYY-MM-DD
+   * @param {Date} date - Objeto Date
+   * @returns {string} Fecha en formato YYYY-MM-DD
+   */
+  formatDateForAPI: (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 };
