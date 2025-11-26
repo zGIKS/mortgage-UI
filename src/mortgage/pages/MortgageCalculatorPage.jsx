@@ -189,7 +189,7 @@ const MortgageCalculatorPage = () => {
         },
         {
           label: t('pages.details.fields.interestRate'),
-          value: `${result.tasa_anual}% (${result.tipo_tasa})`,
+          value: `${formatPercentageString(result.tasa_anual, { fromDecimal: true })} (${result.tipo_tasa})`,
         },
         {
           label: t('pages.details.fields.daysInYear'),
@@ -237,8 +237,19 @@ const MortgageCalculatorPage = () => {
         <Alert className="bg-primary/5 border-primary/20">
           <Info className="h-4 w-4 text-primary" />
           <AlertDescription>
-            <strong className="text-primary">{bankInfo.name}</strong> - Tasa: {bankInfo.rate}% TEA |
-            Moneda: {bankInfo.currency} | Fecha: {bankInfo.date}
+            {(() => {
+              const numericRate = parseFloat(bankInfo.rate);
+              const displayRate = formatPercentageString(
+                numericRate || 0,
+                { fromDecimal: !Number.isNaN(numericRate) && numericRate <= 1 }
+              );
+              return (
+                <>
+                  <strong className="text-primary">{bankInfo.name}</strong> - Tasa: {displayRate} TEA |
+                  Moneda: {bankInfo.currency} | Fecha: {bankInfo.date}
+                </>
+              );
+            })()}
             <br />
             <span className="text-xs text-muted-foreground">
               Los campos de tasa, tipo de tasa y moneda han sido pre-llenados. Complete los demás campos para calcular.

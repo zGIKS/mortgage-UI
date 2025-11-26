@@ -1,11 +1,11 @@
 export const mockProperties = [
   {
     id: 'home-1',
-    title: 'Casa familiar en Miraflores',
-    location: 'Lima, Perú',
+    title: 'Casa Familiar Miraflores',
+    location: 'Miraflores, Lima',
     description: 'Espacios abiertos, luz natural y lista para mudarte.',
     highlights: ['3 habitaciones', '2 baños', '1 estacionamiento'],
-    image: 'https://picsum.photos/400/300?random=1',
+    image: 'https://i.imgur.com/yeP4ei0.jpeg',
     data: {
       precio_venta: 250000,
       cuota_inicial: 50000,
@@ -24,11 +24,11 @@ export const mockProperties = [
   },
   {
     id: 'home-2',
-    title: 'Departamento céntrico en Surco',
-    location: 'Lima, Perú',
+    title: 'Departamento Centro Surco',
+    location: 'Surco, Lima',
     description: 'Ideal para inversión o primera vivienda.',
     highlights: ['2 habitaciones', 'Balcón', 'Pet friendly'],
-    image: 'https://picsum.photos/400/300?random=2',
+    image: 'https://i.imgur.com/yeP4ei0.jpeg',
     data: {
       precio_venta: 180000,
       cuota_inicial: 30000,
@@ -47,11 +47,11 @@ export const mockProperties = [
   },
   {
     id: 'home-3',
-    title: 'Casa moderna en Barranco',
-    location: 'Lima, Perú',
+    title: 'Casa Moderna Barranco',
+    location: 'Barranco, Lima',
     description: 'Diseño contemporáneo con vista al mar.',
     highlights: ['4 habitaciones', '3 baños', 'Jardín'],
-    image: 'https://picsum.photos/400/300?random=3',
+    image: 'https://i.imgur.com/yeP4ei0.jpeg',
     data: {
       precio_venta: 350000,
       cuota_inicial: 70000,
@@ -70,11 +70,11 @@ export const mockProperties = [
   },
   {
     id: 'home-4',
-    title: 'Apartamento en San Isidro',
-    location: 'Lima, Perú',
+    title: 'Apartamento Premium San Isidro',
+    location: 'San Isidro, Lima',
     description: 'Ubicación premium con amenidades exclusivas.',
     highlights: ['1 habitación', '1 baño', 'Gimnasio'],
-    image: 'https://picsum.photos/400/300?random=4',
+    image: 'https://i.imgur.com/yeP4ei0.jpeg',
     data: {
       precio_venta: 120000,
       cuota_inicial: 24000,
@@ -93,11 +93,11 @@ export const mockProperties = [
   },
   {
     id: 'home-5',
-    title: 'Casa en dólares - Cusco',
-    location: 'Cusco, Perú',
+    title: 'Casa Colonial Cusco',
+    location: 'Cusco, Cusco',
     description: 'Propiedad histórica con encanto colonial.',
     highlights: ['3 habitaciones', '2 baños', 'Patio interior'],
-    image: 'https://picsum.photos/400/300?random=5',
+    image: 'https://i.imgur.com/yeP4ei0.jpeg',
     data: {
       precio_venta: 150000,
       cuota_inicial: 30000,
@@ -116,11 +116,11 @@ export const mockProperties = [
   },
   {
     id: 'home-6',
-    title: 'Penthouse en Arequipa',
-    location: 'Arequipa, Perú',
+    title: 'Penthouse Ciudad Blanca',
+    location: 'Arequipa, Arequipa',
     description: 'Vistas panorámicas de la ciudad blanca.',
     highlights: ['4 habitaciones', '3 baños', 'Terraza'],
-    image: 'https://picsum.photos/400/300?random=6',
+    image: 'https://i.imgur.com/yeP4ei0.jpeg',
     data: {
       precio_venta: 280000,
       cuota_inicial: 56000,
@@ -139,11 +139,11 @@ export const mockProperties = [
   },
   {
     id: 'home-7',
-    title: 'Casa en dólares - Trujillo',
-    location: 'Trujillo, Perú',
+    title: 'Casa Familiar Trujillo',
+    location: 'Trujillo, La Libertad',
     description: 'Amplia propiedad familiar con jardín.',
     highlights: ['5 habitaciones', '4 baños', 'Piscina'],
-    image: 'https://picsum.photos/400/300?random=7',
+    image: 'https://i.imgur.com/yeP4ei0.jpeg',
     data: {
       precio_venta: 200000,
       cuota_inicial: 40000,
@@ -162,11 +162,11 @@ export const mockProperties = [
   },
   {
     id: 'home-8',
-    title: 'Estudio moderno en Chiclayo',
-    location: 'Chiclayo, Perú',
+    title: 'Estudio Moderno Chiclayo',
+    location: 'Chiclayo, Lambayeque',
     description: 'Perfecto para profesionales jóvenes.',
     highlights: ['1 habitación', '1 baño', 'Cocina integrada'],
-    image: 'https://picsum.photos/400/300?random=8',
+    image: 'https://i.imgur.com/yeP4ei0.jpeg',
     data: {
       precio_venta: 80000,
       cuota_inicial: 16000,
@@ -185,11 +185,11 @@ export const mockProperties = [
   },
   {
     id: 'home-9',
-    title: 'Casa en dólares - Piura',
-    location: 'Piura, Perú',
+    title: 'Casa Moderna Piura',
+    location: 'Piura, Piura',
     description: 'Propiedad resistente al clima con diseño moderno.',
     highlights: ['3 habitaciones', '2 baños', 'Aire acondicionado'],
-    image: 'https://picsum.photos/400/300?random=9',
+    image: 'https://i.imgur.com/yeP4ei0.jpeg',
     data: {
       precio_venta: 130000,
       cuota_inicial: 26000,
@@ -208,11 +208,11 @@ export const mockProperties = [
   },
   {
     id: 'home-10',
-    title: 'Duplex en Iquitos',
-    location: 'Iquitos, Perú',
+    title: 'Duplex Amazónico Iquitos',
+    location: 'Iquitos, Loreto',
     description: 'Dos niveles con diseño funcional.',
     highlights: ['4 habitaciones', '3 baños', 'Garaje doble'],
-    image: 'https://picsum.photos/400/300?random=10',
+    image: 'https://i.imgur.com/yeP4ei0.jpeg',
     data: {
       precio_venta: 220000,
       cuota_inicial: 44000,

@@ -31,7 +31,26 @@ const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
     frecuencia_pago: '30'
   };
 
-  const [formData, setFormData] = useState(initialData || defaultFormData);
+  const toPercentValue = (value) => {
+    const numeric = parseFloat(value);
+    if (Number.isNaN(numeric)) return '';
+    return numeric <= 1 ? numeric * 100 : numeric;
+  };
+
+  const hydrateForm = (data) => ({
+    ...defaultFormData,
+    ...data,
+    tasa_anual: data?.tasa_anual !== undefined ? toPercentValue(data.tasa_anual) : '',
+    tasa_descuento: data?.tasa_descuento !== undefined ? toPercentValue(data.tasa_descuento) : '',
+  });
+
+  const [formData, setFormData] = useState(() => (initialData ? hydrateForm(initialData) : defaultFormData));
+
+  useEffect(() => {
+    if (initialData) {
+      setFormData(hydrateForm(initialData));
+    }
+  }, [initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -49,13 +68,14 @@ const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
       cuota_inicial: parseFloat(formData.cuota_inicial),
       monto_prestamo: parseFloat(formData.monto_prestamo),
       bono_techo_propio: parseFloat(formData.bono_techo_propio) || 0,
-      tasa_anual: parseFloat(formData.tasa_anual),
+      // Pasar al backend en forma decimal
+      tasa_anual: parseFloat(formData.tasa_anual) / 100,
       tipo_tasa: formData.tipo_tasa,
       plazo_meses: parseInt(formData.plazo_meses),
       meses_gracia: parseInt(formData.meses_gracia) || 0,
       tipo_gracia: formData.tipo_gracia,
       moneda: formData.moneda,
-      tasa_descuento: parseFloat(formData.tasa_descuento) || 0,
+      tasa_descuento: (parseFloat(formData.tasa_descuento) || 0) / 100,
       dias_anio: parseInt(formData.dias_anio),
       frecuencia_pago: parseInt(formData.frecuencia_pago)
     };
