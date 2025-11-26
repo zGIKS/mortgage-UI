@@ -27,7 +27,8 @@
     "dashboard": "Panel",
     "mortgages": "Hipotecas",
     "calculator": "Calculadora",
-    "history": "Historial"
+    "history": "Historial",
+    "banks": "Bancos"
   },
   "dashboard": {
     "welcome": "Bienvenido a tu Panel de Control",

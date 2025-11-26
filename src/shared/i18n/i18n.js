@@ -14,16 +14,22 @@ import iamEs from '../../iam/infrastructure/i18n/locales/es/iam.json';
 import mortgageEn from '../../mortgage/infrastructure/i18n/locales/en';
 import mortgageEs from '../../mortgage/infrastructure/i18n/locales/es';
 
+// Import Bank translations
+import bankEn from '../../bank/infrastructure/i18n/locales/en';
+import bankEs from '../../bank/infrastructure/i18n/locales/es';
+
 const resources = {
   en: {
     shared: sharedEn,
     iam: iamEn,
-    mortgage: mortgageEn
+    mortgage: mortgageEn,
+    bank: bankEn
   },
   es: {
     shared: sharedEs,
     iam: iamEs,
-    mortgage: mortgageEs
+    mortgage: mortgageEs,
+    bank: bankEs
   }
 };
 
@@ -51,7 +57,7 @@ i18n
     },
 
     defaultNS: 'shared',
-    ns: ['shared', 'iam', 'mortgage']
+    ns: ['shared', 'iam', 'mortgage', 'bank']
   });
 
 export default i18n;

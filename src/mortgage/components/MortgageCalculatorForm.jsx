@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,7 +15,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
   const { t } = useTranslation('mortgage');
 
-  const [formData, setFormData] = useState(initialData || {
+  const defaultFormData = {
     precio_venta: '',
     cuota_inicial: '',
     monto_prestamo: '',
@@ -29,7 +29,9 @@ const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
     tasa_descuento: '',
     dias_anio: '360',
     frecuencia_pago: '30'
-  });
+  };
+
+  const [formData, setFormData] = useState(initialData || defaultFormData);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -143,7 +145,7 @@ const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
               onValueChange={(value) => setFormData((prev) => ({ ...prev, tipo_tasa: value }))}
             >
               <SelectTrigger id="tipo_tasa">
-                <SelectValue />
+                <SelectValue placeholder={t('pages.calculator.form.options.rateTypes.nominal')} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="NOMINAL">
@@ -211,7 +213,7 @@ const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
               onValueChange={(value) => setFormData((prev) => ({ ...prev, moneda: value }))}
             >
               <SelectTrigger id="moneda">
-                <SelectValue />
+                <SelectValue placeholder={t('pages.calculator.form.options.currencies.pen')} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="PEN">
