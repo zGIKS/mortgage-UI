@@ -8,53 +8,7 @@ import { Sidebar } from '../shared/components/Sidebar';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-
-const mockProperties = [
-  {
-    id: 'home-1',
-    title: 'Casa familiar en Miraflores',
-    location: 'Lima, Perú',
-    description: 'Espacios abiertos, luz natural y lista para mudarte.',
-    highlights: ['3 habitaciones', '2 baños', '1 estacionamiento'],
-    data: {
-      precio_venta: 250000,
-      cuota_inicial: 50000,
-      monto_prestamo: 200000,
-      bono_techo_propio: 15000,
-      tasa_anual: 0.1,
-      tipo_tasa: 'EFFECTIVE',
-      frecuencia_pago: 30,
-      dias_anio: 360,
-      plazo_meses: 240,
-      meses_gracia: 12,
-      tipo_gracia: 'PARTIAL',
-      moneda: 'PEN',
-      tasa_descuento: 0.08,
-    },
-  },
-  {
-    id: 'home-2',
-    title: 'Departamento céntrico en Surco',
-    location: 'Lima, Perú',
-    description: 'Ideal para inversión o primera vivienda.',
-    highlights: ['2 habitaciones', 'Balcón', 'Pet friendly'],
-    data: {
-      precio_venta: 180000,
-      cuota_inicial: 30000,
-      monto_prestamo: 150000,
-      bono_techo_propio: 10000,
-      tasa_anual: 0.12,
-      tipo_tasa: 'NOMINAL',
-      frecuencia_pago: 30,
-      dias_anio: 360,
-      plazo_meses: 180,
-      meses_gracia: 0,
-      tipo_gracia: 'NONE',
-      moneda: 'PEN',
-      tasa_descuento: 0.1,
-    },
-  },
-];
+import { mockProperties } from '../data/mockProperties';
 
 const formatCurrency = (value, currency = 'PEN') =>
   new Intl.NumberFormat('es-PE', {
@@ -141,6 +95,11 @@ export function HomePage() {
                     <p className="text-sm text-muted-foreground">{property.description}</p>
                   </CardHeader>
                   <CardContent className="space-y-4">
+                    <img
+                      src={property.image}
+                      alt={property.title}
+                      className="w-full h-48 object-cover rounded-lg border border-border/70"
+                    />
                     <div className="flex flex-wrap gap-2">
                       {property.highlights.map((item) => (
                         <Badge key={item} variant="outline" className="border-border/70">
