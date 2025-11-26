@@ -3,9 +3,9 @@ import { cn } from '@/lib/utils';
 
 const HouseIcon = React.forwardRef(({
   size = 64,
-  houseColor = "hsl(0, 0%, 100%)",
-  roofColor = "hsl(0, 0%, 95%)",
-  strokeColor = "hsl(0, 0%, 90%)",
+  houseColor = "hsl(0, 0%, 0%)",
+  roofColor = "hsl(0, 0%, 20%)",
+  strokeColor = "hsl(0, 0%, 0%)",
   strokeWidth = 2,
   className,
   ...props
