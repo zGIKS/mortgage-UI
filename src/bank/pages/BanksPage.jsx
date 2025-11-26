@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -18,6 +18,7 @@ import MortgagePageLayout from '../../mortgage/components/layout/MortgagePageLay
 const BanksPage = () => {
   const { t, i18n } = useTranslation('bank');
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [bankData, setBankData] = useState(null);
   const [currency, setCurrency] = useState('mn');
@@ -30,6 +31,36 @@ const BanksPage = () => {
   // Máxima fecha permitida: ayer
   const maxDate = new Date();
   maxDate.setDate(maxDate.getDate() - 1);
+
+  const propertyKeys = useMemo(
+    () => [
+      'precio_venta',
+      'cuota_inicial',
+      'monto_prestamo',
+      'bono_techo_propio',
+      'tasa_anual',
+      'tipo_tasa',
+      'frecuencia_pago',
+      'dias_anio',
+      'plazo_meses',
+      'meses_gracia',
+      'tipo_gracia',
+      'moneda',
+      'tasa_descuento',
+    ],
+    []
+  );
+
+  const propertyData = useMemo(() => {
+    const values = {};
+    propertyKeys.forEach((key) => {
+      const value = searchParams.get(key);
+      if (value !== null) {
+        values[key] = value;
+      }
+    });
+    return values;
+  }, [propertyKeys, searchParams]);
 
   const fetchBankRates = async (date, curr) => {
     setLoading(true);
@@ -65,15 +96,16 @@ const BanksPage = () => {
 
   const handleBankClick = (bank) => {
     // Navegar a la calculadora con los datos del banco pre-llenados
-    const params = new URLSearchParams({
-      bankName: bank.name,
-      tasa_anual: bank.rate.toString(),
-      tipo_tasa: 'EFFECTIVE', // Los bancos peruanos usan tasa efectiva
-      moneda: currency === 'mn' ? 'PEN' : 'USD',
-      dias_anio: '360',
-      frecuencia_pago: '30',
-      date: bankData.date
-    });
+    const params = new URLSearchParams();
+    Object.entries(propertyData).forEach(([key, value]) => params.set(key, value));
+
+    params.set('bankName', bank.name);
+    params.set('tasa_anual', bank.rate.toString());
+    params.set('tipo_tasa', 'EFFECTIVE'); // Los bancos peruanos usan tasa efectiva
+    params.set('moneda', currency === 'mn' ? 'PEN' : 'USD');
+    params.set('dias_anio', '360');
+    params.set('frecuencia_pago', '30');
+    params.set('date', bankData.date);
 
     navigate(`/mortgage/calculator?${params.toString()}`);
   };
@@ -215,6 +247,16 @@ const BanksPage = () => {
       title={t('banks.title')}
       subtitle={t('banks.subtitle')}
     >
+      {Object.keys(propertyData).length > 0 && (
+        <Card className="border-dashed border-primary/40 bg-primary/5">
+          <CardContent className="flex flex-col gap-2 py-4 text-sm text-primary">
+            <span className="font-semibold">{t('banks.selectedProperty.title')}</span>
+            <span className="text-muted-foreground text-xs">
+              {t('banks.selectedProperty.description')}
+            </span>
+          </CardContent>
+        </Card>
+      )}
       {renderFilters()}
       {renderContent()}
     </MortgagePageLayout>

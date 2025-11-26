@@ -274,8 +274,6 @@ const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
           >
             {loading
               ? t('shared:common.loading')
-              : initialData
-              ? t('shared:common.save')
               : t('pages.calculator.form.calculate')}
           </Button>
         </div>
