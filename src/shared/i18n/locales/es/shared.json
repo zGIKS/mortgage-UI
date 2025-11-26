@@ -46,6 +46,19 @@
         "title": "Historial",
         "description": "Ve y gestiona tus cálculos hipotecarios"
       }
+    },
+    "properties": {
+      "title": "Propiedades disponibles",
+      "subtitle": "Elige una casa real para precargar la calculadora o revisa bancos primero.",
+      "cta": "Abrir calculadora",
+      "bonus": "Bono Techo Propio {{amount}}",
+      "price": "Precio",
+      "rate": "Tasa anual",
+      "term": "Plazo",
+      "months": "meses",
+      "currency": "Moneda",
+      "chooseBank": "Elegir banco",
+      "simulate": "Simular financiamiento"
     }
   },
   "header": {

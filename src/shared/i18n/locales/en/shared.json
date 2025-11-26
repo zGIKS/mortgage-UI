@@ -46,6 +46,19 @@
         "title": "History",
         "description": "View and manage your mortgage calculations"
       }
+    },
+    "properties": {
+      "title": "Available properties",
+      "subtitle": "Pick a real listing to prefill the calculator or choose a bank first.",
+      "cta": "Open calculator",
+      "bonus": "Techo Propio bonus {{amount}}",
+      "price": "Price",
+      "rate": "Annual rate",
+      "term": "Term",
+      "months": "months",
+      "currency": "Currency",
+      "chooseBank": "Choose bank",
+      "simulate": "Simulate financing"
     }
   },
   "header": {

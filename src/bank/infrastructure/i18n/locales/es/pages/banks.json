@@ -16,6 +16,10 @@
     "annual": "anual",
     "noRate": "No disponible"
   },
+  "selectedProperty": {
+    "title": "Usando los datos de la propiedad que elegiste",
+    "description": "Al escoger un banco enviaremos también estos valores a la calculadora."
+  },
   "note": "Nota: Las tasas de interés tienen carácter referencial y corresponden a créditos hipotecarios para vivienda.",
   "source": "Fuente: Superintendencia de Banca, Seguros y AFP (SBS)"
 }

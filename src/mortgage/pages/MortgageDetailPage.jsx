@@ -125,17 +125,17 @@ const MortgageDetailPage = () => {
     },
     {
       label: t('pages.details.metrics.tcea'),
-      value: formatPercentageString(mortgage.tcea, { decimals: 6 }),
+      value: formatPercentageString(mortgage.tcea, { decimals: 6, fromDecimal: true }),
       accent: 'text-destructive',
     },
     {
       label: t('pages.details.metrics.periodicRate'),
-      value: formatPercentageString(mortgage.tasa_periodo, { decimals: 6 }),
+      value: formatPercentageString(mortgage.tasa_periodo, { decimals: 6, fromDecimal: true }),
       accent: 'text-primary',
     },
     {
       label: t('pages.details.metrics.irr'),
-      value: formatPercentageString(mortgage.tir, { decimals: 6 }),
+      value: formatPercentageString(mortgage.tir, { decimals: 6, fromDecimal: true }),
       accent: 'text-primary',
     },
     mortgage.van !== 0 && {
@@ -169,7 +169,7 @@ const MortgageDetailPage = () => {
     },
     {
       label: t('pages.details.fields.interestRate'),
-      value: `${mortgage.tasa_anual}% (${mortgage.tipo_tasa})`,
+      value: `${formatPercentageString(mortgage.tasa_anual, { fromDecimal: true })} (${mortgage.tipo_tasa})`,
     },
     {
       label: t('pages.details.fields.daysInYear'),

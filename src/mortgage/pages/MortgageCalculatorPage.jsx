@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -13,6 +13,22 @@ import MetricsGrid from '../components/common/MetricsGrid';
 import KeyValueGrid from '../components/common/KeyValueGrid';
 import { useFinancialFormatters } from '../hooks/useFinancialFormatters';
 
+const defaultFormValues = {
+  precio_venta: '',
+  cuota_inicial: '',
+  monto_prestamo: '',
+  bono_techo_propio: '',
+  tasa_anual: '',
+  tipo_tasa: 'NOMINAL',
+  plazo_meses: '',
+  meses_gracia: '',
+  tipo_gracia: 'NONE',
+  moneda: 'PEN',
+  tasa_descuento: '',
+  dias_anio: '360',
+  frecuencia_pago: '30',
+};
+
 const MortgageCalculatorPage = () => {
   const { t } = useTranslation('mortgage');
   const [searchParams] = useSearchParams();
@@ -22,7 +38,26 @@ const MortgageCalculatorPage = () => {
   const [bankInfo, setBankInfo] = useState(null);
   const { formatCurrency, formatPercentageString } = useFinancialFormatters();
 
-  // Leer parámetros de URL cuando viene desde la página de bancos
+  const propertyKeys = useMemo(
+    () => [
+      'precio_venta',
+      'cuota_inicial',
+      'monto_prestamo',
+      'bono_techo_propio',
+      'tasa_anual',
+      'tipo_tasa',
+      'frecuencia_pago',
+      'dias_anio',
+      'plazo_meses',
+      'meses_gracia',
+      'tipo_gracia',
+      'moneda',
+      'tasa_descuento',
+    ],
+    []
+  );
+
+  // Leer parámetros de URL cuando viene desde la página de bancos o desde el Home
   useEffect(() => {
     const bankName = searchParams.get('bankName');
     const tasaAnual = searchParams.get('tasa_anual');
@@ -32,41 +67,39 @@ const MortgageCalculatorPage = () => {
     const frecuenciaPago = searchParams.get('frecuencia_pago');
     const date = searchParams.get('date');
 
-    console.log('📋 URL Params:', {
-      bankName,
-      tasaAnual,
-      tipoTasa,
-      moneda,
-      diasAnio,
-      frecuenciaPago,
-      date
-    });
+    const propertyParams = propertyKeys.reduce((acc, key) => {
+      const value = searchParams.get(key);
+      if (value !== null) acc[key] = value;
+      return acc;
+    }, {});
+
+    let newInitialData = Object.keys(propertyParams).length
+      ? { ...defaultFormValues, ...propertyParams }
+      : null;
 
     if (bankName && tasaAnual) {
       setBankInfo({
         name: bankName,
         rate: tasaAnual,
         date: date,
-        currency: moneda === 'PEN' ? 'Soles (MN)' : 'Dólares (USD)'
+        currency: moneda === 'USD' ? 'Dólares (USD)' : 'Soles (MN)'
       });
 
-      const newInitialData = {
-        precio_venta: '',
-        cuota_inicial: '',
-        monto_prestamo: '',
-        bono_techo_propio: '',
+      const bankPrefill = {
         tasa_anual: tasaAnual,
-        tipo_tasa: tipoTasa || 'EFFECTIVE',
-        plazo_meses: '',
-        meses_gracia: '',
-        tipo_gracia: 'NONE',
-        moneda: moneda || 'PEN',
-        tasa_descuento: '',
-        dias_anio: diasAnio || '360',
-        frecuencia_pago: frecuenciaPago || '30'
+        tipo_tasa: tipoTasa || newInitialData?.tipo_tasa || 'EFFECTIVE',
+        moneda: moneda || newInitialData?.moneda || 'PEN',
+        dias_anio: diasAnio || newInitialData?.dias_anio || '360',
+        frecuencia_pago: frecuenciaPago || newInitialData?.frecuencia_pago || '30',
       };
 
-      console.log('🎯 Setting initialData in Calculator Page:', newInitialData);
+      newInitialData = {
+        ...(newInitialData || defaultFormValues),
+        ...bankPrefill,
+      };
+    }
+
+    if (newInitialData) {
       setInitialData(newInitialData);
     }
   }, [searchParams]);
@@ -156,7 +189,7 @@ const MortgageCalculatorPage = () => {
         },
         {
           label: t('pages.details.fields.interestRate'),
-          value: `${result.tasa_anual}% (${result.tipo_tasa})`,
+          value: `${formatPercentageString(result.tasa_anual, { fromDecimal: true })} (${result.tipo_tasa})`,
         },
         {
           label: t('pages.details.fields.daysInYear'),
@@ -204,8 +237,19 @@ const MortgageCalculatorPage = () => {
         <Alert className="bg-primary/5 border-primary/20">
           <Info className="h-4 w-4 text-primary" />
           <AlertDescription>
-            <strong className="text-primary">{bankInfo.name}</strong> - Tasa: {bankInfo.rate}% TEA |
-            Moneda: {bankInfo.currency} | Fecha: {bankInfo.date}
+            {(() => {
+              const numericRate = parseFloat(bankInfo.rate);
+              const displayRate = formatPercentageString(
+                numericRate || 0,
+                { fromDecimal: !Number.isNaN(numericRate) && numericRate <= 1 }
+              );
+              return (
+                <>
+                  <strong className="text-primary">{bankInfo.name}</strong> - Tasa: {displayRate} TEA |
+                  Moneda: {bankInfo.currency} | Fecha: {bankInfo.date}
+                </>
+              );
+            })()}
             <br />
             <span className="text-xs text-muted-foreground">
               Los campos de tasa, tipo de tasa y moneda han sido pre-llenados. Complete los demás campos para calcular.

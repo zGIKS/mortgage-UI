@@ -16,6 +16,10 @@
     "annual": "annual",
     "noRate": "Not available"
   },
+  "selectedProperty": {
+    "title": "Using the property data you picked",
+    "description": "When you choose a bank we will send these numbers to the calculator."
+  },
   "note": "Note: Interest rates are referential and correspond to mortgage loans for housing.",
   "source": "Source: Superintendence of Banking, Insurance and AFP (SBS)"
 }
