@@ -62,7 +62,7 @@ export function Sidebar() {
           <Button
             variant="outline"
             size="icon"
-            className="fixed left-4 top-4 z-40 lg:hidden bg-background border-border hover:bg-accent hover:text-accent-foreground"
+            className="fixed left-4 top-4 z-50 lg:hidden bg-background border-border hover:bg-accent hover:text-accent-foreground"
             aria-label="Toggle navigation"
           >
             <Menu className="h-4 w-4" />
