@@ -116,12 +116,12 @@ const MortgageDetailPage = () => {
     {
       label: t('pages.details.metrics.totalInterestPaid'),
       value: formatCurrency(mortgage.total_intereses, mortgage.moneda),
-      accent: 'text-secondary',
+      accent: 'text-foreground',
     },
     {
       label: t('pages.details.metrics.totalPaid'),
       value: formatCurrency(mortgage.total_pagado, mortgage.moneda),
-      accent: 'text-secondary',
+      accent: 'text-foreground',
     },
     {
       label: t('pages.details.metrics.tcea'),
@@ -141,7 +141,7 @@ const MortgageDetailPage = () => {
     mortgage.van !== 0 && {
       label: t('pages.details.metrics.npv'),
       value: formatCurrency(mortgage.van, mortgage.moneda),
-      accent: 'text-secondary',
+      accent: 'text-foreground',
     },
     {
       label: t('pages.details.metrics.term'),

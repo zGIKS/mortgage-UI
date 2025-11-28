@@ -134,12 +134,12 @@ const MortgageCalculatorPage = () => {
         {
           label: t('pages.calculator.results.totalInterest'),
           value: formatCurrency(result.total_intereses, result.moneda),
-          accent: 'text-secondary',
+          accent: 'text-foreground',
         },
         {
           label: t('pages.calculator.results.totalCost'),
           value: formatCurrency(result.total_pagado, result.moneda),
-          accent: 'text-secondary',
+          accent: 'text-foreground',
         },
         {
           label: 'TCEA',
@@ -159,7 +159,7 @@ const MortgageCalculatorPage = () => {
         result.van !== 0 && {
           label: 'VAN',
           value: formatCurrency(result.van, result.moneda),
-          accent: 'text-secondary',
+          accent: 'text-foreground',
         },
         {
           label: t('pages.details.metrics.term'),
