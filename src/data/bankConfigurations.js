@@ -1,11 +1,16 @@
 /**
  * Configuraciones de bancos peruanos para créditos hipotecarios
+ *
+ * IMPORTANTE:
+ * - Las TASAS (tasa_anual) se obtienen dinámicamente de la API de SBS
+ * - Los SEGUROS y COMISIONES son valores base que se mantienen estables
+ *
  * Basado en datos del Fondo MiVivienda y SBS (2025)
  *
  * Fuentes:
  * - https://www.gob.pe/fondomivivienda
  * - https://www.sbs.gob.pe
- * - Tasas actualizadas marzo 2025
+ * - API: bankRatesService (tasas en tiempo real)
  */
 
 export const bankConfigurations = [

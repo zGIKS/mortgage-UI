@@ -13,7 +13,7 @@ import {
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 import { InfoIcon, AlertTriangle, Lightbulb } from 'lucide-react';
-import BankSelector from './BankSelector';
+import DynamicBankSelector from './DynamicBankSelector';
 
 const FieldTooltip = ({ title, description, example, range, warning, tip, icon = 'info' }) => {
   const IconComponent = icon === 'warning' ? AlertTriangle : icon === 'tip' ? Lightbulb : InfoIcon;
@@ -244,9 +244,10 @@ const MortgageCalculatorForm = ({ onCalculate, loading, initialData }) => {
       <div className="space-y-6">
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Bank Selector */}
-          <BankSelector
+          <DynamicBankSelector
             onBankSelect={handleBankSelect}
             selectedBankId={formData.banco_id}
+            moneda={formData.moneda}
           />
 
           {/* Datos Básicos del Préstamo */}
