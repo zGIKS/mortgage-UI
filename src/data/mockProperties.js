@@ -9,9 +9,10 @@ export const mockProperties = [
     data: {
       precio_venta: 250000,
       cuota_inicial: 50000, // 20% inicial
+      monto_prestamo: 185000, // 250000 - 50000 - 15000
       bono_techo_propio: 15000,
-      tasa_anual: 0.0753, // Tasa TEA BBVA
-      tipo_tasa: 'NOMINAL',
+      tasa_anual: 0.0753, // Tasa BBVA
+      tipo_tasa: 'EFFECTIVE', // Tasa Efectiva Anual
       numero_anios: 20,
       plazo_meses: 240,
       meses_gracia: 12,
@@ -41,6 +42,7 @@ export const mockProperties = [
     data: {
       precio_venta: 180000,
       cuota_inicial: 36000, // 20% inicial
+      monto_prestamo: 134000, // 180000 - 36000 - 10000
       bono_techo_propio: 10000,
       tasa_anual: 0.0862, // Tasa TEA BCP (Crédito)
       tipo_tasa: 'NOMINAL',
@@ -73,9 +75,10 @@ export const mockProperties = [
     data: {
       precio_venta: 350000,
       cuota_inicial: 87500, // 25% inicial
+      monto_prestamo: 262500, // 350000 - 87500 - 0
       bono_techo_propio: 0,
-      tasa_anual: 0.0785, // Tasa TEA Interbank
-      tipo_tasa: 'NOMINAL',
+      tasa_anual: 0.0785, // Tasa Interbank
+      tipo_tasa: 'EFFECTIVE', // Tasa Efectiva Anual
       numero_anios: 25,
       plazo_meses: 300,
       meses_gracia: 6,
@@ -105,6 +108,7 @@ export const mockProperties = [
     data: {
       precio_venta: 120000,
       cuota_inicial: 18000, // 15% inicial
+      monto_prestamo: 97000, // 120000 - 18000 - 5000
       bono_techo_propio: 5000,
       tasa_anual: 0.0826, // Tasa TEA Scotiabank
       tipo_tasa: 'NOMINAL',
@@ -137,9 +141,10 @@ export const mockProperties = [
     data: {
       precio_venta: 150000,
       cuota_inicial: 30000, // 20% inicial
+      monto_prestamo: 112000, // 150000 - 30000 - 8000
       bono_techo_propio: 8000,
-      tasa_anual: 0.078, // Tasa TEA GNB
-      tipo_tasa: 'NOMINAL',
+      tasa_anual: 0.078, // Tasa GNB
+      tipo_tasa: 'EFFECTIVE', // Tasa Efectiva Anual
       numero_anios: 15,
       plazo_meses: 180,
       meses_gracia: 9,
@@ -169,6 +174,7 @@ export const mockProperties = [
     data: {
       precio_venta: 280000,
       cuota_inicial: 70000, // 25% inicial
+      monto_prestamo: 210000, // 280000 - 70000 - 0
       bono_techo_propio: 0,
       tasa_anual: 0.082, // Tasa TEA Pichincha
       tipo_tasa: 'NOMINAL',
@@ -201,9 +207,10 @@ export const mockProperties = [
     data: {
       precio_venta: 200000,
       cuota_inicial: 40000, // 20% inicial
+      monto_prestamo: 148000, // 200000 - 40000 - 12000
       bono_techo_propio: 12000,
-      tasa_anual: 0.0753, // Tasa TEA BBVA
-      tipo_tasa: 'NOMINAL',
+      tasa_anual: 0.0753, // Tasa BBVA
+      tipo_tasa: 'EFFECTIVE', // Tasa Efectiva Anual
       numero_anios: 25,
       plazo_meses: 300,
       meses_gracia: 18,
@@ -233,6 +240,7 @@ export const mockProperties = [
     data: {
       precio_venta: 80000,
       cuota_inicial: 8000, // 10% inicial (mínimo)
+      monto_prestamo: 69000, // 80000 - 8000 - 3000
       bono_techo_propio: 3000,
       tasa_anual: 0.0862, // Tasa TEA BCP
       tipo_tasa: 'NOMINAL',
@@ -265,9 +273,10 @@ export const mockProperties = [
     data: {
       precio_venta: 130000,
       cuota_inicial: 26000, // 20% inicial
+      monto_prestamo: 104000, // 130000 - 26000 - 0
       bono_techo_propio: 0,
-      tasa_anual: 0.0785, // Tasa TEA Interbank
-      tipo_tasa: 'NOMINAL',
+      tasa_anual: 0.0785, // Tasa Interbank
+      tipo_tasa: 'EFFECTIVE', // Tasa Efectiva Anual
       numero_anios: 15,
       plazo_meses: 180,
       meses_gracia: 0,
@@ -297,6 +306,7 @@ export const mockProperties = [
     data: {
       precio_venta: 220000,
       cuota_inicial: 44000, // 20% inicial
+      monto_prestamo: 166000, // 220000 - 44000 - 10000
       bono_techo_propio: 10000,
       tasa_anual: 0.0826, // Tasa TEA Scotiabank
       tipo_tasa: 'NOMINAL',
@@ -329,6 +339,7 @@ export const mockProperties = [
     data: {
       precio_venta: 100000,
       cuota_inicial: 20000, // 20% inicial
+      monto_prestamo: 80000, // 100000 - 20000 - 0
       bono_techo_propio: 0,
       tasa_anual: 0.60, // 60% tasa de prueba
       tipo_tasa: 'NOMINAL',
