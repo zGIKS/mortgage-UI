@@ -44,27 +44,61 @@
     }
   },
   "profile": {
-    "title": "Profile Settings",
+    "title": "Profile",
     "userInfo": {
-      "title": "User Information",
-      "fullName": "Full Name",
+      "title": "Profile Information",
+      "fullName": "Full name",
+      "dni": "DNI",
+      "firstName": "First name",
+      "firstLastName": "Last name",
+      "secondLastName": "Second last name",
       "email": "Email",
-      "accountCreated": "Account Created"
+      "phoneNumber": "Phone number",
+      "monthlyIncome": "Monthly income",
+      "currency": "Currency",
+      "maritalStatus": "Marital status",
+      "isFirstHome": "First home purchase",
+      "hasOwnLand": "Own land",
+      "accountCreated": "Account created"
     },
-    "updateProfile": {
-      "title": "Update Profile",
-      "fullName": "Full Name",
-      "fullNamePlaceholder": "Enter your full name",
-      "email": "Email",
-      "emailPlaceholder": "Enter new email",
-      "newPassword": "New Password",
-      "passwordPlaceholder": "Leave blank to keep current password",
-      "submit": "Update Profile",
-      "updating": "Updating..."
+    "form": {
+      "title": "Update profile",
+      "phoneNumber": "Phone number",
+      "phonePlaceholder": "Enter your phone number",
+      "monthlyIncome": "Monthly income",
+      "monthlyIncomePlaceholder": "Enter your monthly income",
+      "currency": "Currency",
+      "maritalStatus": "Marital status",
+      "isFirstHome": "Is this your first home?",
+      "hasOwnLand": "Do you own land?",
+      "submit": "Save changes",
+      "updating": "Saving..."
+    },
+    "select": {
+      "currency": {
+        "pen": "Soles (PEN)",
+        "usd": "Dollars (USD)"
+      },
+      "maritalStatus": {
+        "soltero": "Single",
+        "casado": "Married",
+        "divorciado": "Divorced",
+        "viudo": "Widowed"
+      }
     },
     "messages": {
       "updateSuccess": "Profile updated successfully",
       "updateFailed": "Update failed. Please try again."
+    },
+    "password": {
+      "title": "Change password",
+      "description": "Enter a new password for your account.",
+      "newPassword": "New password",
+      "placeholder": "Enter new password",
+      "submit": "Update password",
+      "updating": "Updating...",
+      "success": "Password updated successfully",
+      "required": "Password is required"
     }
   }
 }
