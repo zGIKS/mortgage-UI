@@ -14,6 +14,25 @@ export function ProfileFormCard({
 }) {
   const { t } = useTranslation('iam');
 
+  const sanitizeMonthlyIncome = (value) => {
+    const raw = String(value ?? '');
+    const endsWithSeparator = /[.,]$/.test(raw);
+    const normalized = raw.replace(',', '.');
+    const cleaned = normalized.replace(/[^\d.]/g, '').split('.');
+
+    const integerPart = (cleaned[0] || '').slice(0, 10);
+    const decimalPart = cleaned[1] ? cleaned[1].slice(0, 2) : '';
+
+    if (endsWithSeparator && decimalPart === '') {
+      if (integerPart) return `${integerPart}.`;
+      return raw.trim() === '' ? '' : '.';
+    }
+
+    if (decimalPart && integerPart) return `${integerPart}.${decimalPart}`;
+    if (decimalPart && !integerPart) return `0.${decimalPart}`;
+    return integerPart;
+  };
+
   const handleChange = (e) => {
     const { name, type, value, checked } = e.target;
 
@@ -24,8 +43,8 @@ export function ProfileFormCard({
     }
 
     if (name === 'monthly_income') {
-      const numericValue = value.replace(/\D/g, '');
-      onChange(name, numericValue);
+      const sanitized = sanitizeMonthlyIncome(value);
+      onChange(name, sanitized);
       return;
     }
 
@@ -73,12 +92,11 @@ export function ProfileFormCard({
             <Label htmlFor="monthly_income">{t('profile.form.monthlyIncome')}</Label>
             <Input
               id="monthly_income"
-              type="number"
+              type="text"
               name="monthly_income"
-              min="0"
-              step="1"
-              inputMode="numeric"
-              pattern="[0-9]*"
+              inputMode="decimal"
+              pattern="^[0-9]{0,10}([\\.,][0-9]{0,2})?$"
+              maxLength={14}
               value={formData.monthly_income}
               onChange={handleChange}
               placeholder={t('profile.form.monthlyIncomePlaceholder')}

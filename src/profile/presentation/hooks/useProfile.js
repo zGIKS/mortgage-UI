@@ -22,6 +22,18 @@ export function useProfile() {
   const [loading, setLoading] = useState(false);
   const [loadingProfile, setLoadingProfile] = useState(true);
 
+  const sanitizeIncome = (value) => {
+    const normalized = String(value ?? '').replace(',', '.');
+    const cleaned = normalized.replace(/[^\d.]/g, '').split('.');
+
+    const integerPart = (cleaned[0] || '').slice(0, 10);
+    const decimalPart = cleaned[1] ? cleaned[1].slice(0, 2) : '';
+
+    if (decimalPart && integerPart) return `${integerPart}.${decimalPart}`;
+    if (decimalPart && !integerPart) return `0.${decimalPart}`;
+    return integerPart;
+  };
+
   useEffect(() => {
     const token = authService.getToken();
     if (!token) {
@@ -41,10 +53,7 @@ export function useProfile() {
         setProfileError('');
         setFormData({
           phone_number: data.phone_number ?? '',
-          monthly_income:
-            data.monthly_income === null || data.monthly_income === undefined
-              ? ''
-              : String(data.monthly_income),
+          monthly_income: sanitizeIncome(data.monthly_income),
           currency: data.currency || 'PEN',
           marital_status: data.marital_status || '',
           is_first_home: Boolean(data.is_first_home),
@@ -84,13 +93,14 @@ export function useProfile() {
     setLoading(true);
 
     try {
+      const cappedIncome = sanitizeIncome(formData.monthly_income);
+
       const payload = {
         currency: formData.currency,
         has_own_land: formData.has_own_land,
         is_first_home: formData.is_first_home,
         marital_status: formData.marital_status,
-        monthly_income:
-          formData.monthly_income === '' ? 0 : Number(formData.monthly_income),
+        monthly_income: cappedIncome === '' ? 0 : Number(cappedIncome),
         phone_number: formData.phone_number,
       };
 
@@ -99,10 +109,7 @@ export function useProfile() {
       toast.success(t('profile.messages.updateSuccess'));
       setFormData({
         phone_number: updatedProfile.phone_number ?? '',
-        monthly_income:
-          updatedProfile.monthly_income === null || updatedProfile.monthly_income === undefined
-            ? ''
-            : String(updatedProfile.monthly_income),
+        monthly_income: sanitizeIncome(updatedProfile.monthly_income),
         currency: updatedProfile.currency || 'PEN',
         marital_status: updatedProfile.marital_status || '',
         is_first_home: Boolean(updatedProfile.is_first_home),
