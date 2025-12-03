@@ -35,24 +35,19 @@ export const apiClient = {
     return response.json();
   },
 
-  async updateProfile(token, email, password, full_name) {
-    const body = {};
-    if (email) body.email = email;
-    if (password) body.password = password;
-    if (full_name) body.full_name = full_name;
-
-    const response = await fetch(`${API_BASE_URL}/iam/profile`, {
+  async updatePassword(token, password) {
+    const response = await fetch(`${API_BASE_URL}/iam/password`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify({ password }),
     });
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.message || 'Profile update failed');
+      throw new Error(error.message || 'Password update failed');
     }
 
     return response.json();

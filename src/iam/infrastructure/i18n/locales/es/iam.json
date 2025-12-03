@@ -44,27 +44,61 @@
     }
   },
   "profile": {
-    "title": "Configuración del Perfil",
+    "title": "Perfil",
     "userInfo": {
-      "title": "Información del Usuario",
-      "fullName": "Nombre Completo",
-      "email": "Correo Electrónico",
-      "accountCreated": "Cuenta Creada"
+      "title": "Información del perfil",
+      "fullName": "Nombre completo",
+      "dni": "DNI",
+      "firstName": "Nombre",
+      "firstLastName": "Apellido paterno",
+      "secondLastName": "Apellido materno",
+      "email": "Correo electrónico",
+      "phoneNumber": "Teléfono",
+      "monthlyIncome": "Ingreso mensual",
+      "currency": "Moneda",
+      "maritalStatus": "Estado civil",
+      "isFirstHome": "Primera vivienda",
+      "hasOwnLand": "Terreno propio",
+      "accountCreated": "Cuenta creada"
     },
-    "updateProfile": {
-      "title": "Actualizar Perfil",
-      "fullName": "Nombre Completo",
-      "fullNamePlaceholder": "Ingresa tu nombre completo",
-      "email": "Correo Electrónico",
-      "emailPlaceholder": "Ingresa un nuevo correo electrónico",
-      "newPassword": "Nueva Contraseña",
-      "passwordPlaceholder": "Déjalo en blanco para mantener la contraseña actual",
-      "submit": "Actualizar Perfil",
-      "updating": "Actualizando..."
+    "form": {
+      "title": "Actualizar perfil",
+      "phoneNumber": "Teléfono",
+      "phonePlaceholder": "Ingresa tu teléfono",
+      "monthlyIncome": "Ingreso mensual",
+      "monthlyIncomePlaceholder": "Ingresa tu ingreso mensual",
+      "currency": "Moneda",
+      "maritalStatus": "Estado civil",
+      "isFirstHome": "¿Es tu primera vivienda?",
+      "hasOwnLand": "¿Tienes terreno propio?",
+      "submit": "Guardar cambios",
+      "updating": "Guardando..."
+    },
+    "select": {
+      "currency": {
+        "pen": "Soles (PEN)",
+        "usd": "Dólares (USD)"
+      },
+      "maritalStatus": {
+        "soltero": "Soltero",
+        "casado": "Casado",
+        "divorciado": "Divorciado",
+        "viudo": "Viudo"
+      }
     },
     "messages": {
       "updateSuccess": "Perfil actualizado exitosamente",
       "updateFailed": "Error al actualizar. Por favor intenta de nuevo."
+    },
+    "password": {
+      "title": "Cambiar contraseña",
+      "description": "Ingresa una nueva contraseña para tu cuenta.",
+      "newPassword": "Nueva contraseña",
+      "placeholder": "Ingresa tu nueva contraseña",
+      "submit": "Actualizar contraseña",
+      "updating": "Actualizando...",
+      "success": "Contraseña actualizada con éxito",
+      "required": "La contraseña es obligatoria"
     }
   }
 }
