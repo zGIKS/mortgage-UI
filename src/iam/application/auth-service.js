@@ -10,8 +10,8 @@ export const authService = {
     return data;
   },
 
-  async register(email, password, full_name) {
-    const data = await apiClient.register(email, password, full_name);
+  async register({ dni, email, password }) {
+    const data = await apiClient.register(dni, email, password);
     return data;
   },
 

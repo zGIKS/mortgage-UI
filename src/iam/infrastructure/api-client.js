@@ -18,13 +18,13 @@ export const apiClient = {
     return response.json();
   },
 
-  async register(email, password, full_name) {
+  async register(dni, email, password) {
     const response = await fetch(`${API_BASE_URL}/iam/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, password, full_name }),
+      body: JSON.stringify({ dni, email, password }),
     });
 
     if (!response.ok) {

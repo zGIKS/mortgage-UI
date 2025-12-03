@@ -13,24 +13,24 @@
     "register": {
       "title": "Crear Cuenta",
       "subtitle": "Únete a nuestra plataforma financiera",
-      "firstName": "Nombre",
-      "lastName": "Apellido",
+      "dni": "DNI",
       "email": "Correo Electrónico",
       "password": "Contraseña",
-      "confirmPassword": "Confirmar Contraseña",
       "submit": "Crear Cuenta",
       "hasAccount": "¿Ya tienes una cuenta?",
       "signIn": "Inicia sesión aquí"
+    },
+    "tooltips": {
+      "dni": "Usa tu DNI peruano (8 dígitos) para verificar tu identidad.",
+      "email": "Usa tu correo electrónico, ejemplo: usuario@gmail.com",
+      "password": "Usa al menos 8 caracteres con letras y números."
     },
     "validation": {
       "emailRequired": "El correo electrónico es obligatorio",
       "emailInvalid": "Por favor ingresa un correo electrónico válido",
       "passwordRequired": "La contraseña es obligatoria",
       "passwordMinLength": "La contraseña debe tener al menos 8 caracteres",
-      "firstNameRequired": "El nombre es obligatorio",
-      "lastNameRequired": "El apellido es obligatorio",
-      "confirmPasswordRequired": "Por favor confirma tu contraseña",
-      "passwordMismatch": "Las contraseñas no coinciden"
+      "dniRequired": "El DNI es obligatorio"
     },
     "errors": {
       "loginFailed": "Correo electrónico o contraseña incorrectos",
